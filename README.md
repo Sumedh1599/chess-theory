@@ -133,18 +133,7 @@ Related docs for deeper protocol detail: [`SKILL.md`](SKILL.md), [`examples/`](e
   <img src="assets/diagram.png" alt="Three-seat CHESS architecture: Hindsight, Foresight, and Present arbitration" width="420" />
 </p>
 
-```text
-User message
-    │
-    ▼
-┌─────────────┐   lessons H(t)    ┌──────────────────┐
-│  Hindsight  │ ───────────────► │                  │
-│   (Past)    │                  │  Present Self    │──► a*
-└─────────────┘                  │  (ELBO arbiter)  │
-┌─────────────┐   candidates F(t)│                  │
-│  Foresight  │ ───────────────► │                  │
-│  (Future)   │                  └──────────────────┘
-└─────────────┘
+
 ```
 
 | Seat | Role | Output |
