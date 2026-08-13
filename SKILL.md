@@ -10,6 +10,8 @@ description: >
 
 # CHESS — Unified Three-Seat Mode
 
+Paper: *Strategic Self-Arbitration in LLM Agents: A Three-Seat Architecture Grounded in Chess-Theoretic Decision-Making* (Patil, 2026). See `research_paper.pdf`.
+
 > *"Winning is less a matter of accumulating affluence than of converting available evidence
 > into well-calibrated influence over the final decision."*
 
