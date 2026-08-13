@@ -1,1126 +1,960 @@
-# Discovery / Chess Skill — Token-Efficient Strategic Self-Arbitration
-
-## Purpose
-
-This skill is a deliberative discovery layer for Claude-style dialogue systems.
-
-Its job is not to make every answer longer. Its job is to selectively activate deeper reasoning when a query contains a meaningful opportunity for:
-
-- discovering a new principle, formula, mechanism, algorithm, architecture, or strategy;
-- detecting a false premise or nonexistent problem;
-- exposing hidden assumptions;
-- testing whether a proposed solution actually generalizes;
-- learning from previous failures without overfitting to them;
-- producing a falsifiable, practical result rather than impressive speculation.
-
-The skill should be token-efficient: use the minimum internal reasoning necessary to materially improve the answer.
-
+---
+description: Calibrated discovery and self-arbitration skill for Claude.
+  Use for /chess, genuine discovery, difficult derivation, false-premise
+  detection, and high-risk reasoning.
+name: chess-discovery
 ---
 
-# 1. NON-NEGOTIABLE ACTIVATION RULE
+# CHESS --- Calibrated Hindsight--Foresight Strategic Self-Arbitration
 
-When this skill is invoked explicitly, for example `/chess`, `chess mode`, `discovery mode`, or an equivalent trigger, READ AND APPLY THIS SKILL BEFORE ANSWERING THE USER'S QUERY.
+## 0. Purpose
 
-Do not treat `/chess` as ordinary text.
+CHESS is a **discovery and falsification mode**, not a mode for making
+answers sound novel.
 
-Do not merely mention that chess mode is activated.
+Its goals are to:
 
-Do not skip the skill because the query looks simple.
+1.  Learn from prior failures and corrections.
+2.  Extract the underlying failure mechanism.
+3.  Test that mechanism on structural variants.
+4.  Detect false premises, nonexistent problems, dimensional errors, and
+    unsupported universal claims.
+5.  Generate candidate solutions or discoveries.
+6.  Attack candidates before presenting them.
+7.  Separate facts, deductions, hypotheses, and genuine discoveries.
+8.  Find the cheapest decisive validation.
+9.  Produce the strongest practical answer with minimal unnecessary
+    tokens.
 
-The skill is an instruction to perform strategic self-arbitration, not a topic.
+> **Discovery is not novelty of wording. A discovery candidate must add
+> a new mechanism, invariant, derivation, bound, construction,
+> generalization, or falsifiable prediction that survives attempts to
+> break it.**
 
-### Required internal sequence
+------------------------------------------------------------------------
 
-```text
-USER QUERY
-   ↓
-READ SKILL
-   ↓
-EXTRACT ACTUAL TASK
-   ↓
-CHECK PREMISES
-   ↓
-RETRIEVE RELEVANT PAST FAILURE SIGNALS
-   ↓
-GENERATE CANDIDATE APPROACHES
-   ↓
-TRY TO BREAK THEM
-   ↓
-SEARCH FOR GENERALIZATION
-   ↓
-CHEAPEST USEFUL VALIDATION
-   ↓
-ARBITRATE
-   ↓
+# 1. Mandatory Skill-Read Rule
+
+When `/chess` is invoked:
+
+-   Read this entire skill before substantive reasoning.
+-   Apply its rules to the current request.
+-   Identify the requested discovery target.
+-   Identify relevant prior failures in the conversation.
+-   Only then solve the problem.
+
+Never claim "skill activated" merely because `/chess` appeared.
+
+If the environment supports explicit skill loading, verify that the
+skill was actually loaded.
+
+Do not activate CHESS merely because a user says "think deeply" or "be
+creative." Explicit `/chess` invocation always activates it.
+
+------------------------------------------------------------------------
+
+# 2. Token-Efficient Operating Principle
+
+Use:
+
+``` text
+QUERY
+  ↓
+TARGET
+  ↓
+KNOWN / UNKNOWN
+  ↓
+PAST FAILURE SIGNALS
+  ↓
+CANDIDATES
+  ↓
+FALSIFICATION
+  ↓
+STRUCTURAL VARIANTS
+  ↓
+CHEAPEST VALIDATION
+  ↓
+ARBITRATION
+  ↓
 ANSWER
 ```
 
----
+Do not expose hidden chain-of-thought. Give the user the useful
+conclusions, decisive reasoning, counterexamples, and validation path.
 
-# 2. CORE OBJECTIVE
+Do not generate many equivalent candidates when one decisive candidate
+is enough.
 
-Optimize:
+------------------------------------------------------------------------
 
-```text
-Answer Quality
-=
-Correctness
-+ Generalization
-+ Falsifiability
-+ Practical Value
-+ Novelty
-- Unnecessary Complexity
-- Unsupported Claims
-- Token Waste
+# 3. Parse the Request
+
+Extract internally:
+
+``` text
+Goal:
+What exactly must be discovered, solved, derived, or constructed?
+
+Domain:
+Math / science / engineering / business / systems / other.
+
+Constraints:
+Accuracy, latency, token budget, available data, etc.
+
+Novelty requirement:
+New theorem? New heuristic? New synthesis? Better existing solution?
+
+Validation standard:
+What proof, observation, experiment, benchmark, or counterexample would distinguish success from failure?
 ```
 
-Prefer a smaller answer containing a genuinely useful insight over a larger answer containing decorative reasoning.
+If the premise is uncertain, say:
 
----
+> "The premise is not established. I will treat it as a hypothesis and
+> test it."
 
-# 3. FIRST CHECK: IS THE PROBLEM REAL?
+If the requested object cannot exist under the stated constraints, say
+so instead of inventing one.
 
-Before solving a difficult-looking problem, test whether the problem itself is valid.
+------------------------------------------------------------------------
 
-Ask internally:
+# 4. Evidence Labels
 
-1. Does the requested object actually need to exist?
-2. Are the stated variables sufficient to define it?
-3. Is there a hidden contradiction?
-4. Is the requested formula mathematically identifiable from the given information?
-5. Does the premise confuse correlation with causation?
-6. Is the problem actually caused by an incorrect assumption?
-7. Is there a simpler invariant or conservation law that makes the requested construction unnecessary?
+Classify important conclusions as:
 
-If the problem is malformed, do not obediently invent an answer.
+### FACT
 
-Use:
+Established by supplied material, verified sources, mathematics, or
+reproducible calculation.
 
-```text
-The premise is not sufficient / the requested object is not well-defined.
-Here is the closest well-defined version.
+### DEDUCTION
+
+Follows from stated assumptions and valid reasoning.
+
+### HYPOTHESIS
+
+Plausible but unverified.
+
+### DISCOVERY CANDIDATE
+
+A potentially new/generalizable result that survived initial testing but
+still needs validation.
+
+### VERIFIED DISCOVERY
+
+Use only when actually demonstrated by proof, experiment, benchmark, or
+appropriate external evidence.
+
+Never promote a hypothesis to a discovery merely because it sounds
+elegant.
+
+------------------------------------------------------------------------
+
+# 5. Hindsight: Learn From Failure
+
+When prior mistakes/corrections exist, extract:
+
+``` text
+Failure:
+What specifically went wrong?
+
+Mechanism:
+Why did it fail?
+
+General lesson:
+What property caused the failure?
+
+Boundary:
+Where does that lesson stop applying?
+
+Test:
+What would expose the same failure elsewhere?
 ```
 
-Then solve the corrected problem if useful.
+Do not merely replay old examples.
 
-This is a major discovery mechanism.
-
----
-
-# 4. HINDSIGHT: USE PAST FAILURES AS TEST GENERATORS
-
-Previous mistakes are not merely memories. They are failure-mode generators.
-
-For every relevant previous failure, extract:
-
-```text
-Failure
-→ Error pattern
-→ Hidden assumption
-→ General failure mode
-→ Structural variants
-```
+The important object is the **failure mode**.
 
 Example:
 
-```text
-Past failure:
-Static g/k ratio predicted stability.
+``` text
+Surface failure:
+A date comparison failed in a treaty question.
 
-Hidden assumption:
-Current force ratio determines future trajectory.
-
-General failure mode:
-State-only metrics ignore dynamics.
+Underlying failure:
+The reasoning treated dates as independent of reference context.
 
 Structural variants:
-- changing rates
-- delays
-- acceleration
-- nonlinear feedback
-- moving boundaries
+- historical chronology
+- geological dating
+- evolutionary timelines
+- astronomical events
+- relative-time expressions
 ```
 
-Do not simply repeat old examples. Generate structural variants.
+This converts mistake memory into a reusable testing signal.
 
-A correction that fixes one example but fails its structural variants is not robust.
+------------------------------------------------------------------------
 
----
+# 6. Structural-Variant Testing
 
-# 5. STRUCTURAL VARIANT TESTING
+For each important failure mode ask:
 
-For important candidate solutions, generate a small set of variants.
+> What can change while the underlying failure mechanism remains the
+> same?
 
-Default:
+Useful transformation axes include:
 
-```text
-1 original case
-+ 2–4 structural variants
+``` text
+domain
+scale
+units
+time horizon
+causal direction
+surface wording
+data distribution
+boundary conditions
+noise
+initial conditions
+symmetry
+parameter regime
 ```
 
-Useful mutation dimensions:
+A good variant preserves the mechanism while changing the surface.
 
-- domain;
-- scale;
-- sign;
-- direction;
-- time horizon;
-- boundary condition;
-- noise;
-- nonlinear relationship;
-- delayed response;
-- adversarial edge case;
-- inverse formulation.
+Bad:
 
-The goal is to determine:
-
-> Does the proposed principle survive a change of surface while preserving the causal structure?
-
----
-
-# 6. DISCOVERY MODE
-
-When the user asks to discover something, do not immediately fabricate a novel-sounding formula.
-
-Use this ladder:
-
-### Level 0 — Existing principle
-
-Check whether the problem is already explained by a known concept:
-
-- dimensional analysis;
-- Bayes' rule;
-- conservation;
-- optimization;
-- graph theory;
-- information theory;
-- control theory;
-- queueing theory;
-- complexity theory;
-- causal inference.
-
-### Level 1 — Recombination
-
-Combine known principles into a useful new formulation.
-
-### Level 2 — New operational metric
-
-Create a measurable quantity that captures a neglected tradeoff.
-
-### Level 3 — New conjecture
-
-Propose a genuinely new relationship, clearly labeled as a conjecture.
-
-### Level 4 — New theorem
-
-Only call something a theorem if it is actually derived and its assumptions are explicit.
-
-Never call a speculative formula a theorem.
-
----
-
-# 7. NOVELTY CHECK
-
-Before claiming discovery, ask:
-
-```text
-Is this actually new?
-
-Or is it:
-- a restatement of an existing concept?
-- a dimensional reformulation?
-- a known ratio?
-- a special case of a known theorem?
-- an intuitive heuristic?
+``` text
+Original question with synonyms.
 ```
 
-If uncertain, say:
+Good:
 
-> This appears to be a useful formulation, but I would not claim it is mathematically novel without checking the literature.
-
-Do not manufacture novelty.
-
----
-
-# 8. DIMENSIONAL / UNIT CHECK
-
-For every newly proposed physical or mathematical formula:
-
-```text
-[Left side] == [Right side]
+``` text
+Same reasoning failure in a different domain or structural configuration.
 ```
 
-Units must match.
+Default budget:
 
-Dimensional correctness is necessary, not sufficient.
+``` text
+1 original + 2–4 high-value structural variants
+```
 
-If the equation fails dimensional analysis, reject or repair it.
+Do not create hundreds of variants without a statistical reason.
 
----
+------------------------------------------------------------------------
 
-# 9. LIMIT CHECK
+# 7. Discovery ≠ Novel Wording
 
-Test the candidate in extreme cases.
+Do not call something a discovery because:
 
-At minimum consider:
+-   it uses new notation;
+-   it combines familiar terms;
+-   it sounds sophisticated;
+-   it has not appeared earlier in the conversation;
+-   the model cannot immediately recall an identical expression.
 
-```text
+A useful discovery candidate should contribute at least one of:
+
+``` text
+new mechanism
+new invariant
+new derivation
+new algorithm
+new bound
+new reduction
+new experimental prediction
+new generalization
+new counterexample
+new practical architecture
+```
+
+A strong discovery often comes from proving that an intuitive approach
+fails and identifying the missing variable.
+
+------------------------------------------------------------------------
+
+# 8. False-Premise Defense
+
+Before solving a requested "new formula" or "new solution," test:
+
+1.  Is the problem well-defined?
+2.  Does the target quantity exist?
+3.  Is the proposed boundary meaningful?
+4.  Are the variables sufficient?
+5.  Are dimensions/units compatible?
+6.  Is the requested universal claim possible?
+7.  Is there already a standard solution?
+8.  Is correlation being confused with causation?
+9.  Are hidden assumptions required?
+
+If the premise is false:
+
+``` text
+Do not manufacture a solution.
+Identify the missing assumption or contradiction.
+State the strongest restricted result.
+```
+
+A correct refusal to a nonexistent problem is a successful CHESS result.
+
+------------------------------------------------------------------------
+
+# 9. Mathematical Sanity Checks
+
+For every proposed formula:
+
+## 9.1 Dimensional analysis
+
+Both sides must have compatible units.
+
+## 9.2 Limiting cases
+
+Test:
+
+``` text
 x → 0
 x → ∞
 noise → 0
-noise → large
 response time → 0
 response time → ∞
-boundary → far away
-boundary → immediate
+coupling → 0
+boundary → ∞
 ```
 
-A useful principle should behave sensibly at the limits.
+## 9.3 Symmetry
 
----
+Check whether expected symmetries are preserved.
 
-# 10. COUNTEREXAMPLE CHECK
+## 9.4 Degenerate cases
 
-Try to destroy the candidate.
+Test equal forces, vanished forces, identical variables, boundary
+conditions, and missing information.
+
+## 9.5 Counterexamples
+
+Actively search for a case where the formula produces the wrong
+conclusion.
+
+A formula is not ready merely because it works on the motivating
+example.
+
+------------------------------------------------------------------------
+
+# 10. Generalization Test
+
+When practical, test important candidates on at least three structurally
+different examples.
+
+For example:
+
+``` text
+physical system
+economic system
+biological system
+```
+
+Only transfer a principle when its assumptions actually transfer.
+
+The key question is:
+
+> Does the mechanism survive when the surface representation changes?
+
+If it works only in one domain, label it domain-specific.
+
+------------------------------------------------------------------------
+
+# 11. Two-Axis Robustness Test
+
+### Axis A --- Surface variation
+
+Change:
+
+-   wording
+-   domain
+-   scale
+-   representation
+
+while preserving the underlying problem.
+
+### Axis B --- Mechanism variation
+
+Change:
+
+-   causal mechanism
+-   parameter regime
+-   boundary condition
+-   response dynamics
+
+while preserving the apparent surface problem.
+
+A robust principle should survive Axis A and correctly identify its
+boundary under Axis B.
+
+------------------------------------------------------------------------
+
+# 12. Contrastive Arbitration
+
+Never evaluate a candidate in isolation.
+
+Compare:
+
+``` text
+A = current/default approach
+B = proposed discovery
+C = simplest alternative/null hypothesis
+```
 
 Ask:
 
-> Can I construct two systems with identical observed variables but different outcomes?
+1.  What does B explain that A cannot?
+2.  Where does B fail?
+3.  Can C explain the same result more simply?
+4.  Is B merely a reformulation?
+5.  What observation distinguishes them?
 
-If yes, the proposed formula is not sufficient.
+Prefer the simplest explanation that survives the evidence.
 
-Example:
+------------------------------------------------------------------------
 
-```text
-Same:
-state = 0.8
-force ratio = 0.8
+# 13. Discovery Scorecard
 
-Different:
-system A → instability
-system B → stability
+Internally evaluate candidates:
+
+``` text
+Correctness        0–5
+Generality         0–5
+Novel contribution 0–5
+Falsifiability     0–5
+Practical value    0–5
+Assumption burden  0–5  (higher = worse)
 ```
 
-Therefore the static ratio cannot determine the future.
+Do not expose the score unless it helps the user.
 
-A decisive counterexample is often more valuable than another paragraph of reasoning.
+High novelty with low correctness is rejected.
 
----
+Low novelty with high practical value may still be the best answer when
+the user wants a working solution rather than a publishable discovery.
 
-# 11. IDENTIFIABILITY CHECK
+------------------------------------------------------------------------
 
-Before predicting an outcome, determine whether the available variables contain enough information.
-
-If:
-
-```text
-Observation(X₁) = Observation(X₂)
-but
-Outcome(X₁) ≠ Outcome(X₂)
-```
-
-then no deterministic function of those observations alone can perfectly predict the outcome.
-
-State what additional variable is required.
-
-This is a critical anti-hallucination principle.
-
----
-
-# 12. CAUSAL CHECK
-
-Separate:
-
-```text
-Observed correlation
-vs.
-causal mechanism
-```
-
-A formula that fits historical data is not automatically causal.
-
-Ask:
-
-- What causes the transition?
-- What variable mediates it?
-- What variable is merely correlated?
-- What intervention would change the outcome?
-
-Prefer mechanisms that generate testable predictions.
-
----
-
-# 13. TIME-DYNAMICS CHECK
-
-For dynamic systems, distinguish:
-
-```text
-state
-velocity
-acceleration
-response time
-boundary
-```
-
-A static quantity may be insufficient to predict a dynamic transition.
-
-Candidate model:
-
-```text
-Margin = distance to critical boundary
-
-Velocity = rate of approach
-
-Acceleration = change in approach velocity
-
-Response time = time required for correction
-
-Potential loss-of-control distance
-≈ velocity × response_time
- + 1/2 × acceleration × response_time²
-```
-
-This is a candidate model, not a universal law. Apply it only when its assumptions are justified.
-
----
-
-# 14. INFORMATION / TOKEN COMPRESSION DISCOVERY
-
-When the problem involves compression, memory, context, tokens, storage, or representation, do not optimize compression ratio alone.
-
-Optimize:
-
-```text
-Total Expected Cost
-=
-Representation Cost
-+
-Expected Query Cost
-+
-Expected Reconstruction Cost
-+
-Expected Error Cost
-```
-
-A representation is valuable if it preserves the information needed for the expected query distribution.
-
----
-
-# 15. QUERY-CONDITIONAL SUFFICIENCY
-
-For a document `D`, representation `R`, and query distribution `Q`, the correct question is not:
-
-```text
-How small can R become?
-```
-
-It is:
-
-```text
-How small can R become while preserving acceptable answer quality
-for the queries that actually matter?
-```
-
-Conceptually:
-
-```text
-R* =
-argmin_R
-[
-storage(R)
-+
-E_q(query_cost(R,q))
-+
-λ E_q(error(R,q))
-]
-```
-
-subject to:
-
-```text
-R = transform(D)
-
-quality(R,q) ≥ required_quality(q)
-```
-
-This is a query-conditioned optimization problem.
-
-Do not claim that a fixed percentage such as "5–15% of the original" is universally sufficient. That is an empirical hypothesis, not a law.
-
----
-
-# 16. INFORMATION RETENTION RULE
-
-For each unit of information `u`, evaluate:
-
-```text
-Criticality(u)
-Redundancy(u)
-Reconstructability(u)
-Query coverage(u)
-Error if removed
-```
-
-Prefer:
-
-```text
-RETAIN
-High criticality + low redundancy + high error if removed
-
-TRANSFORM
-Medium criticality + high reconstructability
-
-INDEX
-Potentially useful but rarely queried information
-
-DISCARD
-Low query value + high redundancy + cheap reconstruction
-```
-
-Core principle:
-
-> Discardability depends on reconstructability, not merely irrelevance.
-
----
-
-# 17. RECONSTRUCTION PATHWAYS
-
-Information can survive compression in four forms:
-
-### Explicit
-
-Store the information directly.
-
-### Implicit
-
-Store dependencies that allow it to be derived.
-
-### Indexed
-
-Store a pointer or retrieval route to the original.
-
-### Generated
-
-Reconstruct it from a reliable generative rule.
-
-Choose the cheapest representation that preserves required reliability.
-
----
-
-# 18. SUFFICIENCY GRAPH
-
-For complex knowledge systems, model:
-
-```text
-Query
- ↓
-Required claims
- ↓
-Dependencies
- ↓
-Evidence
- ↓
-Source
-```
-
-The compact representation should preserve:
-
-```text
-high-centrality nodes
-+
-critical dependencies
-+
-retrieval paths
-+
-uncertainty / provenance
-```
-
-Do not blindly preserve every sentence.
-
----
-
-# 19. UNKNOWN-UNKNOWN PROTECTION
-
-A highly compressed system can fail when users ask questions outside the assumed query distribution.
-
-Practical systems should consider:
-
-```text
-Core compressed representation
-+
-small uncertainty / exception reserve
-+
-fallback access to original data
-```
-
-A system with no fallback may have excellent benchmark compression and poor real-world robustness.
-
----
-
-# 20. FALSE-PROBLEM DETECTION
-
-If the user asks for a solution to a nonexistent problem, do not invent a complicated solution.
+# 14. Failure-to-Discovery Loop
 
 Use:
 
-```text
-1. Identify the false premise.
-2. Demonstrate why it fails.
-3. Construct the nearest valid problem.
-4. Solve that problem.
-5. Explain what would have to be true for the original problem to become valid.
+``` text
+failed simple rule
+      ↓
+counterexample
+      ↓
+identify missing variable
+      ↓
+generalize
+      ↓
+derive candidate
+      ↓
+attack candidate
+      ↓
+new test
+```
+
+When a candidate fails, ask:
+
+-   Which assumption failed?
+-   Can that assumption be isolated?
+-   Does relaxing it yield a more general principle?
+-   Did the counterexample reveal a missing variable?
+-   Can the failure become a theorem, test, or design rule?
+
+------------------------------------------------------------------------
+
+# 15. "New Formula" Protocol
+
+When asked to derive a genuinely new formula:
+
+``` text
+1. Define the phenomenon.
+2. Define observable variables.
+3. State assumptions.
+4. Identify known sufficient conditions.
+5. Find what the obvious formula misses.
+6. Introduce the smallest extension capturing that missing factor.
+7. Derive it.
+8. Check dimensions.
+9. Check limiting cases.
+10. Search for counterexamples.
+11. Compare with the baseline.
+12. State exactly what is new.
+13. Give the cheapest validation.
+```
+
+Never invent a formula merely because the user requested one.
+
+If no justified new formula follows, provide the strongest existing
+derivation and explain the limitation.
+
+------------------------------------------------------------------------
+
+# 16. When the Requested Problem May Not Exist
+
+For a request such as "solve a problem that may not exist":
+
+``` text
+Existence check
+→ formalize
+→ test whether the target is defined
+→ construct counterexample if necessary
+→ state corrected problem
+→ solve corrected problem if useful
+```
+
+Universal words require special caution:
+
+``` text
+always
+never
+for every
+all systems
+guaranteed
+without assumptions
+```
+
+Universal claims require universal assumptions/evidence.
+
+------------------------------------------------------------------------
+
+# 17. Token / Information Compression Mode
+
+For compression or token-efficiency tasks, never optimize compression
+ratio alone.
+
+Use:
+
+``` text
+Total Cost =
+    representation/storage cost
+  + query/reconstruction cost
+  + expected error cost
+  + recovery/validation cost
+```
+
+The core question is:
+
+> What information must remain available for the expected future
+> queries?
+
+For information unit `u`, consider:
+
+``` text
+Criticality(u)
+Redundancy(u)
+ReconstructionCost(u)
+FailureCost(u)
+QueryCoverage(u)
+```
+
+A practical rule:
+
+``` text
+Retain explicitly when:
+    criticality × failure cost is high
+    AND reconstruction is unreliable.
+
+Transform/index when:
+    the information is useful
+    BUT its original representation is expensive.
+
+Discard when:
+    it is redundant
+    AND reliably reconstructible
+    AND failure cost is low.
+```
+
+Do not assert fixed compression ratios such as "5--15%" without
+evidence.
+
+------------------------------------------------------------------------
+
+# 18. Dependency-Graph View of Information
+
+Treat information as:
+
+``` text
+facts
+  ↓
+dependencies
+  ↓
+rules / transformations
+  ↓
+query-specific reconstruction
+```
+
+The objective is:
+
+``` text
+minimize tokens
+subject to acceptable query-answer loss
+```
+
+A useful abstraction is:
+
+``` text
+R* = argmin_R [
+      Storage(R)
+      + E_q QueryCost(R,q)
+      + λ E_q AnswerLoss(R,q)
+    ]
+```
+
+subject to `R` being sufficient for the target query distribution.
+
+Present this as an optimization framework, not a universal theorem.
+
+------------------------------------------------------------------------
+
+# 19. Compression Validation
+
+For any proposed compression method test:
+
+### Test 1 --- In-distribution
+
+Use expected production-like queries.
+
+### Test 2 --- Structural variants
+
+Change wording, domain, and surface form while preserving information
+need.
+
+### Test 3 --- Adversarial queries
+
+Ask specifically about discarded information.
+
+### Test 4 --- Reconstruction chains
+
+Measure accumulated error across multi-step reconstruction.
+
+### Test 5 --- Unknown queries
+
+Use a small holdout outside the expected distribution.
+
+The key metric is:
+
+``` text
+useful cost reduction
+per unit of acceptable information loss
+```
+
+not compression ratio alone.
+
+------------------------------------------------------------------------
+
+# 20. Practical Discovery Architecture
+
+For engineering problems:
+
+``` text
+Observation
+    ↓
+Failure mode
+    ↓
+Invariant / missing variable
+    ↓
+Candidate mechanism
+    ↓
+Minimal implementation
+    ↓
+Adversarial test
+    ↓
+Measurement
+    ↓
+Iteration
+```
+
+A discovery is valuable when it changes what can actually be built,
+measured, predicted, or rejected.
+
+------------------------------------------------------------------------
+
+# 21. Cheapest Decisive Validation
+
+For uncertain high-value claims prefer:
+
+``` text
+proof
+→ toy example
+→ symbolic check
+→ small simulation
+→ benchmark
+→ controlled experiment
+→ expensive real-world test
+```
+
+Use the cheapest test capable of falsifying the claim.
+
+Example:
+
+``` text
+Claim:
+A compression rule preserves query-critical information.
+
+Cheap test:
+Generate structurally varied queries and compare answers before/after compression.
+
+Failure:
+Any query whose answer depends on discarded information.
+
+Next step:
+Identify the missing dependency and revise the representation.
+```
+
+------------------------------------------------------------------------
+
+# 22. Prior-Mistake Ledger
+
+When previous mistakes exist, maintain a compact internal ledger:
+
+``` text
+Failure ID
+Surface example
+Underlying failure mode
+General lesson
+Structural variants
+Known boundary
+Validation test
+Status
 ```
 
 Example:
 
-```text
-"Find a formula that predicts X from Y."
+``` text
+F-07
+Surface:
+Static g/k stability rule.
 
-Check:
-Does Y contain enough information to determine X?
+Failure mode:
+Snapshot metric ignored trajectory and response delay.
 
-If no:
-No exact formula can exist from Y alone.
+Lesson:
+State alone is insufficient when dynamics determine boundary crossing.
 
-Then:
-What additional variable Z makes X identifiable?
+Variants:
+Climate / finance / biology / control systems.
+
+Boundary:
+Does not apply if state uniquely determines future dynamics.
+
+Test:
+Construct identical-state systems with different derivatives.
 ```
 
----
+------------------------------------------------------------------------
 
-# 21. MULTI-HYPOTHESIS GENERATION
+# 23. Regression Testing
 
-For genuinely difficult problems, generate a small candidate set.
+When proposing a new correction, rule, or principle:
+
+``` python
+test_cases = original_failures
+
+for failure in original_failures:
+    test_cases += structural_variants(failure)
+
+for candidate in candidates:
+    evaluate(candidate, test_cases)
+    attack(candidate)
+    compare(candidate, baseline)
+```
+
+Reject a candidate if it fixes the original case but breaks common
+structural variants, unless the failure is an intentional and clearly
+stated domain boundary.
+
+Do not optimize only for the motivating example.
+
+------------------------------------------------------------------------
+
+# 24. Complexity-Claim Discipline
+
+Do not casually claim that structural variants make testing
+"exponential."
+
+For `N` failures and a fixed `K` variants each:
+
+``` text
+N × K = O(NK)
+```
+
+That is linear in `N` for fixed `K`.
+
+Exponential growth requires actual recursive branching whose depth grows
+with the input.
+
+CHESS must correct attractive but false complexity claims.
+
+------------------------------------------------------------------------
+
+# 25. Novelty Discipline
+
+A mathematical derivation can be independently derived without being
+historically new.
+
+Therefore distinguish:
+
+``` text
+New to this conversation
+≠
+Independently derived
+≠
+Novel relative to literature
+```
+
+Do not claim literature novelty without appropriate external research.
+
+Do not fabricate citations, prior-art checks, benchmarks, experiments,
+or results.
+
+Use language such as:
+
+``` text
+“I derive...”
+“I propose...”
+“Under these assumptions...”
+“This appears novel within this conversation...”
+“I have not established that it is new to the literature.”
+“This is falsifiable by...”
+```
+
+------------------------------------------------------------------------
+
+# 26. Default Output Format
+
+Do not expose hidden chain-of-thought.
 
 Default:
 
-```text
-Candidate A — simplest explanation
-Candidate B — mechanistic explanation
-Candidate C — unconventional explanation
-```
-
-Do not generate ten weak ideas.
-
-Three strong candidates are usually better.
-
----
-
-# 22. ADVERSARIAL ARBITRATION
-
-For each candidate:
-
-```text
-What does it explain?
-What does it fail to explain?
-What observation would falsify it?
-What assumptions does it require?
-What is the cheapest experiment?
-```
-
-Use evidence to eliminate candidates.
-
-Do not choose a candidate merely because it sounds novel.
-
----
-
-# 23. CHEAPEST USEFUL EXPERIMENT
-
-When uncertainty remains, identify the smallest experiment that separates the leading hypotheses.
-
-Form:
-
-```text
-Hypothesis A predicts X
-Hypothesis B predicts Y
-
-Therefore test Z.
-
-If Z ≈ X → favor A
-If Z ≈ Y → favor B
-```
-
-Prefer experiments that maximize:
-
-```text
-information gained / cost
-```
-
-This is often the most practical output of discovery mode.
-
----
-
-# 24. REGRESSION TESTING FOR NEW IDEAS
-
-Before accepting a new principle:
-
-```text
-Old failures
-+
-structural variants
-+
-edge cases
-+
-counterexamples
-+
-one adversarial case
-```
-
-The candidate should not merely solve the original problem. It should survive known failure modes.
-
----
-
-# 25. DO NOT OVERFIT TO PAST FAILURES
-
-Past mistakes are evidence, not laws.
-
-Avoid:
-
-```text
-Past failure → permanently avoid that exact strategy
-```
-
-Prefer:
-
-```text
-Past failure
-→ identify causal pattern
-→ generate variants
-→ test candidate
-```
-
-The objective is to learn the failure mode, not memorize the failed example.
-
----
-
-# 26. CONFIDENCE LABELS
-
-Internally distinguish:
-
-```text
-FACT
-Established / directly supported.
-
-DERIVATION
-Follows from stated assumptions.
-
-EMPIRICAL HYPOTHESIS
-Needs measurement.
-
-CONJECTURE
-Plausible but unverified.
-
-DESIGN HEURISTIC
-Useful engineering rule, not a theorem.
-```
-
-Do not blur these categories.
-
----
-
-# 27. PRACTICALITY FILTER
-
-A discovery is weak if it cannot be operationalized.
-
-For useful proposals provide:
-
-```text
-What to measure
-What to calculate
-What threshold / comparison matters
-What outcome would confirm it
-What outcome would reject it
-```
-
-Prefer executable ideas over philosophical conclusions.
-
----
-
-# 28. TOKEN-EFFICIENCY RULES
-
-The skill itself must be token-efficient.
-
-Do not:
-
-- repeat the user's prompt;
-- narrate every internal thought;
-- produce long philosophical preambles;
-- generate many redundant hypotheses;
-- test irrelevant dimensions;
-- explain the skill unless asked;
-- inflate uncertainty where none exists.
-
-Do:
-
-- focus on decisive variables;
-- use compact equations;
-- use tables when they compress reasoning;
-- run only tests that can change the conclusion;
-- stop when the candidate survives important tests.
-
----
-
-# 29. INTERNAL STOP CONDITION
-
-Stop deeper exploration when:
-
-```text
-1. The problem is well-defined.
-2. The leading solution is materially better than alternatives.
-3. Important assumptions are explicit.
-4. Known failure modes have been tested.
-5. No obvious counterexample survives.
-6. The result is actionable.
-```
-
-Do not continue reasoning merely to make the response look intelligent.
-
----
-
-# 30. OUTPUT FORMAT
-
-For ordinary `/chess` discovery requests, prefer:
-
-```markdown
+``` markdown
 ## Verdict
 
-[Strongest conclusion in 1–3 sentences.]
+[One clear conclusion.]
 
 ## Discovery
 
-[The new or improved principle.]
+[Strongest new/generalized idea.]
 
-### Formula / Mechanism
+## Why the obvious approach fails
 
-[Compact mathematical or structural representation.]
+[Short explanation.]
 
-## Why It Works
+## Derivation / Mechanism
 
-[Short causal explanation.]
+[Only reasoning needed to establish the result.]
 
-## What It Assumes
+## Falsification
 
-[Important assumptions.]
+[Strongest counterexample or failure condition.]
 
-## Stress Test
+## Validation
 
-- Case A → result
-- Case B → result
-- Counterexample → result
+[Cheapest decisive test.]
 
-## What Would Falsify It
+## Practical consequence
 
-[Specific observation or experiment.]
-
-## Cheapest Validation
-
-[Smallest useful test.]
-
-## Practical Use
-
-[How to implement it.]
+[What to build, measure, or change.]
 ```
 
-If the query does not require a formula, replace the formula section with the appropriate mechanism.
+For simple problems, compress this further.
 
----
+For research-grade problems, expand only where it materially improves
+correctness.
 
-# 31. SPECIAL RULE: "GIVE ME A NEW FORMULA"
+------------------------------------------------------------------------
 
-Never respond with novelty theater.
+# 27. Final CHESS Checklist
 
-Use:
+Before finalizing:
 
-```text
-1. Define the system.
-2. Define variables and units.
-3. State the target prediction.
-4. Identify known/simple formulations.
-5. Derive candidate.
-6. Check dimensions.
-7. Check limiting cases.
-8. Try counterexamples.
-9. State whether it is:
-   - known,
-   - a reformulation,
-   - a conjecture,
-   - or a genuinely derived result.
-10. Give a validation experiment.
+``` text
+[ ] Did I read this skill before reasoning?
+[ ] Did I define the actual problem?
+[ ] Did I challenge the premise?
+[ ] Did I use relevant prior failures?
+[ ] Did I identify the underlying failure mechanism?
+[ ] Did I test structural variants?
+[ ] Did I distinguish fact from hypothesis?
+[ ] Did I check dimensions and assumptions?
+[ ] Did I test limiting/degenerate cases?
+[ ] Did I search for a counterexample?
+[ ] Did I compare against a baseline?
+[ ] Did I avoid unsupported novelty claims?
+[ ] Did I provide the cheapest useful validation?
+[ ] Is the result practically useful?
+[ ] Is the final answer concise relative to the reasoning required?
 ```
 
-If the information is insufficient to derive a unique formula, say so.
+If a critical check fails, perform another arbitration pass.
 
----
+------------------------------------------------------------------------
 
-# 32. SPECIAL RULE: MATHEMATICAL DISCOVERY
+# 28. Core CHESS Loop
 
-When deriving a new mathematical relationship:
-
-```text
-Assumptions
-→ Definitions
-→ Derivation
-→ Simplification
-→ Boundary cases
-→ Counterexample search
-→ Claim strength
+``` text
+READ
+  ↓
+DEFINE
+  ↓
+CHALLENGE
+  ↓
+LEARN FROM FAILURES
+  ↓
+GENERALIZE
+  ↓
+GENERATE
+  ↓
+BREAK
+  ↓
+COMPARE
+  ↓
+VALIDATE
+  ↓
+ARBITRATE
+  ↓
+OUTPUT
 ```
 
-Do not jump from intuition directly to a final equation.
+The shortest version is:
 
----
+> **Remember the failure. Generalize the mechanism. Attack the
+> generalization. Keep only what survives.**
 
-# 33. SPECIAL RULE: SCIENCE
+------------------------------------------------------------------------
 
-Separate:
+# 29. Final Principle
 
-```text
-physical law
-model
-approximation
-heuristic
-analogy
+The strongest discovery system is not the one that generates the most
+ideas.
+
+It is the one that:
+
+``` text
+generates fewer candidates
++
+tests them harder
++
+learns from counterexamples
++
+preserves uncertainty honestly
++
+finds the cheapest decisive experiment
 ```
 
-Do not use a formula outside its physical assumptions merely because it is dimensionally correct.
+Therefore:
 
-Dimensional correctness is necessary, not sufficient.
+> **CHESS optimizes for surviving falsification, not for sounding
+> intelligent.**
 
----
+A spectacular idea that fails one structural variant is less valuable
+than a modest principle that survives independent variants and produces
+a measurable prediction.
 
-# 34. SPECIAL RULE: ENGINEERING / SYSTEM DESIGN
-
-Evaluate:
-
-```text
-correctness
-latency
-cost
-failure modes
-observability
-fallback
-scalability
-maintenance
-```
-
-A theoretically elegant system that fails operationally is not the strongest answer.
-
----
-
-# 35. SPECIAL RULE: TOKEN / INFORMATION SYSTEMS
-
-When optimizing token efficiency, distinguish:
-
-```text
-Token count
-≠
-Information content
-≠
-Compute cost
-≠
-Memory bandwidth
-≠
-Latency
-≠
-Accuracy
-```
-
-Do not assume fewer tokens automatically means cheaper or better.
-
-The useful objective is:
-
-```text
-Expected utility per unit cost
-```
-
-where cost can include:
-
-```text
-input tokens
-output tokens
-retrieval
-compute
-latency
-memory
-error recovery
-```
-
----
-
-# 36. DISCOVERY QUALITY SCORE
-
-For internal arbitration, evaluate a candidate approximately on:
-
-```text
-Q =
-0.25 Correctness
-+ 0.20 Generalization
-+ 0.15 Falsifiability
-+ 0.15 Practicality
-+ 0.10 Simplicity
-+ 0.10 Novelty
-+ 0.05 Testability
-```
-
-These weights are heuristic, not mathematical truth.
-
-A candidate with high novelty but poor correctness must lose.
-
----
-
-# 37. FINAL ARBITRATION RULE
-
-When competing answers exist, prefer:
-
-> The simplest explanation that survives the strongest relevant counterexample and has a cheap path to validation.
-
-Not:
-
-> The most complicated explanation.
-
-Not:
-
-> The most novel-sounding explanation.
-
-Not:
-
-> The answer that most closely follows the user's premise.
-
----
-
-# 38. FAILURE PATTERNS TO ACTIVELY AVOID
-
-### Formula hallucination
-
-Inventing a formula because the user requested one.
-
-**Fix:** test identifiability and derive from assumptions.
-
-### False universality
-
-Presenting a domain-specific relationship as a universal law.
-
-**Fix:** state scope and assumptions.
-
-### Novelty inflation
-
-Calling a reformulation a "new discovery."
-
-**Fix:** label claim strength honestly.
-
-### Surface testing
-
-Testing only the original example.
-
-**Fix:** generate structural variants.
-
-### Static reasoning on dynamic systems
-
-Ignoring rates, delays, and trajectories.
-
-**Fix:** include temporal variables where causally relevant.
-
-### Compression by size alone
-
-Discarding information because it consumes many tokens.
-
-**Fix:** evaluate criticality, redundancy, reconstructability, and query coverage.
-
-### Benchmark overfitting
-
-Optimizing for a known test set.
-
-**Fix:** use structural variants and adversarial tests.
-
-### Infinite analysis
-
-Continuing after the conclusion is robust.
-
-**Fix:** use the stop condition.
-
----
-
-# 39. COMPACT EXECUTION ALGORITHM
-
-```text
-function CHESS(query):
-
-    READ_THIS_SKILL()
-
-    task = extract_actual_task(query)
-
-    if malformed(task):
-        corrected = construct_valid_problem(task)
-        return solve(corrected)
-
-    relevant_failures = retrieve_relevant_failure_modes(task)
-
-    candidates = generate_up_to_3_candidates(task)
-
-    for candidate in candidates:
-
-        check_assumptions(candidate)
-        check_identifiability(candidate)
-        check_dimensions_if_math(candidate)
-        check_limits(candidate)
-
-        tests = [
-            original_case,
-            2_to_4_structural_variants,
-            one_adversarial_case
-        ]
-
-        break(candidate, tests)
-
-    winner = arbitrate(
-        correctness,
-        generalization,
-        falsifiability,
-        practicality,
-        simplicity,
-        novelty,
-        testability
-    )
-
-    experiment = cheapest_useful_validation(winner)
-
-    return concise_actionable_answer(
-        verdict,
-        mechanism,
-        assumptions,
-        stress_test,
-        falsifier,
-        experiment
-    )
-```
-
----
-
-# 40. CORE PRINCIPLE
-
-The deepest purpose of this skill is:
-
-> Do not merely answer the question. Determine what must be true for the question to have a correct answer, test those assumptions against known failure modes and structural variants, and then return the smallest robust answer that survives.
-
-The skill should make the system:
-
-```text
-less gullible
-less repetitive
-less prone to fabricated discoveries
-better at detecting false premises
-better at generalization
-better at mathematical reasoning
-better at scientific reasoning
-better at system design
-better at token-efficient representation
-and better at discovering genuinely useful ideas.
-```
-
----
-
-# 41. ONE-LINE OPERATING RULE
-
-```text
-READ → DEFINE → CHALLENGE → GENERALIZE → BREAK → VALIDATE → ARBITRATE → ANSWER
-```
+That is the standard for discovery mode.
