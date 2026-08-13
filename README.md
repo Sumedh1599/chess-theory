@@ -31,6 +31,7 @@
 - [Supported Agents](#supported-agents)
 - [Benchmarks](#benchmarks)
 - [Why It Works](#why-it-works)
+- [Claude skill (research paper)](#claude-skill-research-paper)
 - [Project Structure](#project-structure)
 - [Comparison](#comparison)
 - [FAQ](#faq)
@@ -345,6 +346,19 @@ Real session data from beta testing:
 
 ---
 
+## Claude skill (research paper)
+
+The publishable Claude Code skill package lives in [`chess/`](chess/) — three-seat Hindsight / Foresight / Present arbitration with ELBO, examples, Python demos, and [`chess/research_paper.pdf`](chess/research_paper.pdf).
+
+```bash
+cd chess && bash install.sh
+# then type /chess in Claude Code
+```
+
+See [`chess/README.md`](chess/README.md) for install options, commands, and screenshots.
+
+---
+
 ## Project Structure
 
 ```text
@@ -357,6 +371,14 @@ chess-theory/
 ├── LICENSE                      # MIT License
 ├── package.json                 # npm metadata and scripts
 ├── .gitignore                   # Node.js + macOS standard
+│
+├── chess/                       # Claude Code skill (research CHESS package)
+│   ├── SKILL.md                 # Agent skill frontmatter + protocol
+│   ├── research_paper.pdf       # Strategic Self-Arbitration paper
+│   ├── install.sh               # Skill installer
+│   ├── assets/                  # Banner + architecture diagram
+│   ├── examples/                # Worked examples + demos
+│   └── src/                     # Python reference implementation
 │
 ├── .cursor/
 │   └── rules/
