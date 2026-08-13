@@ -2,7 +2,7 @@
 CHESS: Calibrated Hindsight-Foresight Ensemble for Strategic Self-Arbitration
 Core implementation of the three-seat meta-cognitive architecture.
 
-Reference: Patil, S. (2025). Strategic Self-Arbitration in LLM Agents.
+Reference: Patil, S. (2026). "Strategic Self-Arbitration in LLM Agents: A Three-Seat Architecture Grounded in Chess-Theoretic Decision-Making."
 """
 
 import numpy as np
