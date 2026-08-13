@@ -2,11 +2,12 @@
   <img src="assets/banner.png" alt="CHESS — Calibrated Hindsight-Foresight Ensemble" width="100%" />
 </p>
 
-<h1 align="center">CHESS</h1>
+<h1 align="center">Chess Theory Research Paper with Claude Skill as Implementation</h1>
 <p align="center">
   <b>Calibrated Hindsight–Foresight Ensemble for Strategic Self-Arbitration</b><br>
-  A Claude skill that runs a three-seat meta-cognitive pipeline before every response.
+  A Claude skill that makes AI think before it speaks.
 </p>
+
 
 <p align="center">
   <a href="https://github.com/Sumedh1599/chess-theory/stargazers"><img src="https://img.shields.io/github/stars/Sumedh1599/chess-theory?style=flat&color=yellow" alt="GitHub Stars"></a>
@@ -19,17 +20,20 @@
 
 ## Theory
 
-Every reply an LLM agent produces is a *move*: it occupies a position defined by prior interaction, weighs candidate continuations, and commits to one. Two questions recur—what does history say to avoid, and what do forward consequences favor?—and they often disagree.
+> *A square table is set with two players seated opposite one another: an opponent, and our player. Our player is not alone, though. To their left sits their own past self; to their right, their own future self.*
+>
+> *The past self has already lived through this game once. It knows which lines led to mistakes and can say, in effect, that a particular idea has been tried before, that it cost material, and that it should not be repeated.*
+>
+> *The future self has not yet acted, but it can calculate: given the position, which continuations are open, and where do they lead?*
+>
+> *The present self, the one actually holding the piece, has to listen to both without becoming captive to either. Lean too far on hindsight and you get a player who refuses anything that once went wrong, even once the position has changed beyond recognition. Lean too far on foresight and you get a player who calculates beautifully in the abstract but repeats mistakes the past self already paid for.*
+>
+> *Winning means the present self arbitrates: weighing memory against calculation, then committing to one move.*
+>
+> — Patil, S. (2026). *Strategic Self-Arbitration in LLM Agents*
 
-**CHESS** treats that disagreement as a first-class problem. A **Present Self** arbitrates between a **Hindsight Self** (compressed lessons from prior turns) and a **Foresight Self** (scored candidate continuations), using variational inference (ELBO) to select a single action. Influence weights (`w_h`, `w_f`) track adviser reliability; they are not static token budgets.
+> Read full research paper [`research_paper.pdf`](research_paper.pdf) 
 
-This framing is developed in:
-
-> Patil, S. (2026). **[Strategic Self-Arbitration in LLM Agents: A Three-Seat Architecture Grounded in Chess-Theoretic Decision-Making](research_paper.pdf).**
-
-Pilot results (three open-source models): **H2** (hindsight injection) +0.56 to +0.62 uplift, *p* < .001; **H3** (variational arbitration) beats greedy by 48–80pp and fixed-weight by 10–50pp; **H1** (positional retrieval) mixed.
-
----
 
 ## What This Skill Does
 
@@ -230,3 +234,7 @@ Worked conflict examples (markdown): [`examples/ambiguity.md`](examples/ambiguit
 ## License
 
 MIT — see [`LICENSE`](LICENSE).
+
+## Star this repo 
+
+Chess theory finds the right approach and leads to goal with accuracy.
