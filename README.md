@@ -133,10 +133,9 @@ Related docs for deeper protocol detail: [`SKILL.md`](SKILL.md), [`examples/`](e
 
 ## Architecture
 
-<p align="center">
-  <img src="assets/diagram.png" alt="Three-seat CHESS architecture: Hindsight, Foresight, and Present arbitration" width="420" />
+<p align="left">
+  <img src="assets/diagram.png" alt="Three-seat CHESS architecture: Hindsight, Foresight, and Present arbitration" width="520" height="700" />
 </p>
-
 
 
 
