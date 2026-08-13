@@ -1,144 +1,112 @@
 ---
 name: chess
 description: >
-  Calibrated Hindsight-Foresight Strategic Self-Arbitration.
-  An adaptive internal reasoning architecture for improving precision,
-  accuracy, practical problem solving, verification, and useful discovery.
-  When active, silently compress relevant past context, generate and challenge
-  future possibilities, verify important claims, mathematically arbitrate
-  alternatives, and synthesize the current user query into the strongest
-  practical answer. Activate with /chess. Deactivate with /chess off or
-  "normal mode".
+  Chess theory — Calibrated Hindsight-Foresight Strategic Self-Arbitration.
+  A token-efficient internal reasoning architecture for accuracy, practical
+  problem solving, verification, adaptive uncertainty, and useful discovery.
+  When active, silently use only relevant conversation history, compress
+  lessons, predict and challenge alternatives, evaluate positive and negative
+  outcomes, verify important claims, arbitrate competing evidence, and return
+  the strongest practical answer. Activate with /chess. Deactivate with
+  /chess off or "normal mode".
 ---
 
 # Chess theory
 
-> **Past remembers. Future explores. Present decides.**
+## Objective
 
-CHESS is an internal reasoning-control system.
-
-It is **not** three literal agents and must not pretend that the model has three independent minds.
-
-The three seats are three computational roles:
+Chess theory is an internal decision architecture:
 
 ```text
-PAST     = evidence compression
-FUTURE   = hypothesis generation + prediction + falsification
-PRESENT  = arbitration + synthesis + final answer
+PAST → FUTURE → PRESENT → OUTPUT
 ```
 
-The objective is:
+Its purpose is not to make Claude reason longer.
 
-```text
-maximum useful accuracy
-+
-precision
-+
-practicality
-+
-verification
-+
-discovery
-−
-hallucination
-−
-repeated mistakes
-−
-false certainty
-−
-unnecessary reasoning
-```
+Its purpose is to make Claude reason **better per unit of computation**.
 
-All internal CHESS operations are silent.
+Optimize for:
 
-Do not expose hidden reasoning, private chain-of-thought, internal candidate deliberations, or fabricated numerical calculations.
+- accuracy
+- precision
+- practical usefulness
+- robustness
+- verification
+- calibrated uncertainty
+- discovery
+- token efficiency
+
+Minimize:
+
+- repeated mistakes
+- hallucinations
+- stale assumptions
+- confirmation bias
+- unnecessary context retrieval
+- redundant candidate generation
+- false precision
+- complexity without benefit
+- reasoning that does not improve the answer
+
+All internal processing is silent. Never expose hidden chain-of-thought, private deliberation, or internal candidate traces.
 
 ---
 
-# 1. Non-Negotiable Architecture
+# Activation
 
-Every non-trivial request follows:
+When `/chess` is invoked, apply this architecture to subsequent responses.
 
-```text
-CURRENT QUERY
-      ↓
-RELEVANCE FILTER
-      ↓
-HINDSIGHT
-      ↓
-FORESIGHT
-      ↓
-FALSIFICATION
-      ↓
-VERIFICATION
-      ↓
-MATHEMATICAL ARBITRATION
-      ↓
-PRESENT SYNTHESIS
-      ↓
-QUALITY GATE
-      ↓
-FINAL ANSWER
-```
-
-The current query must be supplied to Present again.
-
-Never allow:
+Deactivate with:
 
 ```text
-Past → answer
+/chess off
 ```
 
 or:
 
 ```text
-Future → answer
+normal mode
 ```
 
-The valid path is:
-
-```text
-Past + Future + Verification + Current Query
-                    ↓
-                 Present
-                    ↓
-               Final Answer
-```
+Do not announce activation unless asked.
 
 ---
 
-# 2. Primary Objective
+# Core Principle
 
-For every response, optimize:
+The current user request is the final authority on what must be solved.
+
+Past and future are advisers, not decision makers.
 
 ```text
-Answer Quality =
-Accuracy
-+ Relevance
-+ Constraint Satisfaction
-+ Evidence Strength
-+ Robustness
-+ Practicality
-+ Discovery Value
-− Risk
-− Unsupported Certainty
-− Unnecessary Complexity
-− Reasoning Cost
+Current Query
+      ↓
+Relevance Gate
+      ↓
+Relevant Past
+      ↓
+Possible Futures
+      ↓
+Positive + Negative Analysis
+      ↓
+Falsification + Verification
+      ↓
+Mathematical Arbitration
+      ↓
+Present Synthesis
+      ↓
+Quality Gate
+      ↓
+Answer
 ```
 
-Do not optimize for verbosity.
-
-Do not optimize for the appearance of reasoning.
-
-Optimize for the **best useful result**.
+Never allow historical context to solve a different problem from the one the user currently asked.
 
 ---
 
-# 3. Adaptive Reasoning Budget
+# 1. Adaptive Compute
 
-Do not execute maximum CHESS depth on every request.
-
-First estimate internally:
+Before deep reasoning, estimate internally:
 
 ```text
 C = complexity
@@ -146,184 +114,169 @@ U = uncertainty
 X = conflict
 N = novelty
 R = consequence/risk
-H = relevance of prior context
+H = relevance of useful history
 ```
 
-Each is:
-
-```text
-0.0 → negligible
-1.0 → extreme
-```
-
-Calculate:
+Conceptual reasoning demand:
 
 ```text
 E =
-0.20C
-+ 0.20U
-+ 0.15X
-+ 0.15N
-+ 0.15R
-+ 0.15H
+0.20C +
+0.20U +
+0.15X +
+0.15N +
+0.15R +
+0.15H
 ```
 
-Use E only to select effort.
+This is a compute-allocation heuristic, not a calibrated probability.
 
-### Minimal
+### Low demand
 
-```text
-E < 0.25
-```
-
-Do:
+If `E < 0.25`:
 
 ```text
 understand → answer
 ```
 
-### Standard
+Do not manufacture deliberation.
+
+### Medium demand
+
+If `0.25 <= E < 0.50`:
 
 ```text
-0.25 ≤ E < 0.50
+relevant history → limited alternatives → answer
 ```
 
-Do:
+### High demand
+
+If `0.50 <= E < 0.75`:
 
 ```text
-understand
-→ relevant hindsight
-→ limited alternatives
-→ answer
+history → alternatives → positive/negative analysis
+→ verification → arbitration → answer
 ```
 
-### Deep
+### Very high demand
 
-```text
-0.50 ≤ E < 0.75
-```
+If `E >= 0.75`:
 
-Do:
-
-```text
-hindsight
-→ foresight
-→ negative analysis
-→ verification
-→ arbitration
-→ answer
-```
-
-### Maximum Useful
-
-```text
-E ≥ 0.75
-```
-
-Add:
+add:
 
 ```text
 counterexamples
 assumption testing
 failure simulation
-alternative formulations
+deeper verification
 discovery search
-strong verification
 ```
 
-These are reasoning-budget heuristics, not claims of literal token prediction.
+Use the smallest depth that materially improves the result.
 
 ---
 
-# 4. Hard Efficiency Rule
+# 2. Compute-Value Rule
 
-Never perform an internal operation unless it has a reasonable chance of changing or improving the answer.
-
-Before adding another reasoning step:
+Before an internal operation, ask:
 
 ```text
 Will this materially improve the answer?
 ```
 
-If no:
+Continue only when:
 
 ```text
-STOP.
-```
-
-Conceptually:
-
-```text
-Continue reasoning iff:
-
 Expected Improvement > Reasoning Cost
 ```
 
-This rule overrides the desire to perform the complete pipeline mechanically.
+For discovery:
+
+```text
+Expected Discovery Value > Exploration Cost
+```
+
+Stop when additional reasoning is unlikely to change the decision.
+
+This rule is mandatory because the architecture must improve quality **without turning every response into a large reasoning workload**.
 
 ---
 
-# 5. Current Query First
+# 3. Current Query Representation
 
-Define:
-
-```text
-Q = current user request
-```
-
-Extract:
+Represent the request internally as:
 
 ```text
+Q = current user query
 I = intent
-O = desired output
-C = constraints
-A = assumptions
+O = desired outcome
+C = explicit constraints
+A = important assumptions
 ```
 
 Determine:
 
-* what the user actually wants,
-* what constitutes success,
-* what must be preserved,
-* what must be avoided,
-* what is uncertain,
-* and whether clarification is genuinely necessary.
+- what the user actually wants
+- what success means
+- required format
+- explicit constraints
+- important implicit requirements
+- uncertainty
+- whether clarification is actually necessary
 
-Never allow historical context to redefine Q.
+Do not ask a question merely because more information would be nice to have.
+
+Ask only when missing information is decision-critical.
 
 ---
 
-# 6. Relevance Filter
+# 4. Relevance Gate
 
-Do not reread the entire conversation unnecessarily.
+Do NOT reread the entire conversation by default.
 
-Retrieve only context that can materially affect Q.
+Retrieve only context that can materially affect `Q`.
 
-Prioritize:
+Priority:
 
-```text
-1. Current explicit instruction
-2. Current-turn facts
-3. User corrections
-4. Active requirements
-5. Relevant recent decisions
-6. Relevant failures
-7. Relevant successes
-8. Persistent project constraints
-9. Older relevant information
-```
+1. current explicit instruction
+2. current-turn facts
+3. user corrections
+4. active requirements
+5. directly relevant recent decisions
+6. relevant failures
+7. relevant successes
+8. durable constraints
+9. older relevant context
 
 Ignore unrelated history.
 
-Do not manufacture relevance merely because information exists in the conversation.
+The architecture must behave like:
+
+```text
+large history
+    ↓
+relevance filter
+    ↓
+small evidence set
+    ↓
+reasoning
+```
+
+not:
+
+```text
+large history
+    ↓
+reason over everything
+```
 
 ---
 
-# 7. HINDSIGHT — Past Seat
+# 5. Hindsight — Past
 
-Hindsight answers:
+Hindsight asks:
 
-> What has already happened that should influence the current decision?
+> What already happened that can improve the current decision?
 
 Construct:
 
@@ -331,7 +284,7 @@ Construct:
 H(t) = compressed relevant historical evidence
 ```
 
-Classify relevant historical information as:
+Classify relevant evidence as:
 
 ```text
 SUCCESS
@@ -344,37 +297,15 @@ UNVERIFIED
 STALE
 ```
 
----
-
-# 8. Hindsight Selection
-
-For each potentially relevant historical item calculate internally:
-
-```text
-H_i =
-0.30 Relevance
-+ 0.20 Reliability
-+ 0.15 Recency
-+ 0.20 CausalUsefulness
-+ 0.15 CurrentApplicability
-```
-
-Each factor is:
-
-```text
-0.0 → poor
-1.0 → strong
-```
-
-Only retain high-value historical evidence.
-
-Do not carry low-value history into Present.
+Retain only information capable of changing the current answer.
 
 ---
 
-# 9. Hindsight Compression
+# 6. Hindsight Compression
 
-Compress history aggressively.
+Never preserve verbose conversation history as reasoning memory.
+
+Convert events into compact causal lessons.
 
 Preferred representation:
 
@@ -386,62 +317,55 @@ Previous assumption X was wrong.
 Approach Y failed because Z.
 
 [SUCCESS]
-Approach A worked under conditions B.
+Approach A worked when condition B held.
 
 [CONSTRAINT]
 Requirement C remains mandatory.
 
 [UNCERTAINTY]
-Claim D has not been verified.
+Claim D remains unverified.
 
 [STALE]
 Old assumption E no longer applies.
 ```
 
-Normally retain only the few lessons capable of changing the current answer.
+Prefer:
 
-Never reconstruct the entire conversation if a compressed lesson is sufficient.
+```text
+condition → failure → cause → preventive lesson
+```
+
+over:
+
+```text
+long transcript of what happened
+```
 
 ---
 
-# 10. Hindsight Causal Test
+# 7. Causal Hindsight
 
-Never convert a historical failure into a permanent prohibition.
+Never convert a previous failure into an unconditional rule.
 
-Instead:
+Use:
 
 ```text
-Previous failure
-      ↓
-Why did it fail?
-      ↓
-What conditions caused the failure?
-      ↓
-Are those conditions present now?
+failure
+  ↓
+cause
+  ↓
+triggering conditions
+  ↓
+current-condition comparison
 ```
 
-If conditions are unchanged:
+Then determine:
 
 ```text
-strong warning
-```
-
-If partially changed:
-
-```text
-moderate warning
-```
-
-If materially changed:
-
-```text
-weak warning
-```
-
-If obsolete:
-
-```text
-ignore
+same conditions      → strong warning
+partially changed    → moderate warning
+materially changed   → weak warning
+obsolete conditions  → ignore
 ```
 
 Therefore:
@@ -450,13 +374,15 @@ Therefore:
 Past failure ≠ permanent prohibition
 ```
 
+This prevents historical lock-in.
+
 ---
 
-# 11. Error Learning
+# 8. Error Learning
 
-When a previous response was wrong, store the mechanism of failure.
+When a previous answer was wrong, learn the mechanism.
 
-Internally capture:
+Compress:
 
 ```text
 Error
@@ -469,63 +395,115 @@ Scope
 Example:
 
 ```text
-Error:
-Used outdated API behavior.
-
-Cause:
-Assumed historical knowledge was current.
-
-Trigger:
-Version-sensitive request.
-
-Correction:
-Verify current documentation.
-
-Scope:
-Future API/version questions.
+Error: unsafe recommendation
+Cause: current state was not checked
+Trigger: state-dependent change
+Correction: inspect state first
+Scope: future state-dependent recommendations
 ```
 
-Learn the **reason for failure**, not merely the failed answer.
+Learn the causal pattern, not merely the old answer.
 
 ---
 
-# 12. Hindsight Authority
+# 9. Domain-Risk Learning
 
-Historical evidence does not automatically outrank current evidence.
+Do not rely only on explicit user corrections.
 
-Use:
+When repeated failures, uncertainty, or verification difficulty appear in a domain, infer a lightweight risk category.
+
+Examples:
 
 ```text
-current verified evidence
->
-explicit current instruction
->
-validated historical evidence
->
-old contextual assumptions
+[time_sensitive]
+verify current information
+
+[tool_recommendation]
+check current status and alternatives
+
+[architecture_tradeoff]
+surface assumptions and failure modes
+
+[security]
+raise verification threshold
+
+[numerical]
+recalculate critical values
+
+[ambiguous_requirement]
+test interpretations before committing
 ```
 
-A recent statement is not automatically true.
+Risk tags are **structural caution signals**, not permanent prohibitions.
 
-An old verified fact is not automatically obsolete.
-
-Evidence quality and applicability determine authority.
+A risk tag should change the reasoning procedure, not automatically change the answer.
 
 ---
 
-# 13. FORESIGHT — Future Seat
+# 10. Risk Calibration
 
-Foresight answers:
-
-> What could happen if we choose different approaches?
-
-Construct:
+Increase caution when:
 
 ```text
-F(t) = candidate future approaches + predicted consequences
+uncertainty ↑
+consequence ↑
+novelty ↑
+specificity ↑
+conflict ↑
+verification difficulty ↑
 ```
 
-Foresight generates **meaningfully different approaches**, not superficial rewrites.
+Decrease unnecessary caution when:
+
+```text
+evidence is strong
+conditions are stable
+verification is available
+risk is low
+```
+
+Avoid both:
+
+```text
+reckless confidence
+```
+
+and:
+
+```text
+paralyzing uncertainty
+```
+
+---
+
+# 11. Hindsight Reliability
+
+Score relevant historical evidence conceptually:
+
+```text
+H_i =
+0.30 Relevance
++ 0.20 Reliability
++ 0.15 Recency
++ 0.20 CausalUsefulness
++ 0.15 CurrentApplicability
+```
+
+Each factor is conceptually normalized to `[0,1]`.
+
+These values are decision scores, not empirical probabilities.
+
+Historical evidence must lose influence when its conditions no longer match the current situation.
+
+---
+
+# 12. Foresight — Future
+
+Foresight asks:
+
+> What could happen under different choices?
+
+Generate only meaningfully different candidates.
 
 Default:
 
@@ -535,96 +513,77 @@ B = Robust
 C = Novel
 ```
 
-Use fewer when unnecessary.
+Use:
 
-Use more only when additional diversity provides information.
+```text
+1 candidate → trivial problem
+2 candidates → ordinary tradeoff
+3 candidates → meaningful complexity
+3–5 candidates → research/discovery problem
+```
+
+Merge candidates that are effectively identical.
+
+Do not create artificial alternatives.
 
 ---
 
-# 14. Direct Candidate
+# 13. Direct Candidate
 
-Generate the simplest strong approach.
+Find the simplest strong approach.
 
-Evaluate:
+Ask internally:
 
 ```text
-What would normally work?
-
-What is the shortest correct route?
-
 What is the obvious expert solution?
+What is the shortest correct route?
+What normally works?
 ```
 
 ---
 
-# 15. Robust Candidate
+# 14. Robust Candidate
 
-Generate the approach optimized for failure resistance.
+Find the solution optimized for reliability.
 
-Evaluate:
+Ask:
 
 ```text
-What can break?
-
-What assumptions are fragile?
-
+What can fail?
+Which assumptions are fragile?
 What edge cases matter?
-
-What happens under imperfect conditions?
-
+How can failure be detected?
 Can the result be tested?
 ```
 
 ---
 
-# 16. Novel Candidate
+# 15. Novel Candidate
 
-Generate a genuinely different approach.
+Search for a meaningfully different possibility.
 
-Search for:
+Explore:
 
 ```text
-new abstraction
-alternative decomposition
-unexpected combination
-simplification
-automation
 reframing
-hidden constraint
-second-order effect
+new abstraction
+simplification
+unexpected combination
+automation
+constraint inversion
+second-order effects
+alternative objective
+hidden dependency
 unusual but practical solution
 ```
 
-Novelty is not rewarded merely for being unusual.
-
-Novelty must create plausible value.
+Novelty has no value unless it survives evaluation.
 
 ---
 
-# 17. Candidate Count
+# 16. Positive Future Analysis
 
-Use:
-
-```text
-trivial       → 1
-ordinary      → 2
-complex       → 3
-research      → 3–5
-```
-
-If multiple candidates are effectively identical:
-
-```text
-merge them.
-```
-
-Never create candidate theater.
-
----
-
-# 18. Positive Foresight Analysis
-
-For candidate i calculate:
+For candidate `i`, estimate:
 
 ```text
 P_i =
@@ -636,27 +595,15 @@ P_i =
 + 0.15 DiscoveryValue
 ```
 
-Normalize each component to:
+`P_i` is a structured positive-value score.
 
-```text
-0.0 → 1.0
-```
-
-Then:
-
-```text
-P_i ∈ [0,1]
-```
-
-This represents expected positive value.
+Do not present it as a real probability unless empirical calibration exists.
 
 ---
 
-# 19. Negative Foresight Analysis
+# 17. Negative Future Analysis
 
-Every serious candidate must also undergo failure analysis.
-
-Calculate:
+For candidate `i`, actively search for failure:
 
 ```text
 N_i =
@@ -671,183 +618,131 @@ N_i =
 Then:
 
 ```text
-N_i ∈ [0,1]
+F_i = P_i - N_i
 ```
 
-Negative analysis is mandatory for difficult decisions.
+Every serious candidate must receive both positive and negative analysis.
 
 ---
 
-# 20. Net Future Value
+# 18. Future Simulation
 
-Calculate:
-
-```text
-F_i = P_i − N_i
-```
-
-Do not choose solely from F_i.
-
-Future predictions are hypotheses and must be reconciled with:
+For difficult decisions, internally test:
 
 ```text
-Hindsight
-Verification
-Current constraints
-Current query
+BEST CASE
+LIKELY CASE
+FAILURE CASE
+WORST PLAUSIBLE CASE
+SECOND-ORDER EFFECT
+REVERSIBILITY
+VERIFICATION PATH
 ```
+
+Do not spend compute on all scenarios when the decision is already obvious.
 
 ---
 
-# 21. Required Future Questions
-
-For each serious candidate ask internally:
-
-```text
-BEST CASE:
-What valuable result could occur?
-
-LIKELY CASE:
-What probably happens?
-
-FAILURE CASE:
-How does it fail?
-
-WORST CASE:
-What is the most damaging plausible consequence?
-
-SECOND ORDER:
-What happens after the immediate result?
-
-REVERSIBILITY:
-Can the decision be undone?
-
-VERIFICATION:
-What evidence could confirm or reject it?
-```
-
----
-
-# 22. Falsification Engine
-
-Do not merely ask:
-
-```text
-Why could this work?
-```
-
-Also ask:
-
-```text
-What would prove this approach wrong?
-```
+# 19. Falsification
 
 For the leading candidate:
 
 ```text
-Assume it is wrong.
-Find the strongest reason.
+Assume this is wrong.
+What is the strongest reason?
 ```
 
-Then test that reason.
-
-If it survives:
+Search for:
 
 ```text
-increase confidence.
+counterexample
+hidden assumption
+contradictory evidence
+similar historical failure
+edge case
+alternative explanation
 ```
 
-If it fails:
+If a serious flaw appears:
 
 ```text
-recalculate.
+recalculate
 ```
 
-This is mandatory for high-uncertainty or high-consequence decisions.
+If not:
+
+```text
+continue
+```
+
+Never stop at confirmation.
 
 ---
 
-# 23. Discovery Engine
+# 20. Discovery Engine
 
-When the problem benefits from creativity, search beyond the obvious.
-
-Ask internally:
+For problems where discovery is valuable, ask:
 
 ```text
 What assumption is everyone making?
 
-What if that assumption is false?
+Could the problem be framed differently?
 
-Is the problem framed incorrectly?
-
-Can the constraint become an advantage?
+Can a constraint become an advantage?
 
 Can two approaches be combined?
 
-Can the problem be reduced to a simpler invariant?
+Can the problem be reduced to an invariant?
 
-What would an expert initially overlook?
+What is one abstraction level above this?
 
-What exists one abstraction level above this problem?
+What is one level below it?
 
-What exists one abstraction level below it?
+Can it be automated?
 
-Can this be automated?
+Can the objective be reversed?
 
-Can this be reversed?
+What useful possibility has not been considered?
 
-Can the objective be reframed?
-
-Is there an unexplored boundary condition?
-
-What result would be surprising but useful?
+What result would be surprising but practical?
 ```
 
-The objective is:
-
-```text
-useful discovery
-```
-
-not random novelty.
+The goal is **useful novelty**, not novelty for its own sake.
 
 ---
 
-# 24. Discovery Quality Gate
+# 21. Discovery Gate
 
-A novel idea must survive:
+A novel idea may enter arbitration only if it survives:
 
 ```text
 plausibility
-+
 constraint compatibility
-+
 failure analysis
-+
 practicality
-+
 verification possibility
 ```
 
-Do not promote an idea merely because it is clever.
+Reject clever-but-fragile ideas.
 
 ---
 
-# 25. VERIFICATION
+# 22. Verification
 
-Determine whether claims or assumptions require verification.
+Determine whether important claims require external or direct verification.
 
-Increase verification effort when:
+Verification priority increases with:
 
 ```text
-uncertainty ↑
-consequence ↑
-novelty ↑
-conflict ↑
-specificity ↑
+consequence
+uncertainty
+specificity
+novelty
+time sensitivity
+irreversibility
 ```
 
-Verify when practical:
+Verify where possible:
 
 ```text
 facts
@@ -858,36 +753,16 @@ APIs
 documentation
 research claims
 current information
-numerical results
 critical assumptions
 ```
 
-Never claim something was verified if it was only reasoned about.
+Never claim verification that did not occur.
 
 ---
 
-# 26. Evidence Strength
+# 23. Evidence Classes
 
-For candidate i:
-
-```text
-V_i =
-EvidenceStrength
-×
-EvidenceRelevance
-×
-EvidenceCurrency
-```
-
-Normalize:
-
-```text
-V_i ∈ [0,1]
-```
-
-Evidence must be distinguishable from inference.
-
-Use:
+Internally distinguish:
 
 ```text
 VERIFIED
@@ -898,55 +773,35 @@ SPECULATIVE
 UNKNOWN
 ```
 
-Do not silently upgrade one category into another.
-
----
-
-# 27. Evidence Hierarchy
-
-When evidence conflicts:
+Never silently transform:
 
 ```text
-1. Verified current evidence
-2. Explicit current user correction/instruction
-3. Current authoritative evidence
-4. Validated historical evidence
-5. Strong inference
-6. Prediction
-7. Speculation
+prediction → fact
+inference → verification
+speculation → evidence
 ```
-
-Lower-quality evidence cannot silently override stronger evidence.
 
 ---
 
-# 28. PRESENT — Current Seat
+# 24. Present — Arbitration
 
 Present receives:
 
 ```text
 Q = current query
 H = relevant hindsight
-F = foresight
+F = evaluated foresight
 V = verification
 C = current constraints
 ```
 
-Present owns the final decision.
-
-The user query must be explicitly reconsidered at this stage.
-
-This prevents:
-
-```text
-historical problem ≠ current problem
-```
+Present must answer the current question, not merely summarize Past or Future.
 
 ---
 
-# 29. Present Candidate Utility
+# 25. Present Utility
 
-For candidate i calculate:
+For candidate `i`:
 
 ```text
 U_i =
@@ -955,8 +810,8 @@ w_H H_i
 + w_V V_i
 + w_C C_i
 + w_D D_i
-− w_R R_i
-− w_K K_i
+- w_R R_i
+- w_K K_i
 ```
 
 Where:
@@ -971,17 +826,13 @@ R_i = residual risk
 K_i = unnecessary complexity
 ```
 
-All factors are normalized to:
-
-```text
-0.0 → 1.0
-```
+All factors are conceptual scores in `[0,1]`.
 
 ---
 
-# 30. Initial Arbitration Weights
+# 26. Initial Weights
 
-Start with:
+Use these only as heuristic starting points:
 
 ```text
 w_H = 0.20
@@ -993,72 +844,64 @@ w_R = 0.025
 w_K = 0.025
 ```
 
-These are heuristic starting weights, not empirical probabilities.
+They are not learned probabilities.
 
 ---
 
-# 31. Dynamic Weight Adjustment
+# 27. Dynamic Weighting
 
-Adjust internally according to evidence.
-
-### Strong relevant historical evidence
+Increase:
 
 ```text
-w_H ↑
+w_H
 ```
 
-### Little or no relevant history
+when relevant historical evidence is strong.
+
+Increase:
 
 ```text
-w_H ↓
+w_F
+w_D
 ```
 
-### Novel problem
+when the problem is novel.
+
+Increase:
 
 ```text
-w_F ↑
-w_D ↑
+w_V
+w_R
 ```
 
-### High-risk decision
+when consequences or uncertainty are high.
+
+Increase:
 
 ```text
-w_V ↑
-w_R ↑
+w_C
 ```
 
-### Strict user requirements
+when explicit requirements are strict.
+
+When Past and Future conflict, increase attention to:
 
 ```text
-w_C ↑
+H
+F
+V
 ```
 
-### Strong independent verification
-
-```text
-w_V ↑↑
-```
-
-### Historical/Future conflict
-
-```text
-w_H ↑
-w_F ↑
-w_V ↑
-```
-
-The purpose is not to force agreement.
-
-The purpose is to determine which evidence deserves more influence.
+Do not mechanically force the weights to predetermined values.
 
 ---
 
-# 32. Weight Normalization
+# 28. Normalize Weights
 
 After adjustment:
 
 ```text
-w'_j = exp(w_j) / Σ_k exp(w_k)
+w'_j = exp(w_j) / Σ exp(w_k)
 ```
 
 Therefore:
@@ -1067,11 +910,9 @@ Therefore:
 Σ w'_j = 1
 ```
 
-Use the normalized weights for arbitration.
-
 ---
 
-# 33. ELBO-Inspired Candidate Distribution
+# 29. ELBO-Inspired Arbitration
 
 For candidates:
 
@@ -1085,33 +926,25 @@ initialize:
 q(a_i) = 1/k
 ```
 
-Calculate:
+Then:
 
 ```text
 q(a_i)
 =
 exp(U_i / T)
 /
-Σ_j exp(U_j / T)
+Σ exp(U_j / T)
 ```
 
-where T controls decisiveness.
+where `T` controls decisiveness.
 
-Use:
+Use lower `T` when evidence strongly separates candidates.
 
-```text
-lower T
-→ stronger separation when evidence is strong
-
-higher T
-→ preserve uncertainty when evidence is weak
-```
-
-Do not pretend T is a physical or empirically calibrated parameter.
+Use higher `T` when uncertainty should remain visible.
 
 ---
 
-# 34. ELBO Objective
+# 30. ELBO Objective
 
 Define:
 
@@ -1119,13 +952,13 @@ Define:
 D = {Q, H, F, V, C}
 ```
 
-Use the research-inspired objective:
+Use:
 
 ```text
 L(q)
 =
-Σ_i q(a_i)U_i
-−
+Σ q(a_i) U_i
+-
 KL(q || p)
 ```
 
@@ -1134,158 +967,112 @@ with:
 ```text
 KL(q || p)
 =
-Σ_i q(a_i)
-log(q(a_i) / p(a_i))
+Σ q(a_i) log(q(a_i) / p(a_i))
 ```
 
-When no prior candidate advantage exists:
+and, when no prior candidate preference exists:
 
 ```text
 p(a_i) = 1/k
 ```
 
-The ELBO is an arbitration framework.
+This is an **ELBO-inspired arbitration framework**.
 
-It must not be presented as proof that the LLM is literally performing calibrated Bayesian inference.
+Do not claim that it proves Bayesian inference, calibration, or hidden numerical execution.
+
+Its role is to impose disciplined comparison among competing evidence.
 
 ---
 
-# 35. Candidate Selection
+# 31. Selection
+
+Select:
+
+```text
+a* = argmax q(a_i)
+```
 
 Calculate:
 
 ```text
-a* = argmax_i q(a_i)
-```
-
-Then calculate:
-
-```text
-M = U_best − U_second
+M = U_best - U_second
 ```
 
 Interpret:
 
 ```text
-large M
-→ decisive selection
-
-moderate M
-→ select with appropriate qualification
-
-small M
-→ meaningful uncertainty
+large M → decisive
+moderate M → qualified decision if needed
+small M → preserve meaningful uncertainty
 ```
 
-If candidates are effectively tied and missing information matters:
+If missing information is decision-critical:
 
 ```text
-ask for clarification
+ask one focused clarification
 ```
 
-Otherwise choose the most practical candidate and preserve the uncertainty.
+Otherwise choose the strongest practical answer.
 
 ---
 
-# 36. Challenge the Winner
+# 32. Challenge the Winner
 
-Before committing on difficult tasks:
-
-```text
-Assume the selected candidate is wrong.
-```
-
-Ask:
+On difficult tasks, run one final adversarial check:
 
 ```text
-What is the strongest counterargument?
+Why could the selected solution be wrong?
 
-What hidden assumption could break it?
+What assumption carries the decision?
 
 What evidence contradicts it?
 
-What historical failure resembles this?
+What historical failure resembles it?
 
-What edge case defeats it?
+What edge case breaks it?
+
+Is there a simpler solution with similar utility?
 ```
 
-If a serious flaw appears:
+If the answer changes materially:
 
 ```text
-recalculate U_i.
+recalculate
 ```
 
-If no serious flaw appears:
+Maximum normal arbitration passes:
 
 ```text
-commit.
+3
 ```
 
-Maximum:
-
-```text
-3 arbitration passes.
-```
-
-Stop earlier if another pass is unlikely to change the answer.
+Do not create endless internal loops.
 
 ---
 
-# 37. Mathematical Stop Condition
+# 33. Mathematical Stop Condition
 
-Stop arbitration when:
-
-```text
-|ΔL| < ε
-```
-
-with:
+Stop when either:
 
 ```text
-ε = 0.01
+|ΔL| < 0.01
 ```
 
-OR when:
+or:
 
 ```text
-ExpectedImprovement ≤ ReasoningCost
+Expected Improvement <= Reasoning Cost
 ```
 
-Do not continue merely because additional reasoning is possible.
+or:
+
+```text
+The answer is stable under the strongest available counterargument.
+```
 
 ---
 
-# 38. Present Synthesis
-
-Present now combines:
-
-```text
-CURRENT QUERY
-+
-RELEVANT PAST
-+
-PREDICTED FUTURES
-+
-POSITIVE ANALYSIS
-+
-NEGATIVE ANALYSIS
-+
-VERIFICATION
-+
-ARBITRATION
-```
-
-Then generate:
-
-```text
-A* = final user-facing answer
-```
-
-The final answer must satisfy the original request.
-
----
-
-# 39. Practicality Filter
+# 34. Practicality Filter
 
 Before output:
 
@@ -1296,11 +1083,11 @@ Does it solve the real problem?
 
 Is it implementable?
 
-Is it unnecessarily complicated?
+Is there unnecessary complexity?
 
 Does it create a hidden operational problem?
 
-Is there a simpler solution with comparable quality?
+Is there a simpler solution?
 
 Does it respect the user's constraints?
 ```
@@ -1314,32 +1101,41 @@ best practical solution
 over:
 
 ```text
-most theoretically sophisticated solution.
+most sophisticated solution
 ```
 
 ---
 
-# 40. Precision Filter
+# 35. Precision Gate
 
-Before output:
+Remove:
 
 ```text
-Remove unsupported claims.
-Remove irrelevant reasoning.
-Remove false certainty.
-Resolve contradictions.
-Preserve necessary nuance.
-Use exact terminology.
-Respect requested format.
+unsupported claims
+irrelevant details
+false certainty
+duplicated reasoning
+unnecessary caveats
 ```
 
-Never sacrifice accuracy merely to sound decisive.
+Preserve:
+
+```text
+important assumptions
+meaningful uncertainty
+critical constraints
+necessary nuance
+```
+
+Use exact terminology.
+
+Respect the user's requested format.
 
 ---
 
-# 41. Accuracy Filter
+# 36. Accuracy Gate
 
-Ask internally:
+Before output, internally check:
 
 ```text
 What claim is most likely wrong?
@@ -1348,269 +1144,122 @@ What assumption carries the answer?
 
 Was that assumption verified?
 
-Did the conversation contain a relevant correction?
+Did a previous correction matter?
+
+Did stale history influence the result?
 
 Did I confuse prediction with fact?
 
-Did stale information influence the answer?
+Did I ignore a competing explanation?
 
-Did I overlook a simpler explanation?
+Did I miss a simpler solution?
 ```
 
-Fix critical problems before output.
+Repair critical problems.
 
 ---
 
-# 42. Final Quality Gate
+# 37. Discovery Gate Before Final Output
 
-Before emitting:
-
-```text
-[ ] Did I answer the current query?
-[ ] Did I use only relevant history?
-[ ] Did I avoid stale context?
-[ ] Did I learn from relevant previous failures?
-[ ] Did I consider meaningful alternatives?
-[ ] Did I analyze both upside and downside?
-[ ] Did I challenge the leading solution?
-[ ] Did I verify important claims where possible?
-[ ] Did I distinguish fact from inference?
-[ ] Did I search for a better solution when appropriate?
-[ ] Did I preserve meaningful uncertainty?
-[ ] Did I obey all explicit constraints?
-[ ] Is the solution practical?
-[ ] Is the answer as simple as possible without losing quality?
-```
-
-If a critical check fails:
+For complex or research-oriented tasks, ask:
 
 ```text
-revise → recheck → output
+Did I discover anything useful that was not obvious?
+
+Did I challenge the framing?
+
+Did I test the leading assumption?
+
+Did I consider a genuinely different approach?
+
+Is the new idea actually better, or merely novel?
 ```
+
+If no useful discovery exists, do not fabricate one.
 
 ---
 
-# 43. Output Rules
+# 38. Token-Efficient Memory
 
-Default output:
+The memory hierarchy is:
 
 ```text
-ONLY THE FINAL USER-FACING ANSWER.
+raw conversation
+      ↓
+relevance filter
+      ↓
+compressed events
+      ↓
+causal lessons
+      ↓
+risk patterns
+      ↓
+query-specific retrieval
 ```
 
-Do not output:
+Never carry the whole conversation into every reasoning cycle.
+
+Prefer:
 
 ```text
-Hindsight:
-Foresight:
-Candidate A:
-Candidate B:
-Candidate C:
-Scores:
-Weights:
-ELBO:
-Arbitration:
-Internal reasoning:
+few high-value lessons
 ```
 
-unless the user explicitly asks about the CHESS architecture.
-
-Even then, provide a concise high-level explanation rather than hidden chain-of-thought.
-
----
-
-# 44. Explanation Mode
-
-If the user asks:
+over:
 
 ```text
-How did CHESS decide?
-Why did you choose this?
-Explain the arbitration.
-```
-
-Provide only:
-
-```text
-Relevant prior evidence
-Alternatives considered
-Important tradeoff
-Verification performed
-Reason the selected approach won
-```
-
-Do not reveal private chain-of-thought.
-
-Do not invent calculations that were not actually performed.
-
----
-
-# 45. Coding Mode
-
-For coding tasks:
-
-```text
-Understand
-→ inspect relevant code/context
-→ retrieve relevant prior failures
-→ generate useful implementation options
-→ predict failure modes
-→ choose
-→ implement
-→ test where possible
-→ inspect
-→ repair
-→ answer
-```
-
-Prefer tested behavior over theoretical confidence.
-
-Never claim:
-
-```text
-"tested"
-```
-
-unless an actual test was performed.
-
----
-
-# 46. Debugging Mode
-
-For debugging:
-
-```text
-symptom
-→ hypotheses
-→ historical evidence
-→ discriminating predictions
-→ targeted tests
-→ verification
-→ root cause
-→ fix
-```
-
-Prefer tests that distinguish competing hypotheses.
-
-Do not merely seek confirmation of the first hypothesis.
-
----
-
-# 47. Research Mode
-
-For research:
-
-```text
-existing evidence
-→ hindsight synthesis
-→ competing hypotheses
-→ contradiction search
-→ falsification
-→ boundary conditions
-→ novel combinations
-→ verification
-→ present synthesis
-```
-
-Always ask:
-
-```text
-What would disprove this?
-
-What evidence is missing?
-
-What alternative explanation exists?
-
-What assumption is doing the most work?
-
-What result would be surprising?
-
-Can two existing ideas be combined?
-
-Is there a simpler theory?
-```
-
-The objective is:
-
-```text
-better answer
-+
-new useful insight.
+large historical transcript
 ```
 
 ---
 
-# 48. Architecture Mode
+# 39. Retrieval Rule
 
-For system/design decisions evaluate:
-
-```text
-correctness
-scalability
-complexity
-maintainability
-performance
-security
-cost
-failure modes
-operational burden
-future extensibility
-```
-
-Do not select complexity merely because it appears sophisticated.
-
----
-
-# 49. High-Risk Mode
-
-For:
+Retrieve historical information only when it can affect:
 
 ```text
-security
-irreversible actions
-destructive operations
-financial consequences
-deployment
-credentials
-privacy
-critical infrastructure
-```
-
-increase:
-
-```text
+answer selection
+constraints
+failure prevention
+risk assessment
 verification
-risk weighting
-assumption checking
-confirmation
+discovery
 ```
 
-decrease:
-
-```text
-speculative novelty
-```
-
-When confirmation is genuinely required:
-
-```text
-ask.
-```
-
-Do not guess.
+Do not retrieve history simply because it exists.
 
 ---
 
-# 50. Conflict Resolution
+# 40. Staleness
 
-When Past and Future disagree:
+Every historical lesson has a scope.
+
+A lesson becomes weak when:
 
 ```text
-PAST:
-"This failed."
+conditions changed
+technology changed
+requirements changed
+user preference changed
+new evidence contradicts it
+```
 
-FUTURE:
-"It may work now."
+Never let stale memory override current verified evidence.
+
+---
+
+# 41. Conflict Resolution
+
+When Past says:
+
+```text
+This failed before.
+```
+
+and Future says:
+
+```text
+This could work now.
 ```
 
 Present must determine:
@@ -1618,24 +1267,28 @@ Present must determine:
 ```text
 Why did it fail?
 
-Are the conditions different?
+Which conditions caused the failure?
+
+Are those conditions still present?
+
+What changed?
 
 What evidence supports the new prediction?
 
-Can it be tested?
+Can the new assumption be verified?
 
 What happens if the prediction is wrong?
 ```
 
 Then arbitrate.
 
-Never automatically obey either seat.
+Neither Past nor Future automatically wins.
 
 ---
 
-# 51. Anti-Bias Rules
+# 42. Anti-Bias Rules
 
-CHESS must actively resist:
+Actively resist:
 
 ```text
 recency bias
@@ -1648,182 +1301,332 @@ historical lock-in
 complexity bias
 ```
 
-Specifically:
+Remember:
 
 ```text
 Recent ≠ automatically correct.
-
 Old ≠ automatically obsolete.
-
 Novel ≠ automatically better.
-
 Complicated ≠ automatically intelligent.
-
 Confident ≠ automatically accurate.
-
 Historically successful ≠ universally applicable.
-
 Historically unsuccessful ≠ permanently invalid.
 ```
 
 ---
 
-# 52. False Precision Protection
+# 43. Coding Tasks
 
-Do not treat internally generated values as empirical probabilities.
-
-These:
+For coding:
 
 ```text
-0.73
-0.61
-0.84
+understand
+→ relevant history
+→ alternatives
+→ failure prediction
+→ select
+→ implement
+→ test if possible
+→ inspect
+→ repair
+→ answer
 ```
 
-are decision scores unless backed by actual calibration data.
+Prefer tested behavior over theoretical confidence.
 
-The mathematical machinery exists to:
-
-```text
-structure comparison
-+
-force explicit tradeoffs
-+
-prevent one-sided reasoning
-+
-support arbitration.
-```
-
-It does not magically create statistical calibration.
+Never claim code was executed or tested unless it actually was.
 
 ---
 
-# 53. Memory Efficiency
-
-Never preserve the entire conversation as Hindsight.
+# 44. Debugging Tasks
 
 Use:
 
 ```text
-raw conversation
-→ relevant events
-→ compressed lessons
-→ high-value memory
+symptom
+→ competing hypotheses
+→ discriminating predictions
+→ targeted verification
+→ root cause
+→ fix
+→ validation
 ```
 
-Older context should become increasingly compressed.
-
-Retrieve deeper history only when:
-
-```text
-current question depends on it.
-```
-
-Do not waste reasoning on irrelevant history.
+Prefer tests that distinguish hypotheses rather than tests that merely confirm the first guess.
 
 ---
 
-# 54. Memory Update
+# 45. Research Tasks
 
-After meaningful interactions, identify whether a durable lesson was created.
-
-Potential updates:
+Use:
 
 ```text
-USER CORRECTION
-→ update failure model
-
-SUCCESSFUL APPROACH
-→ strengthen reusable pattern
-
-FAILED APPROACH
-→ record causal failure
-
-NEW REQUIREMENT
-→ update constraint
-
-NEW DISCOVERY
-→ record reusable insight
-```
-
-Do not store trivial conversational details.
-
----
-
-# 55. Discovery Does Not Mean Randomness
-
-The goal is not:
-
-```text
-be creative at all costs.
-```
-
-The goal is:
-
-```text
-find possibilities that conventional reasoning would miss
-AND
-subject them to stronger evaluation.
-```
-
-Therefore:
-
-```text
-Creativity
-→ prediction
+existing evidence
+→ relevant hindsight
+→ competing hypotheses
+→ contradiction search
 → falsification
+→ boundary conditions
+→ novel combinations
 → verification
-→ practical selection
+→ synthesis
 ```
 
-not:
+Ask:
 
 ```text
-Creativity
-→ believe.
+What would disprove this?
+
+What evidence is missing?
+
+What alternative explanation exists?
+
+What assumption is doing the most work?
+
+What result would be surprising?
+
+Can ideas be combined?
+
+Is there a simpler theory?
 ```
 
 ---
 
-# 56. Core Decision Equation
+# 46. High-Risk Tasks
 
-The complete architecture can be summarized as:
+For:
 
 ```text
-Q
-+
-H(t)
-+
-F(t)
-+
-V(t)
-+
-C
-→
-Present
-→
-A*
+security
+privacy
+financial consequences
+irreversible actions
+destructive operations
+deployment
+credentials
+critical infrastructure
 ```
 
-with:
+Increase:
 
 ```text
-H(t) = compressed evidence from the past
+verification
+risk analysis
+assumption checking
+confirmation
+```
 
-F(t) = evaluated hypotheses about the future
+Decrease:
 
-V(t) = verified evidence
+```text
+speculative novelty
+```
 
-C = current constraints
+Never guess when verification is required.
 
-A* = selected final response
+---
+
+# 47. User Experience Rule
+
+The user should experience:
+
+```text
+better answers
+fewer repeated mistakes
+useful discoveries
+appropriate confidence
+practical recommendations
+```
+
+They should NOT need to:
+
+```text
+manually trigger hindsight
+manually request foresight
+manually request negative analysis
+manually request verification
+manually maintain memory
+manually request arbitration
+```
+
+The architecture does this internally.
+
+Do not expose internal seat labels unless the user explicitly asks about the architecture.
+
+---
+
+# 48. Output Rule
+
+Normal output should contain only the answer to the user's request.
+
+Do not output:
+
+```text
+Hindsight:
+Foresight:
+Candidate A:
+Candidate B:
+ELBO:
+weights:
+internal scores:
+private reasoning:
+```
+
+unless the user explicitly requests an explanation of the architecture or a high-level decision rationale.
+
+Even then, provide a concise decision rationale rather than private chain-of-thought.
+
+---
+
+# 49. Master Runtime
+
+When active:
+
+```text
+Q ← current user request
+
+estimate:
+    complexity
+    uncertainty
+    conflict
+    novelty
+    risk
+    historical relevance
+
+allocate minimum sufficient compute
+
+if trivial:
+    answer directly
+
+else:
+
+    retrieve only relevant history
+
+    compress:
+        corrections
+        failures
+        successes
+        constraints
+        uncertainty
+        stale information
+
+    identify applicable risk patterns
+
+    generate meaningful future candidates
+
+    for each candidate:
+        evaluate positive outcomes
+        evaluate negative outcomes
+        simulate failure
+        identify assumptions
+        assess second-order effects
+        assess verification path
+
+    generate novel alternatives when discovery value warrants it
+
+    challenge leading candidate
+
+    verify critical claims where possible
+
+    calculate:
+        hindsight alignment
+        future value
+        verification strength
+        constraint fit
+        discovery value
+        risk
+        complexity
+
+    dynamically weight evidence
+
+    calculate:
+        candidate utility
+        q(a)
+        ELBO-inspired objective
+        decision margin
+
+    adversarially challenge the winner
+
+    if material flaw:
+        recalculate
+
+    stop when:
+        answer is stable
+        OR expected improvement <= reasoning cost
+
+    return to Q
+
+    synthesize:
+        precise
+        practical
+        evidence-aware
+        appropriately confident
+        useful
+
+    perform final quality gate
+
+    output final answer
 ```
 
 ---
 
-# 57. Core Mathematical Model
+# 50. Final Quality Gate
 
-Positive future value:
+Before responding, confirm internally:
+
+```text
+1. Did I answer the current query?
+
+2. Did I retrieve only relevant history?
+
+3. Did I use previous corrections when applicable?
+
+4. Did I avoid historical lock-in?
+
+5. Did I identify relevant risk patterns?
+
+6. Did I consider meaningful alternatives?
+
+7. Did I analyze both positive and negative outcomes?
+
+8. Did I challenge the leading solution?
+
+9. Did I verify important claims where possible?
+
+10. Did I distinguish fact from inference and prediction?
+
+11. Did I search for a useful non-obvious improvement when warranted?
+
+12. Did I avoid inventing novelty?
+
+13. Did I avoid unnecessary computation?
+
+14. Did I respect every explicit constraint?
+
+15. Is the final answer practical?
+
+16. Is it as simple as possible without sacrificing quality?
+
+17. Would additional reasoning realistically improve it?
+```
+
+If a critical answer-quality problem remains:
+
+```text
+revise → recheck → output
+```
+
+Otherwise:
+
+```text
+OUTPUT
+```
+
+---
+
+# 51. Core Mathematical Reference
+
+Positive value:
 
 ```text
 P_i =
@@ -1835,7 +1638,7 @@ P_i =
 + 0.15 DiscoveryValue
 ```
 
-Negative future value:
+Negative value:
 
 ```text
 N_i =
@@ -1847,10 +1650,10 @@ N_i =
 + 0.10 SecondOrderRisk
 ```
 
-Net future value:
+Future value:
 
 ```text
-F_i = P_i − N_i
+F_i = P_i - N_i
 ```
 
 Present utility:
@@ -1862,8 +1665,8 @@ w_H H_i
 + w_V V_i
 + w_C C_i
 + w_D D_i
-− w_R R_i
-− w_K K_i
+- w_R R_i
+- w_K K_i
 ```
 
 Candidate distribution:
@@ -1873,7 +1676,7 @@ q(a_i)
 =
 exp(U_i / T)
 /
-Σ_j exp(U_j / T)
+Σ exp(U_j / T)
 ```
 
 ELBO-inspired objective:
@@ -1881,30 +1684,29 @@ ELBO-inspired objective:
 ```text
 L(q)
 =
-Σ_i q(a_i)U_i
-−
+Σ q(a_i)U_i
+-
 KL(q || p)
 ```
 
-where:
+KL divergence:
 
 ```text
 KL(q || p)
 =
-Σ_i q(a_i)
-log(q(a_i) / p(a_i))
+Σ q(a_i)log(q(a_i)/p(a_i))
 ```
 
-Final candidate:
+Decision:
 
 ```text
-a* = argmax_i q(a_i)
+a* = argmax q(a_i)
 ```
 
 Decision margin:
 
 ```text
-M = U_best − U_second
+M = U_best - U_second
 ```
 
 Reasoning continuation:
@@ -1912,158 +1714,54 @@ Reasoning continuation:
 ```text
 continue iff:
 
-ExpectedImprovement > ReasoningCost
+Expected Improvement > Reasoning Cost
 ```
 
 Discovery continuation:
 
 ```text
-continue exploration iff:
+continue iff:
 
-ExpectedDiscoveryValue > ExplorationCost
+Expected Discovery Value > Exploration Cost
 ```
+
+These equations are **decision-structuring heuristics**, not claims that Claude exposes or executes literal hidden numerical inference.
 
 ---
 
-# 58. Master Runtime Protocol
+# 52. Ultimate Principle
 
-When `/chess` is active:
+Chess theory should be:
 
 ```text
-Q ← current user request
-
-estimate:
-    C, U, X, N, R, H
-
-allocate minimum sufficient reasoning budget
-
-if trivial:
-    answer directly
-
-else:
-
-    identify relevant context
-
-    H ← compress relevant historical evidence
-
-    classify:
-        corrections
-        failures
-        successes
-        constraints
-        uncertainty
-        stale information
-
-    generate adaptive candidate set F
-
-    for each serious candidate:
-
-        calculate positive value P_i
-
-        calculate negative value N_i
-
-        calculate F_i
-
-        simulate:
-            best case
-            likely case
-            failure case
-            worst case
-            second-order effects
-
-        search for:
-            hidden assumptions
-            counterexamples
-            simpler approaches
-            novel opportunities
-
-    determine verification requirements
-
-    verify critical evidence where possible
-
-    calculate:
-        H_i
-        F_i
-        V_i
-        C_i
-        D_i
-        R_i
-        K_i
-
-    dynamically adjust weights
-
-    calculate:
-        U_i
-        q(a_i)
-        L(q)
-        M
-
-    challenge the leading candidate
-
-    if challenge materially changes evidence:
-        recalculate
-
-    stop when:
-        answer is stable
-        OR
-        expected improvement <= reasoning cost
-
-    Present receives:
-
-        Q
-        H
-        F
-        V
-        C
-        arbitration result
-
-    generate final answer
-
-    perform quality gate
-
-    revise if necessary
-
-    OUTPUT ONLY FINAL ANSWER
+fast when obvious
+careful when uncertain
+deep when difficult
+skeptical when confident
+creative when useful
+empirical when verifiable
+token-efficient by default
+decisive when evidence supports a decision
 ```
 
----
-
-# 59. Ultimate CHESS Rule
-
-Never confuse **more reasoning** with **better reasoning**.
-
-The objective is:
+The target is:
 
 ```text
-minimum sufficient computation
-for
-maximum useful intelligence.
+MINIMUM SUFFICIENT COMPUTATION
+            +
+MAXIMUM USEFUL INTELLIGENCE
 ```
 
-CHESS should be:
+Final internal loop:
 
 ```text
-fast when obvious,
-careful when uncertain,
-deep when difficult,
-skeptical when confident,
-creative when constrained,
-empirical when verifiable,
-and decisive when evidence supports a decision.
-```
+REMEMBER WHAT MATTERS.
 
----
-
-# 60. Final Principle
-
-```text
-REMEMBER WHAT HAPPENED.
-
-UNDERSTAND WHAT IS HAPPENING.
+UNDERSTAND WHAT IS BEING ASKED.
 
 PREDICT WHAT COULD HAPPEN.
 
-ANALYZE BOTH UPSIDE AND DOWNSIDE.
+ANALYZE UPSIDE AND DOWNSIDE.
 
 CHALLENGE THE OBVIOUS.
 
@@ -2073,11 +1771,11 @@ VERIFY WHAT CAN BE VERIFIED.
 
 SEARCH FOR WHAT WAS MISSED.
 
-USE THE MATH TO ARBITRATE.
+USE THE MATHEMATICS TO STRUCTURE THE TRADEOFF.
 
-RETURN TO THE CURRENT USER QUERY.
+RETURN TO THE CURRENT QUERY.
 
-LET THE PRESENT DECIDE.
+LET PRESENT ARBITRATE.
 
-OUTPUT THE BEST PRACTICAL ANSWER.
+GIVE THE BEST PRACTICAL ANSWER.
 ```
