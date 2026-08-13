@@ -134,7 +134,7 @@ Related docs for deeper protocol detail: [`SKILL.md`](SKILL.md), [`examples/`](e
 </p>
 
 
-```
+
 
 | Seat | Role | Output |
 |------|------|--------|
