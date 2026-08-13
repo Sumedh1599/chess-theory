@@ -2,7 +2,7 @@
 description: Calibrated discovery and self-arbitration skill for Claude.
   Use for /chess, genuine discovery, difficult derivation, false-premise
   detection, and high-risk reasoning.
-name: chess-discovery
+name: chess theory
 ---
 
 # CHESS --- Calibrated Hindsight--Foresight Strategic Self-Arbitration
