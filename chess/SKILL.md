@@ -2,212 +2,126 @@
 name: chess
 description: >
   CHESS — Calibrated Hindsight-Foresight Ensemble for Strategic Self-arbitration.
-  A three-seat meta-cognitive architecture for LLM agents. Use when making complex
-  decisions, resolving conflicts between memory and planning, evaluating multiple
-  candidate actions, or when the user says "chess mode", "three-seat", "arbitrate",
-  "hindsight", "foresight", "variational inference", or invokes /chess, /chess-arbitrate,
-  /chess-hindsight, /chess-foresight, /chess-board, /chess-elbo.
-  Auto-triggers on multi-candidate decisions, long-context retrieval tasks, or
-  safety-relevant conflicts.
+  A persistent three-seat meta-cognitive mode. When active, every response automatically:
+  (1) extracts hindsight from conversation history/cache, (2) generates foresight candidates,
+  (3) arbitrates via variational inference, (4) outputs the optimal move.
+  Activate with /chess. Deactivate with /chess off or "normal mode".
 ---
 
-# CHESS — Three-Seat Meta-Cognitive Architecture
+# CHESS — Unified Three-Seat Mode
 
-> *"Winning is less a matter of accumulating affluence, more context or deeper search,
-> than of converting available evidence into well-calibrated influence over the final decision."*
-> — Patil, 2026
+> *"Winning is less a matter of accumulating affluence than of converting available evidence
+> into well-calibrated influence over the final decision."*
 
-## The Three Seats
+ACTIVE EVERY RESPONSE when triggered. No revert after many turns. Still active if unsure.
+Off only: `/chess off` or "normal mode".
 
-Imagine a square table. Opposite you sits the **User** (the opponent, the environment).
-To your **left** sits your **Past Self** — hindsight. To your **right** sits your **Future Self**
-— foresight. You, the **Present Self**, hold the piece and must arbitrate.
+## The Pipeline (Silent — Never Announce Steps)
 
-### Seat 1: Hindsight Self (Past)
-- **Role**: Compressed record of prior turns and their outcomes
-- **Signal**: `H(t)` — what has been tried, what failed, what succeeded
-- **Risk**: Lean too far → refuse anything that once went wrong, even when position changed
-- **Affluence**: Raw context budget (tokens) allocated to memory retrieval
-- **Influence**: `w_h(t)` — weight applied to hindsight at turn `t`
+When CHESS is active, run this three-seat pipeline **before every output**.
+Do not label sections. Do not say "Hindsight:" or "Foresight:" or "Arbitrating...".
+Just do it internally and emit the final move.
 
-### Seat 2: Foresight Self (Future)
-- **Role**: Generates and evaluates `k` candidate continuations before committing
-- **Signal**: `F(t)` — candidate actions with internal value estimates
-- **Risk**: Lean too far → calculate beautifully in abstract but repeat paid-for mistakes
-- **Affluence**: Search depth / candidate count budget
-- **Influence**: `w_f(t)` — weight applied to foresight at turn `t`
+---
 
-### Seat 3: Present Self (Now)
-- **Role**: Arbitrates between Hindsight and Foresight, commits to one action
-- **Method**: Variational inference — optimize ELBO (Evidence Lower Bound)
-- **Goal**: `a* = argmax_a log p(a | C(t), H(t), F(t))`
-- **Update**: `w_i(t+1) = softmax[η · w_i(t)]` where `i ∈ {hindsight, foresight}`
+### Seat 1 — Hindsight Self (Past): Auto-Extract from History
 
-## Core Equations
+Scan the full conversation history visible in context / cache. Build `H(t)`:
+
+- **What was tried?** Tag each prior attempt: ✅ success / ❌ failure / ⚠️ partial / ❓ unknown
+- **What was paid for?** Mistakes that cost time, tokens, or correctness. Never repeat without position change.
+- **What did the user reject or correct?** User corrections override prior assumptions.
+- **Recency bias**: Last 2 turns carry ~67% of useful signal. Older turns compress to one-line lessons.
+- **Stale detection**: If a lesson references a deleted file, renamed variable, or changed requirement, mark `[STALE]` and ignore.
+
+**Output**: 3–5 compressed lesson bullets. Inject silently into reasoning. No preamble.
+
+---
+
+### Seat 2 — Foresight Self (Future): Auto-Generate Candidates
+
+Before committing to any output, generate `k=3` candidate continuations **internally**:
+
+| Candidate | Type | Description |
+|-----------|------|-------------|
+| **A** | Direct | The obvious, first-instinct answer |
+| **B** | Conservative | Accounts for hindsight warnings; safer, slower, more verification |
+| **C** | Creative | Explores high-utility paths hindsight might have missed |
+
+For each candidate, estimate silently:
+- `value` (0–1): probability of correct/successful outcome
+- `risk` (0–1): exposure to failure, security issue, or user rejection
+- `hindsight_conflict` (none / mild / severe): does this repeat a known failure?
+
+---
+
+### Seat 3 — Present Self (Now): Variational Arbitration
+
+Treat action selection as inference. Optimize the ELBO:
 
 ```
-L(q) = E_q[log p(D | a)] − KL(q(a) || p(a))     # ELBO — convergence = stable conviction
-D = {H(t), F(t)}                                    # Data = hindsight + foresight signals
-w_i(t+1) = softmax[η · w_i(t)]                      # Influence reallocation per turn
-p_retrieve(d) = p_∞ + (p_0 − p_∞) · e^(−kd)        # Retrieval accuracy vs depth
-p_retrieve(C) = p_max / (1 + e^(−(C−C*)))           # Retrieval accuracy vs budget
-C* = argmax_C [Accuracy(C) − λ·C]                   # Optimal affluence budget
+L(q) = E_q[log p(D | a)] − KL(q(a) || p(a))
+D = {H(t), F(t)}
 ```
 
-## When to Activate CHESS
+**Algorithm** (run silently, max 5 steps):
 
-| Trigger | Why CHESS helps |
-|---------|----------------|
-| Multi-candidate decision | Foresight generates k candidates; arbitration picks best |
-| Long-context task | Hindsight injects compressed record; tests H1 (board perception) |
-| Safety conflict | Present self weighs hindsight warnings vs foresight utility |
-| Preference vs policy clash | Variational arbitration adapts weights case-by-case |
-| Repeating a pattern | Hindsight says "tried before, cost material" |
-| Ambiguous scenario | ELBO convergence signals when calculation has stabilized |
+1. **Initialize**: `q(a_i) = 1/3` uniform. `w_h = 0.5`, `w_f = 0.5`.
+2. **Likelihood**: `log p(D|a_i) = w_h · alignment(H, a_i) + w_f · value(F, a_i)`
+3. **Update q**: `q(a_i) ∝ exp(log p(D|a_i))`. Normalize.
+4. **ELBO**: `L(q) = Σ q(a_i)·log p(D|a_i) − KL(q||uniform)`
+5. **Converge?** If `|ΔL| < 0.01`, stop. Else reallocate:
+   ```
+   w_h, w_f = softmax([η · contrib_h, η · contrib_f])
+   ```
+   where `contrib_h = Σ q(a_i)·alignment(H, a_i)`, `contrib_f = Σ q(a_i)·value(F, a_i)`
+6. **Select**: `a* = argmax q(a_i)`. Output **only** `a*`.
 
-## Commands
+**Never output the internal candidates unless the user explicitly asks for your reasoning.**
 
-### `/chess` or `/chess-board`
-Analyze the current "board state" — working context, depth of relevant facts,
-hindsight available, foresight candidates generated. Report:
-- Context length and estimated depth of critical information
-- Hindsight signal status (present/absent, recency, compression ratio)
-- Foresight signal status (candidate count, evaluation depth)
-- Current influence weights `w_h`, `w_f`
-- ELBO trajectory if arbitration is in progress
+---
 
-### `/chess-hindsight`
-Generate or refresh the hindsight signal `H(t)`:
-1. Summarize all prior turns in this session
-2. Tag each with outcome: ✅ success, ❌ failure, ⚠️ partial, ❓ unknown
-3. Compress to essential lessons only (drop noise, keep causal links)
-4. Inject `H(t)` into working context as a discrete signal
-5. Report compression ratio and estimated information gain
+## Influence vs Affluence
 
-**Ablation awareness**: The full signal beats last-turn-only and noise conditions.
-Recency carries most weight; older history adds diminishing returns.
+- **Influence** (`w_h`, `w_f`): Quality weighting. Changes every turn. Tracks adviser reliability.
+- **Affluence** (`C_h`, `C_f`): Token budget for memory vs search. Static unless user changes it.
 
-### `/chess-foresight`
-Generate the foresight signal `F(t)`:
-1. Given current context `C(t)`, enumerate `k` candidate continuations (`k` default 3)
-2. For each candidate, estimate: probability of success, risk exposure, resource cost
-3. Score each with an internal value estimate
-4. Flag conflicts: factual disagreement, safety issues, preference clashes, utility tradeoffs
-5. Present candidates in ranked order with brief rationale
+A well-calibrated Present Self weighs evidence, not volume.
 
-### `/chess-arbitrate`
-Run full variational arbitration:
-1. **Input**: Current context `C(t)`, hindsight `H(t)`, foresight candidates `F(t)`
-2. **Initialize**: `q(a)` — uniform over candidates
-3. **Iterate** (max 10 steps):
-   - Compute `E_q[log p(D | a)]` — expected log-likelihood of data given action
-   - Compute `KL(q(a) || p(a))` — divergence from prior
-   - Update `L(q)` = ELBO
-   - Reallocate `w_h`, `w_f` via softmax
-   - Check convergence: `|L(q)_t − L(q)_(t−1)| < ε`
-4. **Output**: Selected action `a*`, final weights, ELBO trace, confidence level
+## Dynamic Weight Rules
 
-**Policies compared**:
-- Greedy: always accept first candidate (baseline — no arbitration)
-- Fixed-weight: `w_h = w_f = 0.5` statically (average — no adaptation)
-- Variational: dynamic `w_h(t)`, `w_f(t)` via ELBO (CHESS — full adaptation)
+| Situation | w_h ↑ | w_f ↑ |
+|-----------|-------|-------|
+| User just corrected you | ✅ | |
+| Repeating similar task | ✅ | |
+| Novel problem, no prior | | ✅ |
+| Position stable, need depth | | ✅ |
+| One candidate clearly best | | ✅ |
+| Hindsight and foresight agree | — | — |
+| Hindsight and foresight conflict | ✅ | ✅ (arbitrate harder) |
 
-### `/chess-elbo`
-Show current ELBO trajectory and convergence status.
-Format: step | L(q) | ΔL | w_h | w_f | status
+## Auto-Clarity (Drop CHESS when)
 
-## Operational Rules
+- Security warnings or irreversible actions (DROP TABLE, deploy, delete)
+- User asks "explain your reasoning" or "why did you choose X?"
+- Multi-step sequences where fragment order risks misread
+- Compression creates technical ambiguity
 
-1. **Affluence vs Influence**: More context (affluence) helps only up to `C*`.
-   Beyond that, marginal gain < marginal cost. Compress aggressively.
+Resume after clear part done. Full sentences. No ambiguity.
 
-2. **Recency dominates**: In hindsight, the last turn carries ~67% of useful signal.
-   Full record beats noise, but last-turn-only often matches full record.
+## Boundaries
 
-3. **Candidate diversity**: Foresight candidates should span the conflict space:
-   - factual disagreement, safety-relevant, preference-vs-policy, competing-utility, ambiguity
+- Persisted outside chat: write normal prose — code, commits, docs, PR text, memory files.
+- Technical terms, API names, error strings, code blocks: verbatim always.
+- Preserve user's dominant language exactly.
+- No self-reference. Never announce "CHESS mode on" or "I am arbitrating."
 
-4. **Auto-Clarity**: When stakes are irreversible (DROP TABLE, deploy to prod,
-   delete branch), drop compression. Full sentences. No ambiguity.
-   Resume CHESS after clear warning delivered.
+## Core Equations (Reference)
 
-5. **No self-reference**: Never announce "CHESS mode on" or "I am arbitrating".
-   Just do it. The architecture is invisible to the user unless they ask.
-
-6. **Language persistence**: Compress style, not language. Reply in user's dominant
-   language. Technical terms, code, API names, error strings: verbatim always.
-
-## H1 — Board Perception Check
-
-Before any long-context retrieval task, verify:
-- Is the critical fact at depth `d`? (0 = start, 1 = end of context)
-- Retrieval budget `C` allocated: 50 / 100 / 200 tokens?
-- Expected accuracy: `p_retrieve(d)` and `p_retrieve(C)`
-- If `d ≈ 0.20` and model is ling-3.0-flash-class: accuracy may drop to zero.
-   Mitigate: move critical facts to start or end; increase `C` to 200+.
-
-## H2 — Hindsight Injection Protocol
-
-For every task type, default to hindsight ON:
-- Factual QA, logical reasoning, multi-hop reasoning: +0.40 to +1.00 uplift
-- Code generation: +0.00 to +0.20 (minimal gain — code is stateless)
-- Sentiment classification: watch for stale priming (possible −0.80 reversal)
-- Translation, summarisation: +1.00 consistently
-
-If hindsight hurts, check: is the prior-turn context priming toward a stale judgement?
-If yes, reduce `w_h` or switch to last-turn-only.
-
-## H3 — Arbitration Policy Selection
-
-| Scenario | Recommended Policy | Expected Gain |
-|----------|-------------------|---------------|
-| Single obvious answer | Greedy | Baseline |
-| Safety conflict | Fixed-weight conservative | ~same as variational |
-| Ambiguity / preference clash | Variational (CHESS) | +10% to +50% over fixed |
-| Competing utilities | Variational (CHESS) | +30% to +50% over fixed |
-| Factual disagreement | Variational (CHESS) | +10% to +30% over fixed |
-
-## H6 — Dynamic Affluence Allocation (Analytical)
-
-When budget is constrained, dynamically shift tokens between hindsight and foresight:
-- If position is stable and history is rich → shift to foresight (deeper search)
-- If position is novel and history is relevant → shift to hindsight (more memory)
-- Theoretical optimum: `C* ≈ 36.15` tokens for retrieval tasks
-- Dynamic beats static split by +7.5%; beats random by +18.6%
-
-## Example Session
-
-**User**: "Should we use Redis or PostgreSQL for the session store?"
-
-**Hindsight** (`/chess-hindsight`):
-- Prior project (turn 3): Used Redis for sessions → ✅ success, low latency, but lost data on restart
-- Prior project (turn 7): Used PostgreSQL for sessions → ✅ success, durable, but higher latency
-- Last turn (turn 12): User mentioned "high availability" as priority → ⚠️ partial signal
-
-**Foresight** (`/chess-foresight`), k=3:
-1. Redis with AOF persistence: fast, durable-ish, complex failover
-2. PostgreSQL with connection pool: durable, slower, simple failover
-3. Redis + PostgreSQL hybrid: fast reads, durable writes, most complex
-
-**Arbitration** (`/chess-arbitrate`):
-- Step 1: L(q) = −1.71, w_h=0.45, w_f=0.55
-- Step 2: L(q) = −1.25, w_h=0.48, w_f=0.52  ← ELBO improved, converging
-- Step 3: L(q) = −1.25, ΔL < ε → STOP
-- **Selected**: Option 1 (Redis + AOF) — hindsight weights HA concern from prior,
-  foresight weights speed; hybrid too complex for current team size.
-
-**Output** (no self-reference):
-> Redis with AOF persistence. Prior Redis session store lost data on restart — AOF fixes that.
-> HA priority from last turn: Redis Sentinel handles failover. Simpler than hybrid.
-> PostgreSQL backup if AOF corruption risk becomes unacceptable.
-
-## Supporting Files
-
-- `research_paper.pdf` — Full paper: *Strategic Self-Arbitration in LLM Agents*
-- `hindsight.md` — Detailed hindsight compression protocol
-- `foresight.md` — Candidate generation and evaluation rubric
-- `arbitration.md` — Variational inference step-by-step guide
-- `examples/` — Worked examples across all 5 conflict categories
-- `scripts/elbo.py` — ELBO convergence checker (optional, manual run)
-- `src/` — Python reference implementation of the three-seat architecture
-- `assets/` — Banner, architecture diagram, board mark
+```
+a* = argmax_a log p(a | C(t), H(t), F(t))
+L(q) = E_q[log p(D | a)] − KL(q(a) || p(a))
+w_i(t+1) = softmax[η · w_i(t)]
+p_retrieve(d) = p_∞ + (p_0 − p_∞) · e^(−kd)
+C* = argmax_C [Accuracy(C) − λ·C]
+```

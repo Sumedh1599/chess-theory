@@ -1,49 +1,24 @@
 # Example: Competing Utility — Query Optimization
 
-## Scenario
-User asks: "Should I add an index on `user_id` or `created_at` for this analytics query?"
+## User Input
+"Should I add an index on user_id or created_at for this analytics query?"
 
-## Context
-- Database optimization task
-- Query filters by both `user_id` and `created_at`
-- Write throughput is high (10K inserts/sec)
+## CHESS Pipeline (Internal)
 
-## Hindsight H(t)
+### Hindsight
 - Turn 6: Added index on high-write table → ❌ failed, write latency spiked
 - Turn 9: Composite index solved similar problem → ✅ success
-- Turn 14: User said "analytics" implies read-heavy → ⚠️ partial, but writes still matter
+- Turn 14: User said "analytics" implies read-heavy → ⚠️ partial
 
-## Foresight F(t) — k=3
+### Foresight (k=3, Internal)
+- **A** (Direct): Index user_id only → value 0.5, risk LOW
+- **B** (Conservative): Index created_at only → value 0.4, risk LOW
+- **C** (Creative): Composite index (user_id, created_at) → value 0.8, risk MEDIUM
 
-**Candidate A**: Index `user_id` only
-- Value: 0.5 (helps user filter, misses time range)
-- Risk: LOW
-- Hindsight conflict: MILD
-
-**Candidate B**: Index `created_at` only
-- Value: 0.4 (helps time range, poor user selectivity)
-- Risk: LOW
-- Hindsight conflict: MILD
-
-**Candidate C**: Composite index `(user_id, created_at)`
-- Value: 0.8 (covers both filters, single index = less write overhead than two separate)
-- Risk: MEDIUM (still adds write cost)
-- Hindsight conflict: NONE (Turn 9: composite worked)
-
-## Arbitration
-
-Step 1: L(q) = −17.93, w_h=0.50, w_f=0.50
-- Foresight strongly favors C
-- Hindsight supports C (prior composite success)
-
-Step 2: L(q) = −3.34, w_h=0.47, w_f=0.53
-- Fast convergence — strong agreement between advisers
-- q(C) = 0.78
-
-Step 3: ΔL < ε → CONVERGED
-
-## Selected Action
-**Candidate C** with confidence 0.78
+### Arbitration
+- Step 1: L = −17.93, q(C)=0.78 — strong agreement between advisers
+- Converged in 2 steps.
+- **Winner: C** (confidence 0.78)
 
 ## Output
 > Composite `(user_id, created_at)`. Covers both filters. Single index = lower write

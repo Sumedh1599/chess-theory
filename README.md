@@ -348,14 +348,18 @@ Real session data from beta testing:
 
 ## Claude skill (research paper)
 
-The publishable Claude Code skill package lives in [`chess/`](chess/) — three-seat Hindsight / Foresight / Present arbitration with ELBO, examples, Python demos, and [`chess/research_paper.pdf`](chess/research_paper.pdf).
+The publishable Claude Code / Cursor skill package lives in [`chess/`](chess/) — unified three-seat Hindsight / Foresight / Present arbitration with ELBO, examples, Python demos, assets, and [`chess/research_paper.pdf`](chess/research_paper.pdf).
+
+<p align="center">
+  <img src="chess/assets/diagram.png" alt="CHESS three-seat architecture" width="420" />
+</p>
 
 ```bash
 cd chess && bash install.sh
 # then type /chess in Claude Code
 ```
 
-See [`chess/README.md`](chess/README.md) for install options, commands, and screenshots.
+See [`chess/README.md`](chess/README.md) for install options, Cursor rules, images, and usage.
 
 ---
 
@@ -372,8 +376,8 @@ chess-theory/
 ├── package.json                 # npm metadata and scripts
 ├── .gitignore                   # Node.js + macOS standard
 │
-├── chess/                       # Claude Code skill (research CHESS package)
-│   ├── SKILL.md                 # Agent skill frontmatter + protocol
+├── chess/                       # ★ Claude Code skill (final publishable package)
+│   ├── SKILL.md                 # Agent skill frontmatter + unified /chess pipeline
 │   ├── research_paper.pdf       # Strategic Self-Arbitration paper
 │   ├── install.sh               # Skill installer
 │   ├── assets/                  # Banner + architecture diagram
@@ -382,11 +386,11 @@ chess-theory/
 │
 ├── .cursor/
 │   └── rules/
-│       └── chess.mdc            # Core ruleset (single source of truth)
+│       └── chess.mdc            # Core ruleset (npm/CLI deliberation engine)
 │
 ├── skills/
 │   └── chess/
-│       └── SKILL.md             # Claude Code skill with frontmatter
+│       └── SKILL.md             # Mirror of chess/SKILL.md for npm package layout
 │
 ├── .agents/                     # Platform-specific rule symlinks
 │   ├── cursor.mdc

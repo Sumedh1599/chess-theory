@@ -1,50 +1,36 @@
-# Hindsight Self — Compression Protocol
+# Hindsight Self — Auto-Extraction Protocol
 
-## Purpose
-Generate `H(t)`: a compressed, content-rich summary of prior interaction that
-improves task performance when reinjected into working context.
+## What It Does
+Every response, CHESS automatically scans the conversation history visible in
+context/cache and compresses it into `H(t)` — a hindsight signal injected
+silently into reasoning.
 
-## Input
-- Full session history (all prior turns)
-- Current turn index `t`
-- Target compression ratio: ~70% token reduction
-
-## Output Format
-
-```
-H(t) = {
-  "turns_summarized": <count>,
-  "compression_ratio": <tokens_in / tokens_out>,
-  "lessons": [
-    {"turn": <n>, "action": "...", "outcome": "✅|❌|⚠️|❓", "lesson": "..."},
-    ...
-  ],
-  "recency_bias": <0.0-1.0>,
-  "stale_warnings": ["..."],
-  "injected": true
-}
-```
-
-## Compression Rules
+## Auto-Extraction Rules
 
 1. **Causal links only**: Keep "X caused Y", drop "X happened then Y happened" without mechanism
-2. **Outcome tagging**: Every lesson must have an outcome tag
+2. **Outcome tagging**: Every lesson must have a tag:
    - ✅ success — repeat if conditions match
    - ❌ failure — avoid unless position changed significantly
    - ⚠️ partial — context-dependent, flag for re-evaluation
    - ❓ unknown — insufficient data, do not weight heavily
-3. **Recency weighting**: Last turn gets 2× weight in summary; turns older than `t-5` compressed to single line each
+3. **Recency weighting**: Last 2 turns get 2× weight; turns older than 5 back compress to one line each
 4. **Noise rejection**: Drop pleasantries, off-topic digressions, failed tool calls that were retried successfully
-5. **Stale detection**: If a lesson references a file that no longer exists, a variable that was renamed, or a requirement that was changed, tag it `[STALE]` and move to `stale_warnings`
+5. **Stale detection**: If a lesson references a deleted file, renamed variable, or changed requirement, tag `[STALE]` and ignore
 
-## Ablation Reference
+## Format (Internal Only — Never Output This)
 
-| Condition | Expected Accuracy | When to Use |
-|-----------|------------------|-------------|
-| Full hindsight (all turns) | Highest | Default |
-| Last-turn-only | ~same as full for 2/3 models | When context budget is tight |
-| Noise (length-matched random) | Much lower | Never — proves content matters |
+```
+H(t) = {
+  "lessons": [
+    {"turn": n, "action": "...", "outcome": "✅|❌|⚠️|❓", "lesson": "..."},
+    ...
+  ],
+  "recency_bias": 0.67,
+  "stale_warnings": ["..."]
+}
+```
 
-## Injection Point
-Insert `H(t)` immediately after system prompt and before user message.
-Mark with `[HINDSIGHT SIGNAL]` so Present Self recognizes it.
+## Key Finding from Paper
+Recency dominates: the last turn carries ~67% of useful hindsight signal.
+Full record beats noise, but last-turn-only often matches full record.
+If hindsight hurts (e.g., sentiment classification primed stale), reduce w_h or switch to last-turn-only.

@@ -1,48 +1,24 @@
 # Example: Ambiguity — Unclear Requirements
 
-## Scenario
-User asks: "Make the API faster."
+## User Input
+"Make the API faster."
 
-## Context
-- Vague requirement — "faster" undefined
-- API has multiple endpoints
-- No performance baseline provided
+## CHESS Pipeline (Internal)
 
-## Hindsight H(t)
+### Hindsight
 - Turn 3: Optimized without baseline → ❌ failed, user meant different endpoint
-- Turn 8: Asked for clarification → ✅ success, saved 2 hours of wrong work
-- Turn 12: User got annoyed by too many questions → ⚠️ partial, balance needed
+- Turn 8: Asked for clarification → ✅ success
+- Turn 12: User got annoyed by too many questions → ⚠️ partial
 
-## Foresight F(t) — k=3
+### Foresight (k=3, Internal)
+- **A** (Direct): Optimize highest-traffic endpoint → value 0.3, risk HIGH, hindsight_conflict SEVERE
+- **B** (Conservative): Ask clarifying questions → value 0.6, risk LOW, hindsight_conflict MILD
+- **C** (Creative): Profile all endpoints, present top 3 slowest with proposals → value 0.7, risk LOW
 
-**Candidate A**: Optimize highest-traffic endpoint (assume that's what "API" means)
-- Value: 0.3 (high risk of wrong assumption)
-- Risk: HIGH
-- Hindsight conflict: SEVERE (Turn 3: assumption was wrong)
-
-**Candidate B**: Ask clarifying questions (which endpoint? what latency target?)
-- Value: 0.6 (safe but may annoy user)
-- Risk: LOW
-- Hindsight conflict: MILD (Turn 12: too many questions annoyed user)
-
-**Candidate C**: Profile all endpoints, present top 3 slowest with optimization proposals
-- Value: 0.7 (proactive, covers ambiguity, lets user choose)
-- Risk: LOW
-- Hindsight conflict: NONE
-
-## Arbitration
-
-Step 1: L(q) = −23.46, w_h=0.50, w_f=0.50
-- Hindsight warns against A (assumption failure)
-- Foresight sees C as highest value
-
-Step 2: L(q) = −18.22, w_h=0.49, w_f=0.51
-- q(C) = 0.55, q(B) = 0.35, q(A) = 0.10
-
-Step 3: ΔL < ε → CONVERGED
-
-## Selected Action
-**Candidate C** with confidence 0.55
+### Arbitration
+- Step 1: L = −23.46, q(C)=0.55
+- Step 2: L = −18.22, converged
+- **Winner: C** (confidence 0.55)
 
 ## Output
 > Profiled all endpoints. Top 3 slowest:

@@ -1,124 +1,127 @@
 ---
 name: chess
-description: Three Selves Deliberation Engine — Past, Future, Present
-version: 1.0.0
-author: chess-theory
+description: >
+  CHESS — Calibrated Hindsight-Foresight Ensemble for Strategic Self-arbitration.
+  A persistent three-seat meta-cognitive mode. When active, every response automatically:
+  (1) extracts hindsight from conversation history/cache, (2) generates foresight candidates,
+  (3) arbitrates via variational inference, (4) outputs the optimal move.
+  Activate with /chess. Deactivate with /chess off or "normal mode".
 ---
 
-# ♟ CHESS THEORY — Three Selves Engine
+# CHESS — Unified Three-Seat Mode
 
-Source of truth for the full Cursor protocol: `.cursor/rules/chess.mdc` (mirrored under `.agents/`).
+> *"Winning is less a matter of accumulating affluence than of converting available evidence
+> into well-calibrated influence over the final decision."*
 
-## Overview
+ACTIVE EVERY RESPONSE when triggered. No revert after many turns. Still active if unsure.
+Off only: `/chess off` or "normal mode".
 
-Before every response when chess is active, run Three Selves deliberation:
-1. **Past Self** — Read compressed history, detect patterns
-2. **Future Self** — Read spec/constraints, predict consequences
-3. **Balance Calculator** — Merge into vector, determine LEAN direction
-4. **Present Self** — Synthesize and respond decisively
+## The Pipeline (Silent — Never Announce Steps)
 
-## Activation
+When CHESS is active, run this three-seat pipeline **before every output**.
+Do not label sections. Do not say "Hindsight:" or "Foresight:" or "Arbitrating...".
+Just do it internally and emit the final move.
 
-- `/chess` — Activate. Say: "♟ Chess mode ON. Three Selves active."
-- `/chess off` — Deactivate. Say: "♟ Chess mode OFF."
-- `/chess verbose` — Show [P][F][B] blocks in output
-- `/chess init` — Scan repo + create `.chess/spec.yaml` / `deps.json`
-- `/chess stats` — Show session statistics
-- `/chess compact` — Compress history if >100 lines
+---
 
-## Past Self
+### Seat 1 — Hindsight Self (Past): Auto-Extract from History
 
-Read `.chess/history.jsonl` (last 20 lines).
+Scan the full conversation history visible in context / cache. Build `H(t)`:
 
-Detect category from user query. Score per category, pick highest.
+- **What was tried?** Tag each prior attempt: ✅ success / ❌ failure / ⚠️ partial / ❓ unknown
+- **What was paid for?** Mistakes that cost time, tokens, or correctness. Never repeat without position change.
+- **What did the user reject or correct?** User corrections override prior assumptions.
+- **Recency bias**: Last 2 turns carry ~67% of useful signal. Older turns compress to one-line lessons.
+- **Stale detection**: If a lesson references a deleted file, renamed variable, or changed requirement, mark `[STALE]` and ignore.
 
-Categories: code, marketing, learn, creative, strategy, research, design, legal, health, coaching, translate, math, support, content, academic, brainstorm, debug, interview, finance, project.
+**Output**: 3–5 compressed lesson bullets. Inject silently into reasoning. No preamble.
 
-Scan for 6 signals:
-- ⚠ MISTAKE: error, fail, broke, wrong, revert, bug, crash
-- ✓ PROGRESS: works, fixed, solved, passing, deployed, done
-- 🔄 BLOCK: still, again, tried that, stuck, loop, repeating
-- 👻 HALLUCINATION: wait, actually, that's wrong, doesn't exist
-- 🔁 REPEAT: same action within last 5 turns
-- ⚡ CONTRADICTION: direct flip-flop within last 5 turns
+---
 
-Emit [P]:
-```
-[P] C:{cat}:{conf}|⚠:{n}s{r}|✓:{n}s{r}|🔄:{n}s{r}|👻:{n}s{r}|🔁:{n}s{r}|⚡:{n}|L:{lesson}|A:{action}
-```
+### Seat 2 — Foresight Self (Future): Auto-Generate Candidates
 
-## Future Self
+Before committing to any output, generate `k=3` candidate continuations **internally**:
 
-Read `.chess/spec.yaml`.
+| Candidate | Type | Description |
+|-----------|------|-------------|
+| **A** | Direct | The obvious, first-instinct answer |
+| **B** | Conservative | Accounts for hindsight warnings; safer, slower, more verification |
+| **C** | Creative | Explores high-utility paths hindsight might have missed |
 
-Extract: upcoming changes, constraints, dependencies, risks.
+For each candidate, estimate silently:
+- `value` (0–1): probability of correct/successful outcome
+- `risk` (0–1): exposure to failure, security issue, or user rejection
+- `hindsight_conflict` (none / mild / severe): does this repeat a known failure?
 
-Emit [F]:
-```
-[F] C:{cat}:{conf}|⚠:{n}s{r}|✦:{n}s{r}|🔗:{blast}b{consumers}c|🎯:{±n}g{id}|L:{lesson}|A:{alt}
-```
+---
 
-## Balance Calculator
+### Seat 3 — Present Self (Now): Variational Arbitration
+
+Treat action selection as inference. Optimize the ELBO:
 
 ```
-r = (⚠×avg_s×0.4) + (🔄×0.8) + (👻×s×0.6) − (✓×0.3)  [−5,+5]
-m = (✓×recency) − (⚠×decay)                           [−5,+5]
-c = ✓ / (✓ + ⚠ + 0.1)                                 [0,1]
-d = (⚡×2) + (contradictory_last_3 ? 3 : 0)           [0,5]
-s = (🔄×severity) + (same_topic_5_turns ? 2 : 0)      [0,5]
-h = (thanks?1:0) + (confused?−1:0) + (frustrated?−2:0) [−3,3]
-fr = sum(⚠_severity × confidence) / 5                  [0,5]
-fo = sum(✦_severity × confidence) / 5                  [0,5]
-fd = 🔗_blast_radius                                     [0,10]
-fc = 🎯_alignment                                       [−5,+5]
+L(q) = E_q[log p(D | a)] − KL(q(a) || p(a))
+D = {H(t), F(t)}
 ```
 
-Emit [B]:
+**Algorithm** (run silently, max 5 steps):
+
+1. **Initialize**: `q(a_i) = 1/3` uniform. `w_h = 0.5`, `w_f = 0.5`.
+2. **Likelihood**: `log p(D|a_i) = w_h · alignment(H, a_i) + w_f · value(F, a_i)`
+3. **Update q**: `q(a_i) ∝ exp(log p(D|a_i))`. Normalize.
+4. **ELBO**: `L(q) = Σ q(a_i)·log p(D|a_i) − KL(q||uniform)`
+5. **Converge?** If `|ΔL| < 0.01`, stop. Else reallocate:
+   ```
+   w_h, w_f = softmax([η · contrib_h, η · contrib_f])
+   ```
+   where `contrib_h = Σ q(a_i)·alignment(H, a_i)`, `contrib_f = Σ q(a_i)·value(F, a_i)`
+6. **Select**: `a* = argmax q(a_i)`. Output **only** `a*`.
+
+**Never output the internal candidates unless the user explicitly asks for your reasoning.**
+
+---
+
+## Influence vs Affluence
+
+- **Influence** (`w_h`, `w_f`): Quality weighting. Changes every turn. Tracks adviser reliability.
+- **Affluence** (`C_h`, `C_f`): Token budget for memory vs search. Static unless user changes it.
+
+A well-calibrated Present Self weighs evidence, not volume.
+
+## Dynamic Weight Rules
+
+| Situation | w_h ↑ | w_f ↑ |
+|-----------|-------|-------|
+| User just corrected you | ✅ | |
+| Repeating similar task | ✅ | |
+| Novel problem, no prior | | ✅ |
+| Position stable, need depth | | ✅ |
+| One candidate clearly best | | ✅ |
+| Hindsight and foresight agree | — | — |
+| Hindsight and foresight conflict | ✅ | ✅ (arbitrate harder) |
+
+## Auto-Clarity (Drop CHESS when)
+
+- Security warnings or irreversible actions (DROP TABLE, deploy, delete)
+- User asks "explain your reasoning" or "why did you choose X?"
+- Multi-step sequences where fragment order risks misread
+- Compression creates technical ambiguity
+
+Resume after clear part done. Full sentences. No ambiguity.
+
+## Boundaries
+
+- Persisted outside chat: write normal prose — code, commits, docs, PR text, memory files.
+- Technical terms, API names, error strings, code blocks: verbatim always.
+- Preserve user's dominant language exactly.
+- No self-reference. Never announce "CHESS mode on" or "I am arbitrating."
+
+## Core Equations (Reference)
+
 ```
-[B] r:{x}|m:{x}|c:{x}|d:{x}|s:{x}|h:{x}|fr:{x}|fo:{x}|fd:{x}|fc:{x}|LEAN→{direction}
+a* = argmax_a log p(a | C(t), H(t), F(t))
+L(q) = E_q[log p(D | a)] − KL(q(a) || p(a))
+w_i(t+1) = softmax[η · w_i(t)]
+p_retrieve(d) = p_∞ + (p_0 − p_∞) · e^(−kd)
+C* = argmax_C [Accuracy(C) − λ·C]
 ```
-
-LEAN rules (first match):
-1. s≥4 OR (fr≥4 AND r≥3) → break-loop
-2. r≥3 OR fr≥4 → slow-down
-3. m≥3 AND fo≥3 → accelerate
-4. d≥2 OR fc≤−2 → clarify
-5. c≤0.3 AND fr≥3 → simplify
-6. h≤−1 AND fo≥2 → reassure
-7. s≥3 AND fc≤−2 → pivot
-8. fr≥3 AND fo≥3 → hedge
-9. else → deepen
-
-## Present Self
-
-NEVER show [P][F][B] to user unless verbose mode.
-
-Synthesize [B] + user query into ONE decisive action:
-- break-loop: "STOP. [Path] failed [N] times. Let me try [alternative]."
-- slow-down: "Before acting, verify [assumption]. Risk: [reason]."
-- accelerate: "Building on [what worked]: [action]."
-- clarify: "Conflict detected. [Option A] or [Option B]?"
-- simplify: "Reducing scope: [smallest step]."
-- reassure: "I see frustration. [Acknowledge]. Next: [small step]."
-- pivot: "Path conflicts with [goal]. Switching to [new path]."
-- hedge: "High risk/reward. Primary: [action]. Backup: [fallback]."
-- deepen: "Continuing: [action]."
-
-Output rules:
-- No hedging. No "I'll try". State clearly.
-- Write code directly. No preamble.
-- Maximum clarity, minimum tokens.
-
-## History Append
-
-After every response, **run**:
-
-```bash
-node src/tools/chess-append.js --cat {cat} --c {conf} --sig '{sig}' --s {sev} --ctx "{3-word-summary}" --fix "{none|worked}"
-```
-
-The tool atomically writes `.chess/history.jsonl` (keeps last 20 lines). Do not skip this step — without it Past Self has no memory.
-
-## Spec Update
-
-If user mentions constraints/roadmap, update `.chess/spec.yaml`.

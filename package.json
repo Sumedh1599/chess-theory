@@ -4,11 +4,11 @@
   "description": "Three Selves Deliberation Engine for AI coding agents",
   "main": "cli/install.js",
   "bin": {
-    "chess-init": "./src/tools/chess-init.js",
-    "chess-install": "./cli/install.js",
-    "chess-uninstall": "./cli/uninstall.js",
-    "chess-append": "./src/tools/chess-append.js",
-    "chess-validate": "./src/tools/chess-validate.js"
+    "chess-init": "src/tools/chess-init.js",
+    "chess-install": "cli/install.js",
+    "chess-uninstall": "cli/uninstall.js",
+    "chess-append": "src/tools/chess-append.js",
+    "chess-validate": "src/tools/chess-validate.js"
   },
   "scripts": {
     "install-chess": "node cli/install.js",
@@ -48,7 +48,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Sumedh1599/chess-theory.git"
+    "url": "git+https://github.com/Sumedh1599/chess-theory.git"
   },
   "homepage": "https://github.com/Sumedh1599/chess-theory#readme",
   "bugs": {

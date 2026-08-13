@@ -26,17 +26,17 @@ copy_skill() {
   local dest="$1"
   mkdir -p "$dest"
   cp "$here/SKILL.md" "$dest/SKILL.md"
-  for f in hindsight.md foresight.md arbitration.md README.md LICENSE research_paper.pdf requirements.txt; do
+  for f in hindsight.md foresight.md arbitration.md README.md LICENSE research_paper.pdf requirements.txt .cursorrules; do
     [ -f "$here/$f" ] && cp "$here/$f" "$dest/$f"
   done
-  for d in examples scripts src assets; do
+  for d in examples scripts src assets .cursor; do
     if [ -d "$here/$d" ]; then
       rm -rf "$dest/$d"
       cp -R "$here/$d" "$dest/$d"
     fi
   done
-  # Drop Python cache if any leaked in
-  find "$dest" -type d -name '__pycache__' -prune -exec rm -rf {} + 2>/dev/null || true
+  # Drop Python cache / local venv if any leaked in
+  find "$dest" -type d \( -name '__pycache__' -o -name '.venv' \) -prune -exec rm -rf {} + 2>/dev/null || true
   echo "✓ Installed: $dest"
 }
 
