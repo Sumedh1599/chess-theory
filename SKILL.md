@@ -1,5 +1,3 @@
-# CHESS — Calibrated Hindsight–Foresight Strategic Self-Arbitration
-
 ```yaml
 ---
 name: chess
