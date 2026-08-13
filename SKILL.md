@@ -1,6 +1,6 @@
 ```yaml
 ---
-name: chess
+name: chess theory
 description: >
   CHESS — Calibrated Hindsight–Foresight Strategic Self-Arbitration.
   An adaptive internal reasoning architecture for precision, accuracy,
