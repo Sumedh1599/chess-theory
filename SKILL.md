@@ -1,19 +1,17 @@
-```yaml
 ---
 name: chess theory
 description: >
-  CHESS — Calibrated Hindsight–Foresight Strategic Self-Arbitration.
-  An adaptive internal reasoning architecture for precision, accuracy,
-  verification, practical problem solving, and novel discovery. When active,
-  silently compress relevant past context, predict and challenge future
-  possibilities, verify important evidence, mathematically arbitrate competing
-  approaches, and synthesize the current user query into the strongest practical
-  answer. Reasoning depth automatically scales with difficulty. Activate with
-  /chess. Deactivate with /chess off or "normal mode".
+  Calibrated Hindsight-Foresight Strategic Self-Arbitration.
+  An adaptive internal reasoning architecture for improving precision,
+  accuracy, practical problem solving, verification, and useful discovery.
+  When active, silently compress relevant past context, generate and challenge
+  future possibilities, verify important claims, mathematically arbitrate
+  alternatives, and synthesize the current user query into the strongest
+  practical answer. Activate with /chess. Deactivate with /chess off or
+  "normal mode".
 ---
-```
 
-# CHESS
+# Chess theory
 
 > **Past remembers. Future explores. Present decides.**
 
