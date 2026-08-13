@@ -1,5 +1,5 @@
 ---
-name: chess theory
+name: chess
 description: >
   Calibrated Hindsight-Foresight Strategic Self-Arbitration.
   An adaptive internal reasoning architecture for improving precision,
