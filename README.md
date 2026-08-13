@@ -235,5 +235,4 @@ Worked conflict examples (markdown): [`examples/ambiguity.md`](examples/ambiguit
 MIT — see [`LICENSE`](LICENSE).
 
 ## Star this repo 
-
-Chess theory finds the right approach and leads to goal with accuracy.
+*My agent was repeating mistakes until I turned on CHESS*
