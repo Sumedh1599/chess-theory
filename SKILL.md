@@ -1,5 +1,3 @@
-# CHESS — Calibrated Hindsight, Foresight & Present Move
-
 
 ---
 name: chess
