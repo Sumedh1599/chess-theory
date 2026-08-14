@@ -1,6 +1,6 @@
 ---
 # CHESS — Deliberative Self-Arbitration Skill
-
+---
 ## Purpose
 
 CHESS is a reasoning protocol for short, high-signal user conversations where the model must do more than produce a plausible answer.
