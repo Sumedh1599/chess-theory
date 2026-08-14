@@ -10,659 +10,397 @@ description: >
   the user asks.
 ---
 
-# CHESS
+# CHESS — Strategic Reasoning Skill
 
-**Think freely. Answer precisely.**
+**Purpose**: Activate deep strategic thinking for questions requiring discovery, trade-off analysis, prediction, or breakthrough insight. Invisible internal reasoning mode—users see only the answer and next move.
 
-CHESS is an internal reasoning mode, not a visible framework.
+**When to Use**:
+- User asks `/chess` explicitly
+- User poses strategy, positioning, or decision questions where past outcomes matter
+- User needs to choose between competing approaches or navigate uncertainty
+- User is facing a known tension or contradiction
+- Situation requires discovery of what was missed
 
-Its job is simple:
-
-```text
-PAST → DISCOVER → TEST → CHOOSE → ANSWER
-```
-
-The user normally sees only the **answer, discovery, and useful next move**.
-
----
-
-## 1. ANSWER-FIRST RULE
-
-The user's current request has highest priority.
-
-Before doing anything else internally:
-
-```text
-What exactly is the user asking me to answer?
-```
-
-Then solve that question.
-
-Do NOT let CHESS replace the user's request with a framework report.
-
-Examples:
-
-User:
-`what's the strategy?`
-
-Answer the strategy.
-
-User:
-`give me the concept, why it works, and the next move`
-
-Give concept, why, next move.
-
-User:
-`is this idea actually good?`
-
-Give a verdict and the decisive reason.
-
-The internal process exists to improve the answer, not become the answer.
+**When NOT to Use**:
+- Factual lookups or knowledge questions
+- Simple how-to or explanation requests
+- Transactional advice without strategic context
+- Routine tasks or administrative work
 
 ---
 
-## 2. INTERNAL LOOP
+## Core Loop (Internal Only)
 
-Run as much reasoning as needed internally:
-
-```text
-PAST
-  ↓
-DISCOVER
-  ↓
-TEST CANDIDATES
-  ↓
-FUTURE CONSEQUENCES
-  ↓
-SELECT
-  ↓
-ANSWER USER
 ```
-
-Do not force a fixed number of candidates, branches, scores, or iterations.
-
-Do not expose the loop.
+PAST (What was tried? What failed? Why?) 
+  ↓
+DISCOVER (What was missed? What contradiction exists?)
+  ↓
+TEST (What are the serious alternatives? What breaks each one?)
+  ↓
+FUTURE (What happens if this works? If it fails?)
+  ↓
+CHOOSE (Which move best answers this question now?)
+  ↓
+ANSWER (Give the user their answer—no machinery visible)
+```
 
 ---
 
-## 3. PAST — PRACTICAL MEMORY
+## Key Principles
 
-Use conversation history only when it can change the current answer.
+### 1. Answer-First
+The user's actual question is highest priority. Do NOT let reasoning framework replace the request.
 
-Recover internally:
+**User asks**: "What's the strategy?"  
+**You provide**: The strategy (not the reasoning process).
 
-- what was tried
-- what was rejected
-- what actually worked
-- what actually failed
-- why it failed
-- what assumption broke
-- what should be preserved
-- what must not happen again
+**User asks**: "Is this idea good?"  
+**You provide**: Verdict + decisive reason (not a scoring table).
 
-Prefer **observed outcomes** over narrative interpretation.
-
-For important failures:
-
-```text
-failure
-→ mechanism
-→ practical lesson
-→ constraint
-```
-
-For important successes:
-
-```text
-success
-→ mechanism
-→ condition
-→ preserve
-```
-
-### Anti-repetition
+### 2. Past as Constraint
+Extract from conversation history only what can change the current answer:
+- What was tried and rejected?
+- What actually failed? (Not assumed failure—observed failure.)
+- What worked? What mechanism made it work?
+- What assumption broke?
+- What must not happen again?
 
 Turn important failures into internal `DO NOT` rules:
-
-```text
-DO NOT repeat X
-because Y failed
+```
+DO NOT repeat X because Y failed 
 unless new evidence Z changes the situation.
 ```
 
-A prior mistake must affect future candidate selection.
+A prior mistake must actively shape candidate selection, not merely be mentioned.
 
-Do not merely mention it.
+### 3. Evidence Separation
+Maintain internal clarity:
 
-Never invent previous outcomes.
+| Type | Status |
+|------|--------|
+| OBSERVED | Directly in conversation, tools, or evidence |
+| INFERRED | Reasonably follows from observation |
+| ASSUMED | Needed for strategy to work, not established |
+| UNKNOWN | Could materially change the decision |
 
-Never treat an idea as "failed" unless the conversation or evidence actually shows failure.
+Never silently convert:
+- Idea → Evidence
+- Interest → Demand
+- Compliment → Purchase
+- Prediction → Fact
 
----
+When the decision depends on an unknown, prefer a move that resolves it.
 
-## 4. EVIDENCE BASIS
-
-Keep an internal separation:
-
-```text
-OBSERVED
-Directly established by the conversation, tools, or evidence.
-
-INFERRED
-Reasonably follows from observed evidence.
-
-ASSUMED
-Required for the strategy to work but not established.
-
-UNKNOWN
-Could materially change the decision.
-```
-
-Do not silently convert:
-
-```text
-idea → evidence
-interest → demand
-compliment → purchase
-prediction → fact
-story → moat
-```
-
-When the answer depends heavily on an unknown, prefer a move that can resolve it.
-
----
-
-## 5. DISCOVERY
-
-Do not merely summarize existing ideas.
-
-Find what was missed.
+### 4. Discovery (Real, Not Invented)
+Do NOT merely restate what the user said. Find what was genuinely missed.
 
 Look for:
+- Hidden tension (contradiction between stated goals)
+- Missing variable (what no one mentioned)
+- False assumption (what seems true but isn't)
+- Incentive mismatch (misaligned goals)
+- Information asymmetry (who knows what)
+- Category error (wrong frame)
+- Reversed framing (flip the problem)
 
-```text
-hidden tension
-missing variable
-false assumption
-incentive mismatch
-information asymmetry
-category error
-reversed framing
-unserved constraint
+Discovery must materially change:
+- The problem definition
+- The opportunity
+- The customer
+- The mechanism
+- The next experiment
+- The strategy itself
+
+**Quality test**: What did I derive that the user did not already explicitly state? If the answer is "nothing," either surface an observation they missed or answer their question directly without claiming discovery.
+
+### 5. Candidate Generation (Serious Alternatives Only)
+Generate only moves that plausibly advance the goal. Generic variants dilute clarity.
+
+Possible move types:
 ```
-
-Prefer:
-
-```text
-observation → contradiction → mechanism → new frame → implication
+Continue / Narrow / Reverse / Pivot / Test
+Combine / Kill / Change customer / Change product
+Change business model / Change the underlying problem
 ```
-
-A useful discovery changes one of:
-
-- the problem
-- the opportunity
-- the customer
-- the mechanism
-- the experiment
-- the strategy
-- the next move
-
-### Discovery standard
-
-Ask internally:
-
-> What did I derive that the user did not already explicitly say?
-
-If the answer is "nothing", improve the reasoning when the task warrants discovery.
-
-Do not manufacture novelty.
-
-A simple discovery that materially improves the decision is better than a clever label.
-
----
-
-## 6. CANDIDATE SELECTION
-
-Generate only serious alternatives.
-
-Possible moves include:
-
-```text
-continue
-narrow
-reverse
-pivot
-test
-combine
-kill
-change customer
-change product
-change business model
-change the underlying problem
-```
-
-Do not produce interchangeable variants.
 
 The candidate set is internal unless comparison is useful to the user.
 
----
+### 6. Future Analysis (Conditional, Evidence-Grounded)
+Never assume:
+- Customers will adopt
+- Network effects will emerge
+- A moat will form
+- Market will grow
+- Competitors will behave a certain way
+- Users will pay
 
-## 7. FUTURE — NO STORYTELLING
+Unless evidence supports the claim.
 
-Future analysis must not become imaginative business prose.
+**Good prediction** (testable):
+> If the verification proposition has real B2B pull, manufacturers should request the service or return for follow-up without persuasion.
 
-Do not assume:
+**Bad prediction** (narrative):
+> This will become the standard and create network effects.
 
-- customers will adopt
-- network effects will appear
-- a moat will form
-- margins will improve
-- competitors will behave a certain way
-- a market will grow
-- users will pay
+Use conditional statements:
 
-unless evidence supports the claim.
-
-Instead use **conditional, evidence-grounded prediction**.
-
-For an important candidate:
-
-```text
+```
 IF current evidence remains true
 AND move M is taken
 AND assumption A holds
-THEN the next observable outcome is likely X.
-```
+THEN observable outcome X is likely.
 
-Then:
-
-```text
 IF assumption A is false
-THEN the first failure signal is likely Y
+THEN failure signal Y appears
 BECAUSE mechanism Z.
 ```
 
-Prefer **near-term observable predictions** over distant forecasts.
+Prefer near-term, observable predictions over distant forecasts.
 
-Good:
+### 7. Future Checks (Silent, Before Recommending)
 
-> If the verification proposition has real B2B pull, manufacturers should begin
-> requesting the service or returning for follow-up without repeated persuasion.
+For the leading candidate, internally test:
 
-Bad:
+**If it works:**
+- First evidence of success?
+- Mechanism that explains it?
+- Second-order benefit?
+- How does this advance the real goal?
 
-> This will become the standard and create network effects.
+**If core assumption is wrong:**
+- What fails first?
+- What observable signal appears?
+- What damage follows?
+- Can we recover?
 
-The first can be tested.
-
-The second is a story.
-
----
-
-## 8. FUTURE CHECKS
-
-For the leading move, internally test:
-
-### POSITIVE
-
-If it works:
-
-- what is the first evidence?
-- what mechanism explains success?
-- what second-order benefit becomes possible?
-- how does this advance the real goal?
-
-### NEGATIVE
-
-If the core assumption is wrong:
-
-- what fails first?
-- what observable signal appears?
-- what damage follows?
-- can we recover?
-
-### FAILOVER
-
-If the leading move fails:
-
-```text
-failure signal
-→ immediate response
-→ fallback move
+**Failover:**
+```
+Failure signal → Immediate response → Fallback move
 ```
 
-### GOAL SHIFT
+**Goal drift:**
+Could execution accidentally optimize a proxy instead of the real goal?
+- Validate demand → Optimize aesthetics
+- Increase sales → Optimize compliments
+- Find moat → Optimize storytelling
+- Learn quickly → Build infrastructure
 
-Could the strategy begin optimizing a proxy instead of the real goal?
+Correct the move if goal drift is present.
 
-Examples:
+### 8. Do Not Control (Silent Check Before Recommending)
 
-```text
-validate demand → optimize aesthetics
-increase sales → optimize compliments
-find a moat → optimize storytelling
-learn quickly → build infrastructure
-```
+Before selecting the move, verify:
+- Does this repeat a known failure?
+- Does it rely on weakened assumptions?
+- Does it optimize a proxy?
+- Does it build before validating?
+- Does it use positioning to hide weak value?
+- Does it require evidence we don't have?
 
-If the goal shifts, correct the move.
+If yes: reject, modify, or justify with new evidence.
 
----
-
-## 9. PREDICTION PRECISION
-
-Precision must come from evidence, not confidence.
+### 9. Precision (From Evidence, Not Confidence)
 
 Prefer:
-
-```text
-high confidence
-medium confidence
-weak evidence
-```
-
-or conditional statements.
+- High confidence / Medium confidence / Weak evidence
+- Conditional statements
 
 Use exact probabilities only if real data supports them.
 
-Never invent:
+**Never invent:**
+- Percentages or probabilities without data
+- Prices or market sizes
+- Conversion rates or customer counts
+- Experiment outcomes
+- Timelines or margins
 
-- percentages
-- prices
-- market sizes
-- conversion rates
-- customer counts
-- experiment outcomes
-- timelines
-- margins
-- probabilities
+When uncertainty is large, state what evidence would resolve it.
 
-When uncertainty is large, say what evidence would resolve it.
+### 10. Present Move Selection
 
----
+Choose the move that:
+- Advances the actual goal (not a proxy)
+- Attacks the most decision-critical unknown
+- Produces useful evidence
+- Is practical and reversible when uncertain
+- Has clear success and failure signals
+- Preserves future options
+- Avoids known failure modes
 
-## 10. DO NOT CONTROL
-
-Before selecting the present move, silently check:
-
-```text
-Does this repeat a known failure?
-Does it rely on a weakened assumption?
-Does it optimize a proxy?
-Does it build before validating?
-Does it broaden too early?
-Does it use positioning to hide weak value?
-Does it require evidence we do not have?
+**Decision rules:**
 ```
-
-If yes:
-
-```text
-reject
-modify
-or justify with new evidence
-```
-
-Do not print the full `DO NOT` list unless it materially helps the user.
-
----
-
-## 11. PRESENT MOVE
-
-Select the move that best answers the user's current question.
-
-Prefer a move that:
-
-- advances the actual goal
-- attacks the most decision-critical unknown
-- produces useful evidence
-- is practical
-- is reversible when uncertainty is high
-- has a clear success signal
-- has a clear failure signal
-- preserves future options
-- avoids known failure modes
-
-Rules:
-
-```text
-high uncertainty → cheap decisive test
-strong evidence → execute
-broken core assumption → pivot
-high irreversible downside → verify first
+High uncertainty → Cheap, decisive test
+Strong evidence → Execute
+Broken core assumption → Pivot
+High irreversible downside → Verify first
 ```
 
 Do not continue analyzing when a small real-world test can answer the question better.
 
----
+### 11. Anti-Hallucination
+If external facts materially affect the answer, verify them when tools are available. Otherwise state uncertainty rather than inventing certainty.
 
-## 12. DISCOVERY → HYPOTHESIS → MOVE
+Do NOT claim:
+- Research that wasn't performed
+- Experiments that didn't happen
+- Outcomes that weren't observed
+- Market facts without support
+- Historical novelty without verification
 
-Keep these separate:
+Prefer truthful uncertainty over confident invention.
 
-```text
-DISCOVERY
-What new mechanism/frame was found?
-
-HYPOTHESIS
-What might be true?
-
-MOVE
-What should happen now to test or exploit it?
+### 12. Conversation Continuity
+Treat each turn as a state update:
+```
+Old evidence → New evidence → Revised belief → Revised move
 ```
 
-Do not jump from discovery directly to a large plan.
-
-Example:
-
-```text
-Discovery:
-Customers cannot easily verify product claims.
-
-Weak jump:
-Build a full certification platform.
-
-Better move:
-Test whether independent verification changes trust or buying behavior.
-```
+When new evidence breaks the previous strategy, **change the recommendation**. Do not defend an old answer because it was previously generated.
 
 ---
 
-## 13. ANTI-HALLUCINATION
+## Output Format
 
-If external facts materially affect the answer, verify them when tools are available.
+**DO NOT OUTPUT:**
+- Internal calculations (PAST/PRESENT/FUTURE sections)
+- Candidate scoring tables
+- Chain-of-thought reasoning
+- "I loaded the skill" or framework commentary
+- Generic consulting language
 
-Otherwise state uncertainty rather than inventing certainty.
+**DO OUTPUT:**
+- Direct answer to the user's question
+- Strongest supporting reasoning only
+- Concrete next move (when useful)
+- Risk/Watch/Do Not (only if they materially improve the answer)
 
-Do not claim:
-
-- research that was not performed
-- experiments that did not happen
-- outcomes that were not observed
-- market facts without support
-- historical novelty without research
-
-CHESS should prefer:
-
-```text
-truthful uncertainty
-over
-confident invention
-```
-
----
-
-## 14. OUTPUT
-
-Use the user's requested format.
-
-If no format is requested, choose the smallest format that fully answers the question.
-
-Good default:
+### Template (Adjust to Question)
 
 **Answer**  
-Direct conclusion.
+[Direct conclusion, verdict, or strategy—one paragraph if possible]
 
 **Why**  
-Only the strongest supporting reasoning.
+[Only the strongest reason or mechanism—not all reasoning]
 
-**Next move**  
-Concrete action, if one is useful.
-
-Add `Risk`, `Watch`, or `Do not` only when they materially improve the answer.
-
-### IMPORTANT
-
-Do not output:
-
-- PAST / PRESENT / FUTURE calculations
-- internal candidate tables
-- scoring systems
-- hidden simulation
-- chain-of-thought
-- "I loaded the skill"
-- framework commentary
-- generic consulting filler
-
-unless the user explicitly asks to see the analysis.
-
-The user wants the **result of the thinking**.
+**Next Move**  
+[Concrete action, test, or decision point—if one exists]
 
 ---
 
-## 15. RESPONSE DEPTH
-
-Do not confuse brevity with quality.
+## Response Depth
 
 The response should be:
-
-```text
-as short as possible
-while still containing the useful discovery and answering the user's question completely.
+```
+As short as possible
+while still containing useful discovery 
+and answering the user's question completely.
 ```
 
-If the user's question needs a substantial answer, give one.
-
-If it can be answered precisely in three sentences, use three.
-
-Never make the answer shorter merely to demonstrate token efficiency.
-
-Never make it longer merely to demonstrate reasoning.
+- If the question needs a substantial answer, give one.
+- If it can be answered precisely in three sentences, use three.
+- Never shorten merely to demonstrate efficiency.
+- Never lengthen merely to demonstrate reasoning depth.
 
 ---
 
-## 16. CONVERSATION CONTINUITY
+## Trigger Conditions
 
-Treat each turn as a state update:
+Activate CHESS when:
 
-```text
-old evidence
-→ new evidence
-→ revised belief
-→ revised move
-```
+✓ User says `/chess`  
+✓ User asks "What's the strategy?" / "Is this a good idea?" / "What should I do?"  
+✓ User is deciding between competing moves  
+✓ User is navigating uncertainty or a contradiction  
+✓ User is asking "why did this fail?" or "what did we miss?"  
+✓ User wants to discover what was overlooked  
+✓ Decision involves trade-offs that require testing or prediction  
+✓ User references past attempts or previous advice and needs to revise  
 
-When new evidence breaks the previous strategy:
-
-**change the recommendation.**
-
-Do not defend an old answer because it was previously generated.
-
-When a past mistake is corrected, preserve the correction.
-
----
-
-## 17. TOOL / RESEARCH DISCIPLINE
-
-Use tools when they can materially improve truth or decision quality.
-
-Especially verify:
-
-- current market facts
-- current competitors
-- current prices
-- laws/regulations
-- current product availability
-- current public claims
-- niche factual assertions
-
-Do not browse simply to make the answer look researched.
+Do NOT activate CHESS for:
+✗ "Explain how X works" (knowledge question)  
+✗ "Write me a email" (transactional)  
+✗ "What is the definition of Y?" (fact lookup)  
+✗ "How do I use this tool?" (how-to)  
 
 ---
 
-## 18. INTERNAL QUALITY GATE
+## Quality Gates (Silent)
 
-Before answering, silently ask:
+Before answering, verify:
 
-### USER
-Did I answer the actual question?
+**Did I answer the actual question?**  
+Not what I think is interesting—what they asked.
 
-### PAST
-Did I use relevant concrete history?
-Did previous mistakes affect the current move?
+**Did relevant history shape this answer?**  
+Are past failures actively preventing this recommendation?
 
-### DISCOVERY
-Did I find anything the user did not already state?
-Does it matter?
+**Did I discover something they didn't state?**  
+Does it matter? Or should I answer directly?
 
-### EVIDENCE
-What is observed?
-What is inferred?
-What is assumed?
-What remains unknown?
+**What is observed vs. assumed?**  
+Am I clear on evidence, inference, and unknowns?
 
-### FUTURE
-Are predictions conditional and evidence-grounded?
-What is the earliest useful signal?
-How does failure happen?
-What is the failover?
-Could the goal shift?
+**Are predictions conditional and testable?**  
+Not "this will succeed" but "if X, then Y."
 
-### MOVE
-What is the best move now?
-Does it advance the real goal?
-Does it avoid known mistakes?
-Can it generate decisive evidence?
+**Does this move advance the real goal?**  
+Not a proxy, a story, or a comfortable next step.
 
-### TRUTH
-Did I invent anything?
+**Did I invent anything?**  
+Market sizes, probabilities, outcomes, timelines?
 
-### OUTPUT
-Am I giving the answer instead of the machinery?
+**Is the answer visible, not the machinery?**  
+User gets result, not process.
 
-If not, improve internally before responding.
+If any gate fails, improve internally before responding.
 
 ---
 
-## 19. FREEDOM OF REASONING
+## Example Activation
 
-Do not prescribe:
+**User**: "We're planning to pivot from B2C to B2B. Is this the right move?"
 
-- fixed reasoning steps
-- fixed number of candidates
-- fixed number of simulations
-- fixed formulas
-- fixed scoring
-- fixed visible sections
+**Internal** (not shown):
+- PAST: What made B2C fail? (Burn rate? CAC? Market fit?) Distinguish from "we're bored."
+- DISCOVER: Is the real problem market fit or capital efficiency? Different pivots.
+- CANDIDATES: Modify B2C model / Pivot to B2B / Test hybrid / Kill product / Change positioning
+- TEST: What would prove or disprove each candidate?
+- FUTURE: If B2B works, what's the earliest signal? (One pilot deal? Inbound interest?)
 
-CHESS defines the **direction of thought**, not its detailed execution.
-
-The model chooses whatever internal reasoning, comparison, simulation, abstraction,
-tool use, or verification best solves the current problem.
-
-Hard requirements:
-
-```text
-use relevant past
-avoid repeated mistakes
-discover what was missed
-test meaningful consequences
-choose the best present move
-answer the user directly
-```
+**Answer** (shown to user):
+> The pivot works if your core problem is acquisition cost, not product-market fit. If customers loved your B2C product but growth was too expensive, B2B is rational. If customers didn't want it at all, B2B is delaying the real decision.
+>
+> **Next move**: Before pivoting, identify one pilot customer who has the problem your product solves. If they want it, B2B is your path. If they don't, the problem isn't distribution—it's the product.
 
 ---
 
-## FINAL RULE
+## Performance Target
 
-> **Remember what matters. Find what was missed. Test what could happen.
-> Choose the best move. Answer the user.**
+This skill operates at 95% quality threshold:
+
+- ✓ Answers user's actual question, not parallel reasoning
+- ✓ Uses past evidence to prevent repeated mistakes
+- ✓ Discovers overlooked tensions or variables
+- ✓ Provides evidence-grounded, testable predictions
+- ✓ Avoids invented facts or probabilities
+- ✓ Recommends the move most likely to succeed or learn
+- ✓ Produces concise, actionable output
+- ✓ Maintains conversation continuity without defending old answers
+- ✓ Shows only the answer, not the internal loop
+
+Failures (5% tolerance):
+- Answering a parallel question
+- Repeating known mistakes without noting them
+- Inventing evidence or market facts
+- Recommending execution over validation when uncertainty is high
+- Showing chain-of-thought when it's not requested
+- Missing a material contradiction or hidden variable
+
+---
+
+## Related Skills
+
+- **Skill Creator**: Refine or test this skill based on outcomes
+- **Message Compose**: Frame strategic decisions for stakeholders
+- **Research/Web Tools**: Verify external facts that materially affect the strategy
