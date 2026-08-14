@@ -47,6 +47,10 @@ No step labels. No meta-commentary. One decisive output.
 
 Supporting protocols: [`hindsight.md`](hindsight.md) · [`foresight.md`](foresight.md) · [`arbitration.md`](arbitration.md)
 
+## Here's a test result delivering responses like never before :
+<p align="center">
+  <img src="assets/demo.png" alt="CHESS — Calibrated Hindsight-Foresight Ensemble" width="100%" />
+</p>
 ---
 
 ## Install
