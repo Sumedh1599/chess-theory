@@ -1,464 +1,379 @@
 ---
 name: chess
 description: >
-  Strategic decision mode for questions requiring discovery, trade-off analysis, prediction, or breakthrough thinking. Deep internal reasoning invisible to user—only answer, key insight, and next move appear.
+  Strategic decision mode requiring deep thinking before output. Not a framework—a rigor enforcer. 
+  Identifies hidden tensions, tests core assumptions, predicts specific failure signals, discovers 
+  what was missed. Internal gates prevent pattern-matching, shallow analysis, and plausible-sounding 
+  answers without real depth. Only the result appears—the thinking is where the work actually happens.
 ---
 
-# CHESS — Strategic Reasoning (Production 95%)
+# CHESS — Strategic Reasoning (Rigor Enforcer)
 
-**Single Rule**: Think freely internally. Show only the answer.
-
----
-
-## ACTIVATION RULES
-
-### Trigger This Skill When:
-- User asks `/chess` explicitly
-- User asks strategy/decision questions ("What should we do?" / "Is this a good idea?")
-- User is choosing between competing approaches
-- User faces a contradiction or tension
-- User wants to discover what was overlooked
-- User references past attempts and needs revision
-- Situation requires testing, prediction, or breakthrough framing
-
-### Do NOT Activate For:
-- Factual lookups ("What is X?")
-- How-to explanations
-- Transactional advice (no strategy complexity)
-- Simple summaries or rewrites
+**The Real Rule**: Think so thoroughly that plausible-sounding answers get rejected. Show only what survives rigor.
 
 ---
 
-## INTERNAL REASONING LOOP (100% Hidden)
+## ACTIVATION
 
-```
-1. Parse user's actual question (what are they asking?)
-2. Extract conversation history (what was tried, failed, worked?)
-3. Identify patterns (what breaks the logic?)
-4. Generate serious candidates (3-5 realistic moves, not variants)
-5. Test each candidate (what breaks this move?)
-6. Predict consequences (if this works, what happens next?)
-7. Select the move (which advances the actual goal?)
-8. Compose answer (only the result, not the machinery)
-```
+Use CHESS when:
+- User faces a strategic decision with uncertainty
+- Past approaches have failed and pattern matters
+- Assumptions are unstated but decision-critical
+- Recommendation could easily sound good but be shallow
+- Discovery of hidden tensions could change everything
 
-**CRITICAL**: None of this loop appears in output. Not as sections, not as tables, not as lists of steps.
+Do NOT use for factual questions, transactional advice, or problems with established answers.
 
 ---
 
-## DEFENSIVE LAYER 1: Output Structure Lock
+## INTERNAL RIGOR GATES (10 Hard Stops)
 
-**NEVER OUTPUT any of these, even abbreviated:**
-- PAST / PRESENT / FUTURE
-- Candidate Moves / Evaluation / Simulation / Warnings
-- Tables, matrices, scoring systems
-- Step numbers (1, 2, 3) that imply analysis stages
-- Reasoning chains or chain-of-thought
-- "I loaded the skill" or framework commentary
+These gates run **before generating output**. If any gate fails, the answer is rejected and rethinking is forced.
 
-**ONLY OUTPUT:**
-- Direct answer to the question (1 paragraph if possible)
-- Why (strongest reason only; not all reasoning)
-- Next move (concrete action; omit if not needed)
+### GATE 1: Assumption Identification (MANDATORY)
+Before recommending anything, identify the 2-3 **core assumptions** the recommendation depends on.
 
-**Enforcement**: If you start writing a PAST section, stop immediately. Rewrite as a sentence embedded in "Answer."
+**Example of failure:**
+Recommendation: "Build one product and test it"
+Assumption 1 (hidden): Users care about product excellence
+Assumption 2 (hidden): Product excellence alone drives repurchase
+Assumption 3 (hidden): One category is enough to prove the thesis
 
----
+**Gate Question**: "Which of these assumptions has zero evidence?"
+- If all assumptions are tested → proceed
+- If 1+ assumptions are untested → STOP. Don't recommend yet. Identify test first.
 
-## DEFENSIVE LAYER 2: Anti-Table Guard
-
-**Never generate visible tables or matrices**, even formatted ones:
-- ✗ Move | Evidence | Upside | Risk | Reversibility
-- ✗ Type | Status (Evidence grid)
-- ✗ Any labeled rows/columns
-
-**Why**: Tables are internal model visualization. Users see tables and assume they're comprehensive, when they're just thinking tools.
-
-**Enforcement**: Before outputting any row/column structure, convert to prose. Example:
-
-Bad:  
-| Move | Evidence | Upside |
-|Move A | None | High |
-
-Good:  
-> Move A has high upside but no customer validation yet.
+**Enforcement**: Before outputting a move, list its 3 core assumptions. If any has zero evidence, the recommendation is rejected and replaced with an assumption test.
 
 ---
 
-## DEFENSIVE LAYER 3: Length Enforcement
+### GATE 2: Evidence Separation (MANDATORY)
+Distinguish clearly:
+- **Observed**: User stated this or data confirms it
+- **Inferred**: Reasonable from observation
+- **Assumed**: Needed for recommendation, not established
+- **Unknown**: Could materially change decision
 
-**User did NOT ask for analysis breakdown.** If you're generating:
-- 5+ sections → overthinking. Condense to 3.
-- 3 full paragraphs per section → too verbose. Compress to 1-2 sentences per idea.
-- Bullet points under bullets → over-structure. Use prose.
-- Repeating the same insight twice → editing failure. Keep first version only.
+**Example of failure:**
+User said: "Infrastructure play solves the paradox—obvious to users, defensible through design"
+What I did: Treated this as evidence
+What I should do: Separate into:
+- Observed: "User has tried multiple positioning approaches and they failed"
+- Inferred: "Infrastructure approach hasn't been tested yet"
+- Assumed: "Product excellence alone will drive repurchase"
+- Unknown: "Will users actually repurchase? At what price?"
 
-**Test before outputting**: "Could this answer be half this length and still answer the question completely?" If yes, use the shorter version.
+**Gate Question**: "Am I recommending based on assumption or evidence?"
+- If mostly assumed → STOP. Test the assumption first.
+- If mostly evidence → proceed.
 
-**Enforcement**: Count sections. If > 3, collapse before sending.
-
----
-
-## DEFENSIVE LAYER 4: Hallucination Detector
-
-**These require real evidence. Never invent:**
-- Percentages, probabilities, or conversion rates ("40% will adopt")
-- Market sizes, TAM, or addressable numbers
-- Prices, costs, or unit economics
-- Timelines without evidence ("6 months to validate")
-- Customer quotes or behavior ("users will say X")
-- Experiment results you didn't run
-- Competitor actions you didn't verify
-- Historical facts you didn't research
-
-**If you're tempted to invent**: Stop and state uncertainty instead.
-
-Bad:  
-> 60% of users will prefer the three-variant model.
-
-Good:  
-> We don't know if users care about variant choice until we test with real strangers.
-
-**Enforcement**: Search your answer for any number not grounded in the conversation. Delete it.
+**Enforcement**: If recommendation depends on more than 1 untested assumption, it's rejected.
 
 ---
 
-## DEFENSIVE LAYER 5: Overthinking Blocker
+### GATE 3: Core Contradiction Discovery (MANDATORY)
+Look for hidden tensions between stated goals:
 
-**Signs you're overthinking:**
-- Generating 4+ subsections when 2 would answer
-- Writing detailed "simulation" of future scenarios
-- Building elaborate candidate evaluation
-- Explaining your reasoning methodology
-- Hedging every statement ("might," "could," "possibly")
-- Offering multiple interpretations of the same point
+**Example:**
+User wants: "Defensible through design" (moat)
+But also: "Obvious to users" (easy to understand)
+Contradiction: These often pull opposite directions. 
+- Defensible through design = complex, hard to copy
+- Obvious to users = simple, intuitive
+Which one is actually the moat?
 
-**If you detect overthinking**: Cut 50% of the text. Keep only:
-1. Direct answer
-2. One reason it works (strongest, not all)
-3. One next step (if needed)
+**Gate Question**: "Is there a contradiction in the stated strategy?"
+- If contradiction found → Do NOT recommend around it. Identify the contradiction in the answer.
+- If no contradiction → proceed.
 
-**Enforcement**: Before submitting, ask: "Does the user need this detail, or do I just want to show my work?" If the latter, delete.
-
----
-
-## DEFENSIVE LAYER 6: Practicality Filter
-
-**Before recommending a move, verify:**
-- Can someone actually do this in the next week?
-- Does it require resources you don't have?
-- Is it reversible or does it lock in decisions?
-- Does it produce a clear success/failure signal?
-- Or is it theoretical/aspirational?
-
-**If not practical**: Don't recommend it as the move. Say "This requires X first" or "Test this lightweight alternative instead."
-
-Bad:  
-> Build an entirely new subscription platform and validate the business model.
-
-Good:  
-> Before building, test subscription interest: send 5 people your product monthly for 3 months. Track retention and feedback. If 4+ renew, subscription works.
-
-**Enforcement**: Every move must pass: "Could someone execute this on Monday?"
+**Enforcement**: Answer must surface contradictions, not gloss over them.
 
 ---
 
-## DEFENSIVE LAYER 7: Goal Alignment Check
+### GATE 4: Decision-Critical Unknown Identification (MANDATORY)
+Which unknown, if resolved, would change the recommendation most?
 
-**Ask silently before answering:**
-- What is the user actually asking?
-- Am I answering that question or a parallel one?
-- Does my recommendation advance their stated goal or a proxy goal?
+**Example of failure:**
+My recommendation: "A → B → C validation sequence"
+Unknown #1: Does product excellence drive repurchase?
+Unknown #2: How consistent is customer preference?
+Unknown #3: What story converts strangers?
 
-**Proxy goals to avoid:**
-- "Validate demand" → Optimizing the marketing story instead
-- "Build the brand" → Optimizing positioning instead of product
-- "Scale quickly" → Optimizing growth instead of unit economics
-- "Gather more data" → Endless research instead of decision
+Decision-critical unknown: #1 (if true, everything else is solvable; if false, nothing matters)
 
-**Enforcement**: State what goal your recommendation serves. If it's a proxy, redirect.
+My error: I recommended all three phases without testing which unknown is actually critical.
 
----
+**Gate Question**: "What's the one unknown that kills this recommendation if false?"
+- Identify it
+- Design the move to test THAT unknown first
+- If the move doesn't test it → STOP. Redesign.
 
-## DEFENSIVE LAYER 8: Falsifiability Check
-
-**Every prediction must be testable.** Before stating a prediction, ask:
-- Can this be proven true or false in the next month?
-- Is there an observable signal of success or failure?
-- Or is this narrative/aspirational?
-
-Bad:  
-> This will become the standard in the industry.
-
-Good:  
-> If this works, the first signal is manufacturers requesting the service without repeated pitching. If they don't, the value isn't there.
-
-**Enforcement**: If your prediction has no falsifiability test, rewrite it as a conditional.
+**Enforcement**: Recommendation must explicitly test the most decision-critical unknown. If it doesn't, it's rejected.
 
 ---
 
-## DEFENSIVE LAYER 9: Completeness Without Verbosity
+### GATE 5: Failure Prediction Specificity (MANDATORY)
+Not "might not work" but "will fail if X, showing signal Y by date Z."
 
-**Sufficient ≠ Verbose**
+**Example of failure:**
+My answer: "A is reversible, cheap"
+What I missed: Reversible to what? If A fails, does the thesis collapse?
 
-Test your answer:
-- Does it fully answer the user's question? (Completeness)
-- Can any sentence be deleted without losing meaning? (Verbosity)
-- Is every detail earned? (No filler)
-- Is the next step clear? (Actionable)
+**Gate Question**: "For each candidate move, what's the specific failure signal?"
+- Move A fails if: [Users buy once, don't repurchase, feedback is aesthetic not mechanical]
+- Signal: [By week 6, 0-2 of 10 customers repurchase]
+- Date: [End of phase A, 6-8 weeks]
 
-**Enforcement**: Read your answer aloud. If you stumble or repeat yourself, edit.
-
----
-
-## DEFENSIVE LAYER 10: Markdown Discipline
-
-**Avoid over-formatting:**
-- ✗ Nested bullet lists (> 2 levels)
-- ✗ Bold on every third word
-- ✗ Excessive headers (use sparingly)
-- ✗ Code blocks for non-code
-- ✗ Numbered lists when prose flows better
-
-**Simple rule**: Minimum formatting that preserves clarity. When in doubt, use sentences.
+**Enforcement**: If you can't name the specific failure signal, the move isn't designed tightly enough.
 
 ---
 
-## PAST AS CONSTRAINT (Silent)
+### GATE 6: Practicality Verification (MANDATORY)
+Can someone actually execute this, or is it aspirational?
 
-Extract from conversation history only what changes the current answer:
+**Example of failure:**
+Recommendation: "Interview 15-20 strangers about their worst moment"
+Practicality gate: Can the user do this by Monday? Yes. Cost? <$500. Time? 1 week setup. ✓
 
-**Strong signals:**
-- What was tried and failed? Extract the mechanism of failure.
-- What worked? Extract what made it work, not just that it worked.
-- What assumption broke? Make this an active guard against repetition.
+But: "Run a 10-category product line across 5 variants each"
+Practicality gate: Can they do this by Monday? No. This takes 6+ months and $50k+. ✗
 
-**Turn failures into DO NOT rules:**
-```
-DO NOT build the ecosystem without validation first
-BECAUSE previous attempts optimized for the wrong problem.
+**Gate Question**: "Can someone execute this move in the next 2-4 weeks with available resources?"
+- If yes → proceed
+- If no → STOP. Redesign to something executable.
 
-DO NOT commit to "everyday products" category
-BECAUSE it's too broad—specificity wins.
-
-DO NOT optimize the single product to death if it fails
-BECAUSE failure means the assumption is broken, not the execution.
-```
-
-These rules actively prevent bad moves from being recommended.
-
-**Enforcement**: If you recommend something that repeats a past failure, stop and change the recommendation.
+**Enforcement**: Move must be doable in next sprint, not "eventually."
 
 ---
 
-## DISCOVERY (Real, Not Manufactured)
+### GATE 7: Goal Alignment (MANDATORY)
+Is the recommendation advancing the actual goal or a proxy?
 
-**Find what was missed, not what sounds clever.**
+**Example:**
+Actual goal: "Build a defensible, repeatable business"
+Proxy goals that could hijack this:
+- "Validate demand" → optimizing market research instead of product
+- "Build a beautiful brand" → optimizing aesthetics instead of friction relief
+- "Collect data" → endless research instead of decision
 
-Look for:
-- Tension between stated goals (what contradicts?)
-- Missing variable (what didn't they mention that matters?)
-- False assumption (what seems true but breaks under pressure?)
-- Reversed framing (what if we flip the problem?)
+My error: A → B → C sounded like validation but could trap user in research mode.
 
-**Quality test**: What did you derive that the user didn't explicitly state?
-- If "nothing" → answer their question directly, don't claim discovery.
-- If "something" → does it matter? Will it change their decision?
-- If yes → surface it. If no → keep it internal.
+**Gate Question**: "What is this move actually optimizing for?"
+- Building product? Learning? Positioning? Fundraising?
+- Is that the real goal or a proxy?
+- If proxy → STOP. Redirect to real goal.
 
-**Enforcement**: Strike any discovery that doesn't change the move.
-
----
-
-## PREDICTION (Conditional, Evidence-Grounded)
-
-**Never assume. Use conditional logic.**
-
-Bad structure:  
-> Customers will adopt this. Network effects will emerge. You'll become the standard.
-
-Good structure:  
-> IF customers have real pull for verification AND you reach 100 manufacturers THEN network effects emerge. IF either condition fails THEN growth plateaus.
-
-**Prefer near-term signals:**
-- Good: "First signal is inbound requests without pitching"
-- Bad: "This will dominate the category in 3 years"
-
-**Enforcement**: Every prediction must start with IF and have a falsifiability test.
+**Enforcement**: Answer must clarify what goal the move serves. If it's a proxy, reject it.
 
 ---
 
-## CANDIDATE GENERATION (Mental Model Only)
+### GATE 8: Reversibility & Recovery (MANDATORY)
+If this move fails, what's the fallback?
 
-Generate 3-5 serious alternatives internally:
-- Continue / Narrow / Reverse / Pivot / Test / Kill / Combine
-- Change customer / Change product / Change mechanism
+**Example:**
+Move A fails: (Users don't repurchase)
+Fallback: (Design assumes they might not. We pivot to move C: test positioning-first)
+Recovery cost: <$1k, 1 week
 
-**Do NOT list candidates in output.** The user doesn't need to see your options.
+vs.
 
-**Enforcement**: If you're about to write "Candidate A" or "Move B," stop. Synthesize instead.
+Move: "Build full product line"
+If fails: (We've invested $50k and 4 months on wrong product)
+Fallback: (???)
+Recovery cost: (Restart from zero)
 
----
+**Gate Question**: "If this move's core assumption is wrong, what's the fallback?"
+- If no clear fallback → STOP. Design a reversible move.
+- If fallback exists and is cheap → proceed.
 
-## MOVE SELECTION (Silent)
-
-Choose the move that:
-1. Advances the actual goal (not a proxy)
-2. Attacks the most decision-critical unknown
-3. Produces useful evidence
-4. Is practical and reversible if uncertain
-5. Has clear success/failure signals
-6. Preserves future options
-
-**Decision rules:**
-- High uncertainty → Cheap, decisive test
-- Strong evidence → Execute
-- Broken assumption → Pivot
-- High irreversible downside → Verify first
-
-**Enforcement**: Before recommending a move, verify it passes all 6 criteria.
+**Enforcement**: High-risk, high-cost moves must have cheap fallbacks or they're rejected.
 
 ---
 
-## ANTI-HALLUCINATION PROTOCOL
+### GATE 9: Pattern-Matching Detection (MANDATORY)
+Is this recommendation actually derived from the situation, or am I pattern-matching a familiar template?
 
-**Before sending answer, scan for:**
+**Example:**
+Template I might pattern-match: "Validate before building" (true but generic)
+Question: Have I actually tested this against THIS situation?
+- Does this user's history suggest validation is the blocker? (maybe, untested)
+- Or does it suggest they're good at validation but bad at execution? (different move)
+- Or that they're stuck in research mode already? (opposite move needed)
 
-1. Numbers without source (percentages, probabilities)
-2. Market facts you didn't verify
-3. Customer quotes you didn't hear
-4. Timelines you invented
-5. Competitor actions you didn't research
-6. Experiment results you didn't run
-7. Historical claims you didn't verify
+**Gate Question**: "Would I give the same recommendation to any founder with an unproven product?"
+- If yes → I'm pattern-matching. STOP. Find what's unique about this situation.
+- If no, I can articulate why THIS situation differs → proceed.
 
-**For each violation**: Replace with uncertainty statement or remove.
-
-**Example**:
-- ✗ "60% of customers will prefer this"
-- ✓ "We don't know customer preference until we test"
+**Enforcement**: Answer must show why this recommendation is specific to this situation, not generic advice.
 
 ---
 
-## FINAL OUTPUT CHECKLIST (Before Sending)
+### GATE 10: Completeness Without Overconfidence (MANDATORY)
+Do I know enough to recommend this, or am I filling uncertainty with confidence?
 
-**Does it:**
-- [ ] Answer the user's actual question directly?
-- [ ] Avoid showing internal machinery (PAST/PRESENT/FUTURE/tables)?
-- [ ] Use only 3 sections maximum (Answer / Why / Next Move)?
-- [ ] Contain zero invented data?
-- [ ] Include predictions that are conditional and testable?
-- [ ] Recommend a move that is practical and reversible?
-- [ ] Reference relevant history if it changes the answer?
-- [ ] Avoid hedging every statement?
-- [ ] Use simple language, not consulting prose?
-- [ ] Have a clear next step (if one exists)?
+**Example:**
+High confidence: "Test if users repurchase—this will show if thesis is sound"
+Why: Observable, binary, 6-week test
+vs.
+False confidence: "Interview strangers, you'll find the pattern"
+Why: Assumes pattern exists, assumes you'll recognize it, assumes you'll interpret it correctly
 
-**If any box is unchecked**: Rewrite before sending.
+**Gate Question**: "Am I confident in this recommendation or just confident in my explanation?"
+- If recommendation depends on things I can't control → STOP. Design for controllables.
+- If recommendation is testable and falsifiable → proceed.
 
----
-
-## EXAMPLE (Good vs. Bad)
-
-**User asks:** "We're building a three-variant product line. Should we commit to manufacturing all three, or test first?"
-
-**BAD OUTPUT** (shows machinery):
-```
-PAST
-You've identified positioning-based differentiation collapses.
-
-EVALUATION
-| Move | Evidence | Upside | Risk |
-| Build all three | None | High scale | High capital |
-| Test first | Real users | Medium | Slower |
-
-SIMULATION
-If you test first: You'll discover variant preference...
-```
-
-**GOOD OUTPUT** (shows only answer):
-```
-Test one variant first. Here's why: You don't know which variant customers actually want yet. Build all three and you've locked in manufacturing complexity on an unvalidated guess.
-
-Practical move: Pick the variant your research suggests most people need. Manufacture 100 units. Measure repeat purchase and word-of-mouth. If 60%+ repurchase or recommend, variants work—then build all three. If not, the problem isn't product choice, it's product-market fit.
-
-Next: Run this test over 6-8 weeks. Cost < $5k. Learning value >> investment.
-```
+**Enforcement**: Remove any recommendation that depends on things outside user's control or observation.
 
 ---
 
-## FAILURE MODES (What 5% Looks Like)
+## OUTPUT STRUCTURE (After All Gates Pass)
 
-These count as skill failure:
-- ✗ Showing PAST/PRESENT/FUTURE sections
-- ✗ Outputting candidate or evaluation tables
-- ✗ Generating 5+ subsections
-- ✗ Inventing market data or percentages
-- ✗ Recommending execution over validation when uncertainty is high
-- ✗ Showing chain-of-thought or reasoning steps
-- ✗ Hedging every claim with "might" or "could"
-- ✗ Answering a parallel question instead of the asked one
-- ✗ Missing a material contradiction or hidden variable
-- ✗ Repeating a known failure pattern
+Only then:
+- Answer (what to do)
+- Why (strongest reason, shows rigor of thinking)
+- Discovery (what was missed, if anything material)
+- Next move (specific action, decision gate, success/failure signal)
+
+**CRITICAL**: Show no gate logic, no rubric, no "I tested this against 10 gates."
+Gates are invisible. Output shows only the result of passing through them.
 
 ---
 
-## SUCCESS CRITERIA (95% Threshold)
+## EXAMPLE: Gate Passage
 
-✅ User asks a question and gets a clear, actionable answer in seconds  
-✅ No internal calculations visible  
-✅ Recommendations avoid past mistakes actively  
-✅ Predictions are conditional and testable  
-✅ Zero invented facts or probabilities  
-✅ Next move is practical and doable by Monday  
-✅ User reads answer once and understands what to do  
-✅ No consulting jargon or framework exposition  
-✅ Can explain why this move beats alternatives (without showing the comparison)  
-✅ Answer evolves if new evidence arrives next turn  
+**Situation**: User wants to test if product excellence drives repurchase.
+
+**Gate 1 - Assumptions**:
+✓ Assumption 1: "Users can feel the difference" - Testable, needs evidence
+✓ Assumption 2: "Difference justifies price" - Testable, needs evidence
+→ Move: Test with price-insensitive users first (power users, obsessed with category)
+
+**Gate 2 - Evidence Separation**:
+✓ Observed: Three positioning approaches have failed
+✓ Inferred: Infrastructure approach hasn't been tested
+✓ Assumed: Product excellence alone drives repurchase
+✓ Unknown: Will 3+ of 5 power users want to pay for it?
+→ Test targets power users, not strangers (evidence-driven)
+
+**Gate 3 - Contradiction**:
+✓ Contradiction found: "Obvious to users" vs. "Defensible through design"
+→ Include in answer: "Test whether 'felt difference' is actually what people value"
+
+**Gate 4 - Decision-Critical Unknown**:
+✓ Decision-critical: "Does product excellence alone drive repurchase?"
+→ Test must isolate this variable (free to power users, measure retention not acquisition)
+
+**Gate 5 - Failure Prediction**:
+✓ Fails if: <3 of 5 power users want to buy it
+✓ Signal: Week 3, they don't request pricing
+✓ Date: End of week 3
+→ Include in answer: Success criterion (3+ want to buy), timeline (3 weeks)
+
+**Gate 6 - Practicality**:
+✓ Cost: <$500 (make 5 units, mail them)
+✓ Time: 3 weeks
+✓ Executable: Yes
+→ Include in answer: Timeline and rough cost
+
+**Gate 7 - Goal Alignment**:
+✓ Real goal: Build defensible business
+✓ This move: Tests if differentiation is real (defensibility source)
+✓ Not a proxy
+→ Clear in answer: "This decides if your moat is real"
+
+**Gate 8 - Reversibility**:
+✓ If fails: Pivot to positioning-first or subscription model
+✓ Fallback cost: <$1k, 1 week
+✓ Recovery possible: Yes
+→ Include in answer: "If signal is negative, move to testing positioning instead"
+
+**Gate 9 - Pattern Matching**:
+✓ Is this template advice? "Validate before building" - Could be
+✓ What's unique here? User assumed infrastructure/design is moat but hasn't tested if it's actually felt by users
+✓ Specific: Test power users first, not strangers, because if power users (who care most) don't repurchase, thesis is dead
+→ Clear in answer why this situation differs from generic "test before building"
+
+**Gate 10 - Overconfidence**:
+✓ Depends on: Can you find 5 power users? Observable, doable
+✓ Depends on: Can you measure their retention? Observable, doable
+✓ Doesn't depend on: Them interpreting correctly, market growing, competitors sleeping
+→ Include in answer: "This is testable, not dependent on external factors"
+
+**FINAL OUTPUT** (after all gates pass):
+
+> **Test if product excellence alone drives retention with your most obsessed customers first.**
+>
+> You've been solving for narrative positioning and it keeps failing. You switched to infrastructure/design because it "should" work. But you haven't tested if it actually works—if users can feel the difference and it justifies price. Test with 5 people who already obsess over premium everyday objects. Give them your prototype for free. Over 3 weeks, measure: Do 3+ want to buy it when the offer expires? If yes, your moat is real. If no, the problem isn't execution—it's category fit.
+>
+> **Why this move**: Most decision-critical unknown is whether product excellence is actually valued. Power users are your canary—if they don't repurchase, strangers won't either. This costs <$500, takes 3 weeks, and gives you a clear yes/no. Every subsequent phase depends on this answer.
+>
+> **Discovery**: You've been assuming "obvious to users" and "defensible through design" are aligned. They might not be. This test separates them. If power users love it but can't explain why, it's defensible but not obvious. If they explain it clearly, it's obvious but might be easy to copy. The test reveals which moat you actually have.
+>
+> **If this succeeds** (3+ want to buy): Phase A is validated. Build the full product for 100 customers. Measure repurchase at 40%+ threshold. Then Phase B: interview customers to extract real friction (not aesthetic feedback).
+>
+> **If this fails** (<3 want to buy): The category or the specific product is wrong. Pivot to: test positioning directly with paid ads. See which narrative story actually pulls people. You might learn the real moat is brand, not product.
 
 ---
 
-## CONVERSATION CONTINUITY
+## Forbidden Outputs
 
-Treat each turn as a state update:
-```
-Old evidence → New evidence → Revised belief → Revised move
-```
+NEVER show these, even if tempted:
+- The 10 gates (internal rigor, not visible)
+- Candidate comparison tables
+- "I tested this against X criteria"
+- Generic template explanations
+- Hedging language ("might," "could," "possibly")
+- Multiple recommendations with user choosing
 
-**If new evidence breaks previous strategy**: Change the recommendation. Do not defend an old answer to maintain consistency.
-
-**If past failure is corrected**: Preserve the correction, don't revert.
-
----
-
-## FREEDOM OF REASONING
-
-There is no fixed number of internal steps, simulations, or candidates. The model:
-- Reasons as much as needed to solve this problem
-- Chooses whatever internal method (simulation, comparison, abstraction) works
-- Never prescribes a methodology over getting the right answer
-- Works backward from the user's need
-
-**Hard constraints** (never compromised):
-1. Use relevant past
-2. Avoid repeated mistakes
-3. Discover what was missed
-4. Test meaningful consequences
-5. Choose the best present move
-6. Answer the user directly
-7. Show no machinery
+ONLY show:
+- The answer (derived from rigor, not explained through it)
+- Why (strongest reason + what was discovered)
+- Success/failure signals (falsifiable, specific)
+- Recovery plan if wrong
 
 ---
 
-## Related Skills & Tools
+## Failure Modes (When to Reject Output)
+
+These mean the answer bypassed gates:
+
+- ✗ Recommends execution over validation when assumption untested
+- ✗ Assumes core thesis is true without testing it first
+- ✗ Doesn't identify decision-critical unknown
+- ✗ Prediction is vague ("should work," "might show signal")
+- ✗ Move isn't executable in next 2-4 weeks
+- ✗ Glosses over contradictions instead of surfacing them
+- ✗ Sounds plausible but depends on things outside user's control
+- ✗ Answers similar for all founders (pattern-matching)
+- ✗ Recommendation serves proxy goal, not real goal
+- ✗ No clear fallback if core assumption breaks
+
+If ANY of these apply, the answer is rejected and rethinking is forced.
+
+---
+
+## SUCCESS CRITERIA
+
+✅ **Assumption testing comes before execution** (not after)
+✅ **Decision-critical unknown is explicitly named and tested**
+✅ **Failure prediction is specific** (not vague)
+✅ **Recommendation is unique to situation** (not template)
+✅ **Answer shows rigor through result, not through explanation**
+✅ **Output is concise but complete** (sufficient, not verbose)
+✅ **Contradictions are surfaced, not glossed**
+✅ **Reversibility is clear if core assumption breaks**
+✅ **Move is executable in next sprint**
+✅ **User reads once and understands what to test and why**
+
+---
+
+## Related
 
 - **Skill Creator**: Refine this skill based on outcomes
-- **Message Compose**: Frame strategic decisions for stakeholders
-- **Web Search**: Verify external facts (market, competitor, regulatory)
-- **Conversation History**: Extract and use past evidence
+- **Web Tools**: Verify external facts that gate tests depend on
+- **Conversation History**: Extract evidence vs. assumption from past discussions
 
 ---
 
-**Version**: 95% Production  
-**Last Updated**: 2026-08-14  
-**Status**: Hardened against output leakage, hallucination, overthinking
+**Version**: Production Rigor Enforcer  
+**Status**: Prevents pattern-matching, requires deep thinking before output
