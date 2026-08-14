@@ -1,252 +1,372 @@
 ---
 name: chess
 description: >
-  Strategic discovery and decision mode. Use when the user invokes /chess or
-  asks for a non-trivial strategy, idea, positioning, decision, prediction,
-  trade-off, or breakthrough. Use the conversation as accumulated evidence:
-  learn from what already failed or worked, discover a better frame, consider
-  plausible futures, and give the strongest present move. Think freely and
-  deeply internally; do not expose the deliberation unless the user asks.
+  Strategic discovery and decision mode for /chess and non-trivial strategy,
+  ideation, positioning, prediction, trade-offs, or breakthrough thinking.
+  Use practical conversation history, preserve learned constraints, discover
+  what was missed, simulate conditional futures and failover, then choose the
+  strongest present move. Think deeply internally; return the useful result.
 ---
 
 # CHESS
 
-**Think freely. Direction is fixed; reasoning is not.**
+**Think freely. Direction is fixed. Output is the move.**
 
-CHESS exists to improve the **present answer** using the **past conversation**
-and plausible **future consequences**.
-
-Do not turn this into a visible checklist, consulting report, or reasoning dump.
-
-## Core
-
-Internally do this:
+Core:
 
 ```text
-PAST → DISCOVER → FUTURE → SELECT → ANSWER
+PAST → BASIS → DISCOVER → FUTURE → MOVE → ANSWER
 ```
 
-### PAST
-Use relevant conversation history as evidence.
+Do not expose this machinery unless the user asks.
 
-Recover:
-- what was tried
-- what worked
-- what failed
-- why it failed
-- what should be preserved
-- what must not be repeated
+## PAST — PRACTICAL MEMORY
 
-Convert important failures into internal guardrails:
+Use only prior conversation that can change today's decision.
+
+Extract:
 
 ```text
-failure → mechanism → lesson → DO NOT
+tried / worked / failed / why / useful lesson / what not to repeat
 ```
 
-A `DO NOT` constraint must affect later idea generation and choice.
+For important failure:
 
-Do not invent history. Do not repeat a rejected move just because it has been
-reworded.
+```text
+failure → mechanism → lesson → DO NOT → future check
+```
 
-### DISCOVER
-Do not merely summarize or reorganize existing ideas.
+For important success:
 
-Find the **hidden tension, missing variable, overlooked constraint, inversion,
-or asymmetry** that can produce a better idea.
+```text
+success → mechanism → condition → preserve
+```
+
+Past is not a summary. Its job is to reduce repeated error.
+
+Never invent history. Never repeat a rejected move merely because wording changed.
+
+## BASIS — ONE SHARED STATE
+
+Past and future reasoning must use the same basis:
+
+```text
+GOAL
+KNOWN
+INFERRED
+ASSUMED
+UNKNOWN
+PAST LESSONS
+DO NOT
+CURRENT CONSTRAINTS
+```
+
+New ideas do not erase old evidence.
+
+A move that violates a learned `DO NOT` must be rejected or explicitly justified by new evidence.
+
+## DISCOVER — FIND WHAT WAS MISSED
+
+Do not merely reorganize existing ideas.
+
+Look for:
+
+```text
+hidden tension
+missing variable
+false assumption
+incentive mismatch
+information asymmetry
+reversed framing
+unserved constraint
+```
 
 Prefer:
 
 ```text
-observation → tension → new frame → implication
+observation → contradiction → new frame → implication
 ```
 
-A useful discovery changes what the best move should be.
+A useful discovery changes the decision frame.
 
-Do not force novelty when none is justified.
-
-### FUTURE
-For the few moves that matter, internally consider:
+Keep separate:
 
 ```text
-positive: what if it works?
-negative: how does it fail?
-warning: what appears first if it is going wrong?
+DISCOVERY = newly recognized mechanism/frame
+HYPOTHESIS = what may be true because of it
+STRATEGY = candidate way to exploit it
+MOVE = best action now
 ```
 
-Use the past as part of the simulation.
+Do not turn an interesting discovery directly into an unsupported large strategy.
 
-Future reasoning is conditional, not prophecy.
+## FUTURE — CONDITIONAL SIMULATION
 
-Ask:
+Future reasoning is not prophecy.
 
-- What is the goal?
-- What assumption matters most?
-- What becomes possible if the move works?
-- What fails if it does not?
-- What would falsify the idea?
-- Is failure reversible?
-- Does the move recreate a past mistake?
+For serious moves, internally test:
 
-When uncertainty is high, prefer a move that produces decisive information
-cheaply.
+```text
+CURRENT STATE + MOVE
+→ early signal
+→ outcome
+→ consequence
+→ response
+```
 
-### SELECT
-Choose the strongest present move.
+At minimum consider:
 
-Informally optimize:
+```text
+UPSIDE
+BASE
+FAILURE
+FAILOVER
+```
+
+### Upside
+If it works:
+
+- first evidence
+- cause of success
+- second-order advantage
+- new option opened
+- effect on goal
+
+### Base
+If nothing dramatic happens:
+
+- ordinary outcome
+- information gained
+- options preserved/lost
+
+### Failure
+If it fails:
+
+- first failure point
+- mechanism
+- damage
+- earliest warning
+- reversibility
+
+### Failover
+When failure occurs:
+
+```text
+failure → immediate response → fallback → revised move/goal
+```
+
+Always ask:
+
+**What do we do immediately after this strategy stops working?**
+
+Use past evidence and `DO NOT` constraints inside every simulation.
+
+## PREDICTION DISCIPLINE
+
+Use conditional form:
+
+```text
+IF X
+THEN Y becomes more likely
+BECAUSE Z
+WATCH W
+FAILOVER F
+```
+
+Never turn speculation into fact.
+
+Do not invent probabilities, market behavior, costs, experiments, demand, margins,
+network effects, or defensibility.
+
+When useful, use qualitative confidence only.
+
+Prefer:
+
+```text
+known > inferred > assumed > speculative
+```
+
+If external facts materially matter, verify them with available tools.
+
+## GOAL SHIFT
+
+Check whether the strategy quietly changes the goal.
+
+Examples:
+
+```text
+validate demand → optimize aesthetics
+find a moat → build a story
+learn cheaply → build infrastructure
+increase sales → maximize compliments
+```
+
+If optimization drifts away from the actual goal, correct it.
+
+## WARNING
+
+A useful warning has:
+
+```text
+TRIGGER → MEANING → ACTION
+```
+
+Example:
+
+```text
+TRIGGER: people praise it but do not switch/pay
+MEANING: interest is not commercial value
+ACTION: do not expand; retest the core proposition
+```
+
+Prefer early, observable warnings.
+
+## JOINT CALCULATION
+
+Past and future jointly determine the present move:
+
+```text
+PAST EVIDENCE
++ CURRENT STATE
++ FUTURE SCENARIOS
++ FAILOVER
++ GOAL
++ RISK
++ DO NOT
+↓
+BEST PRESENT MOVE
+```
+
+Internal move quality:
 
 ```text
 goal impact
-+ information gained
-+ useful upside
-+ future optionality
++ evidence
++ information gain
++ upside
++ optionality
 - cost
 - downside
-- known failure exposure
+- known-failure exposure
 ```
 
-Use exact numbers only when evidence supports them. Never manufacture precision.
+Use exact math only when justified. Never use numbers as decoration.
 
-### ANSWER
-Answer the user's actual query.
+## MOVE SELECTION
 
-The internal process is there to improve the answer, not replace it.
+Choose one strongest move unless alternatives are requested.
 
-Do not explain:
-- that you loaded the skill
-- the internal seats
+Prefer moves that:
+
+- advance the real goal
+- test the most important uncertainty
+- are practical
+- are reversible when uncertainty is high
+- have a clear success signal
+- have a clear failover
+- avoid known failures
+- preserve useful options
+
+Rules of thumb:
+
+```text
+high uncertainty → cheap decisive test
+strong evidence → execute
+broken assumption → pivot
+irreversible downside → verify first
+```
+
+## DISCOVERY → VALIDATION
+
+Use:
+
+```text
+DISCOVERY → HYPOTHESIS → CHEAP TEST → EVIDENCE → STRATEGY → SCALE
+```
+
+Do not skip directly from clever idea to business plan.
+
+## USER QUERY FIRST
+
+The internal calculation exists to improve the user's present answer.
+
+If user asks:
+
+`what's the strategy?`
+
+give the strategy.
+
+If user asks:
+
+`give me concept, why it works, next move`
+
+give those.
+
+Do not output:
+
+- skill-loading messages
+- framework lectures
 - hidden calculations
+- every candidate
 - chain-of-thought
-- every candidate you considered
+- generic risk dumps
+- prompt-writing advice
 
-Unless the user asks for the reasoning itself.
-
----
-
-## Output
+## OUTPUT
 
 Follow the user's requested format.
 
-If no format is requested, prefer:
+If none:
 
 **Answer / Discovery**  
-The strongest conclusion or new idea.
+Strongest conclusion or genuinely new frame.
 
 **Why**  
-The minimum reasoning needed to understand why it wins.
+Minimum reasoning needed to make it clear.
 
 **Next move**  
-One concrete action that advances the goal or tests the key uncertainty.
+One concrete action.
 
-Add **Risk**, **Warning**, or **Do not** only when they materially improve the
-decision.
+Add `Risk`, `Watch`, or `Do not` only when they materially improve the answer.
 
-Do not force these headings onto every answer.
+Do not force headings every turn.
 
-Do not artificially shorten a response when the discovery needs explanation.
+Do not make answers artificially short. Do not make them long just to prove CHESS ran.
 
-Do not inflate a response just to show that CHESS ran.
+## CONTINUITY
 
----
-
-## Anti-hallucination
-
-Separate evidence from inference.
-
-Use:
-- supplied facts as facts
-- deductions as deductions
-- hypotheses as hypotheses
-
-Do not invent market behavior, user demand, statistics, experiments, costs,
-or probabilities.
-
-When external facts matter and tools are available, verify them.
-
-For predictions, say what must be true for the prediction to hold.
-
-For strategy, distinguish:
+Every turn updates the state:
 
 ```text
-known
-inferred
-assumed
-unknown
+old state → new evidence → revised basis → revised move
 ```
 
-internally, and surface uncertainty only when it affects the decision.
+If new evidence breaks the old strategy, change the strategy.
 
----
+Do not defend an earlier answer because it was yours.
 
-## Conversation memory
+## FREEDOM RULE
 
-CHESS is cumulative.
+Do not prescribe a fixed number of candidates, branches, formulas, scores, or
+visible steps.
 
-When new evidence appears:
+CHESS defines the direction:
 
 ```text
-old belief → new evidence → update → new move
+use history
+avoid repeated failure
+find what was missed
+simulate what matters
+choose the move
 ```
 
-Do not defend an earlier answer just because it was yours.
+The model chooses how to reason.
 
-A new fact that breaks the old strategy should change the strategy.
+## FINAL RULE
 
-Past mistakes are useful only if they alter future behavior.
-
----
-
-## Freedom rule
-
-Do not micromanage the order, number, or wording of internal reasoning steps.
-
-CHESS gives Claude a **direction of search**, not a script.
-
-Choose whatever internal reasoning, simulation, comparison, tool use, or
-abstraction is most effective for the current problem.
-
-The only hard requirements are:
+> **Past reduces repeated error. Future predicts opportunity and failover.
+> Both use the same evidence basis. The present answer is the strongest move.**
 
 ```text
-use relevant past
-avoid repeating known failures
-look for a better frame
-consider meaningful future consequences
-select one best present move
-answer the user
+REMEMBER → DISCOVER → SIMULATE → MOVE
 ```
-
----
-
-## Example
-
-User:
-
-`/chess What's the strategy?`
-
-Bad CHESS:
-
-> PAST  
-> PRESENT  
-> FUTURE  
-> WARNING  
-> RISK  
-> CANDIDATE A  
-> CANDIDATE B  
-> CANDIDATE C
-
-Better CHESS:
-
-> The strategy is to prove the product mechanism before building the brand.
-> The earlier ideas kept changing positioning while leaving the core customer
-> value untested. So the next move is not another positioning exercise: run one
-> test that can distinguish genuine willingness to switch from polite enthusiasm.
-
-The reasoning can be deep internally. The answer does not need to display it.
-
----
-
-## Final rule
-
-> **Remember what happened. Find what was missed. Simulate what matters.
-> Make the best move now.**
