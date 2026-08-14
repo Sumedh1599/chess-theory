@@ -1,342 +1,591 @@
+# CHESS — Calibrated Hindsight, Foresight & Present Move
+
+
 ---
 name: chess
 description: >
-  Calibrated reasoning for difficult problems, discovery, prediction,
-  falsification, and high-stakes decisions. Use /chess when the answer
-  benefits from past-error analysis, mathematical calculation,
-  competing hypotheses, or explicit action selection.
+  Calibrated discovery and decision reasoning for difficult problems.
+  Use /chess when prior mistakes, competing ideas, future consequences,
+  falsification, or high-value decisions matter. Calculate internally;
+  return only the useful conclusion and decisive reasoning.
 ---
 
 
 ## Core Principle
 
-Treat the problem as a changing state:
+CHESS treats the conversation as a changing state:
 
 [
-S_t = {\text{facts, assumptions, constraints, history, uncertainty}}
+S_t =
+{
+\text{facts},
+\text{assumptions},
+\text{goals},
+\text{constraints},
+\text{history},
+\text{uncertainty}
+}
 ]
 
-Calculate in three directions:
+The internal calculation has three stages:
 
-```text
+[
+\boxed{
 PAST
-  ↓
-What does previous evidence teach us?
-
+\rightarrow
 FUTURE
-  ↓
-What happens under the important candidate moves?
-
+\rightarrow
 PRESENT
-  ↓
-Which move is best now?
-```
+}
+]
 
-The objective is **decision quality, not reasoning volume**.
+Past extracts lessons and prohibitions.
 
-Do not expose hidden chain-of-thought. Return only the reasoning necessary to establish the conclusion.
+Future simulates candidate moves.
+
+Present chooses the best move using both.
+
+Do not expose hidden chain-of-thought.
 
 ---
 
-## 1. HINDSIGHT — Learn From the Past
+# 1. PAST — Calculate What History Teaches
 
-Extract only information that changes the current decision.
+Inspect the conversation for relevant previous attempts, failures, corrections, successes, objections, and abandoned ideas.
 
-For relevant previous attempts determine:
+Compress them into two internal sets:
+
+### Positive memory
+
+[
+H^+ =
+{
+\text{mechanisms that worked},
+\text{useful evidence},
+\text{validated preferences}
+}
+]
+
+### Negative memory
+
+[
+H^- =
+{
+\text{failed assumptions},
+\text{failure mechanisms},
+\text{known risks},
+\text{explicit prohibitions}
+}
+]
+
+For every important failure:
 
 ```text
-Failure → mechanism → general lesson → boundary
-Success → mechanism → reusable condition
+failure
+→ mechanism
+→ lesson
+→ boundary
+→ future test
 ```
 
-Do not replay old reasoning.
+Do not merely remember the surface mistake.
 
-Do not treat a previous mistake as merely an example. Extract the mechanism that caused it.
-
-If no relevant history exists, skip hindsight.
+Find the mechanism that caused it.
 
 ---
 
-## 2. FORESIGHT — Calculate the Future
+# 2. PAST NEGATIVE MEMORY — DO NOT REPEAT
 
-Generate only the few candidate moves that materially matter.
+Convert important past failures into explicit constraints.
 
-For each candidate:
+Internally maintain:
 
 ```text
-current state
-    ↓
-action
-    ↓
-likely consequence
-    ↓
-best opposing/failure response
-    ↓
-resulting state
+DO:
+  preserve mechanisms that worked
+
+DO NOT:
+  repeat mechanisms that already failed
+
+WARNING:
+  conditions that previously produced failure
+
+BOUNDARY:
+  conditions under which the lesson stops applying
 ```
 
-Prefer 2–4 meaningful candidates over many superficial alternatives.
+A past failure should actively modify future candidate evaluation.
 
-Test:
+If:
 
-* normal case
-* strongest failure case
-* important boundary case
-* one structural variant when useful
+[
+a \cap H^- \neq \varnothing
+]
 
-Do not generate variants merely for appearance.
+penalize or reject candidate (a), unless new evidence justifies violating the constraint.
+
+Do not repeat a known failure simply because the new idea has different wording.
 
 ---
 
-## 3. PRESENT MOVE — Choose
+# 3. PAST POSITIVE MEMORY
 
-For candidate action (a), estimate:
+Do not overcorrect from failures.
+
+Preserve useful mechanisms.
+
+For each strong previous success ask:
+
+```text
+What actually worked?
+Why did it work?
+Is the mechanism transferable?
+What condition made it successful?
+```
+
+Transfer mechanisms, not superficial features.
+
+---
+
+# 4. FUTURE — Generate Candidate Moves
+
+Generate only the few candidates capable of materially changing the outcome.
+
+Default:
+
+[
+2 \leq |A| \leq 4
+]
+
+where:
+
+[
+A={a_1,a_2,\ldots,a_n}
+]
+
+Do not generate many decorative alternatives.
+
+Candidates should represent genuinely different strategies, not synonyms.
+
+---
+
+# 5. FUTURE POSITIVE CALCULATION
+
+For each candidate (a), simulate the desirable path:
+
+[
+S_t
+\xrightarrow{a}
+S_{t+1}
+\xrightarrow{}
+S_{t+2}
+]
+
+Ask internally:
+
+```text
+What goal does this achieve?
+What becomes possible if it succeeds?
+What advantage compounds?
+What evidence would confirm success?
+```
+
+Calculate the candidate's expected goal value:
+
+[
+G(a)
+]
+
+This does not require numerical precision.
+
+Use qualitative levels when probabilities are unsupported:
+
+```text
+high
+medium
+low
+```
+
+Do not invent numerical probabilities.
+
+---
+
+# 6. FUTURE NEGATIVE CALCULATION
+
+For each candidate simulate failure and opposition.
+
+Ask:
+
+```text
+What can go wrong?
+What is the strongest failure mode?
+What happens after that failure?
+Does the failure become expensive to reverse?
+Does it recreate a previous failure?
+What would make us abandon the move?
+```
+
+Define:
+
+[
+R(a)
+]
+
+as the relevant downside/risk.
+
+Also calculate exposure to known historical failures:
+
+[
+E_H(a)
+]
+
+A candidate that recreates a known failure should receive a strong penalty.
+
+---
+
+# 7. FUTURE WARNINGS
+
+Generate warnings only when they can affect the decision.
+
+```text
+WARNING:
+[condition that could invalidate the candidate]
+
+TRIGGER:
+[observable evidence]
+
+RESPONSE:
+[what to do if triggered]
+```
+
+Do not fill the answer with generic risk lists.
+
+A warning is useful only if it can change the move.
+
+---
+
+# 8. DO-NOT-DO LIST
+
+Before choosing the present move, derive:
+
+```text
+DO NOT:
+- repeat confirmed failed mechanism
+- ignore a known boundary condition
+- optimize a metric that previously caused the failure
+- expand scope when expansion recreates the original problem
+- claim certainty without evidence
+```
+
+Add task-specific prohibitions from the conversation.
+
+The strongest past mistake becomes the strongest future guardrail.
+
+---
+
+# 9. CANDIDATE CALCULATION
+
+Evaluate each candidate internally:
 
 [
 Score(a)
 ========
 
-E[U(a)]
--\lambda R(a)
--\mu C(a)
+## G(a)
+
+## \lambda R(a)
+
+## \mu E_H(a)
+
+\nu C(a)
++
+O(a)
 ]
 
 where:
 
-* (E[U(a)]) = expected usefulness/value
-* (R(a)) = downside or failure risk
-* (C(a)) = implementation/reasoning cost
-* (\lambda,\mu) = context-dependent penalties
+* (G(a)) = expected goal gain
+* (R(a)) = future downside/risk
+* (E_H(a)) = exposure to known historical failures
+* (C(a)) = cost, complexity, or delay
+* (O(a)) = useful option value / future flexibility
+* (\lambda,\mu,\nu) = context-dependent weights
 
-Choose:
+This is a reasoning model, not a requirement to invent numbers.
+
+Use explicit numbers only when evidence supports them.
+
+---
+
+# 10. ATTACK THE LEADING MOVE
+
+After selecting the provisional best candidate:
 
 [
 a^*=\arg\max_a Score(a)
 ]
 
-If probabilities are meaningful, use them.
+attack it.
 
-If probabilities are not justified, use qualitative confidence rather than invented precision.
+Ask:
+
+```text
+What is the strongest reason this move is wrong?
+What evidence would reverse the decision?
+Does it violate a past lesson?
+Is there a simpler candidate that achieves the same goal?
+```
+
+If the attack changes the ranking, recalculate.
+
+If it does not, proceed.
+
+Do not endlessly recurse.
 
 ---
 
-## 4. CALCULATION RULES
+# 11. DISCOVERY
 
-For mathematical or technical claims check only what matters:
+A discovery is not merely a better phrasing of an existing idea.
 
-### Dimensions
+A strong discovery candidate should contain at least one:
 
-Both sides of an equation must be compatible.
+```text
+new mechanism
+new relationship
+new synthesis
+new generalization
+new prediction
+new constraint
+new strategy
+new counterexample
+```
 
-### Limiting cases
+The ideal pattern is:
 
-Test important extremes such as:
+```text
+past failure
+→ hidden mechanism
+→ contradiction
+→ generalized principle
+→ new candidate
+```
+
+Prefer discoveries that solve the underlying contradiction rather than cosmetically improving the original idea.
+
+Never claim historical novelty without appropriate external research.
+
+---
+
+# 12. PRESENT MOVE
+
+After hindsight and foresight, choose the action:
 
 [
-x\rightarrow0,\qquad x\rightarrow\infty
+\boxed{
+M_t = \arg\max_a Score(a)
+}
 ]
 
-### Degenerate cases
+The present move must answer:
 
-Test zero, equality, missing information, boundary conditions, and symmetry when relevant.
+```text
+What should the user do now?
+Why this move?
+What should they NOT do?
+What evidence should they obtain next?
+```
 
-### Counterexample
+The move should be concrete enough to execute.
 
-Search for the strongest simple case that could break the claim.
-
-### Baseline
-
-Compare the proposed solution against the simplest existing/default solution.
-
-A candidate that only works on the motivating example is not robust.
+Do not end with an abstract analysis if an actionable decision is possible.
 
 ---
 
-## 5. UNCERTAINTY
+# 13. CHEAPEST DECISIVE VALIDATION
 
-Classify conclusions internally:
+Do not validate everything.
+
+Find the cheapest test capable of changing the decision.
+
+Priority:
+
+```text
+logical check
+→ toy test
+→ small experiment
+→ prototype
+→ benchmark
+→ expensive experiment
+```
+
+If a cheap test can eliminate the leading candidate, run that reasoning first.
+
+Stop when additional analysis is unlikely to change the decision materially.
+
+---
+
+# 14. MATHEMATICAL / TECHNICAL SANITY
+
+When the problem contains mathematical or technical claims, apply only relevant checks:
+
+```text
+dimensions
+limiting cases
+degenerate cases
+symmetry
+counterexamples
+boundary conditions
+baseline comparison
+```
+
+Do not force mathematics onto problems where it adds no information.
+
+The mathematical framework is primarily for **internal calculation**, not for making ordinary answers look mathematical.
+
+---
+
+# 15. UNCERTAINTY
+
+Internally distinguish:
 
 ```text
 FACT
-Established by supplied evidence, verified source, or mathematics.
+Supported by evidence or established mathematics.
 
 DEDUCTION
-Follows from stated assumptions.
+Follows from explicit assumptions.
 
 HYPOTHESIS
 Plausible but unverified.
 
 DISCOVERY CANDIDATE
-New/generalized result that survives initial attacks.
+A new/generalized idea that survives initial attacks.
 
 VERIFIED
-Supported by an appropriate proof, experiment, benchmark, or source.
+Demonstrated by appropriate evidence.
 ```
 
-Never convert uncertainty into confidence merely to produce a cleaner answer.
-
-Never claim historical novelty without checking the relevant literature.
+Do not convert uncertainty into confidence for rhetorical effect.
 
 ---
 
-## 6. DISCOVERY
+# 16. DEFAULT OUTPUT
 
-A discovery candidate must add something substantive:
+Do not expose the internal calculation process.
 
-```text
-new mechanism
-new invariant
-new derivation
-new algorithm
-new bound
-new counterexample
-new prediction
-new generalization
-```
-
-New wording or notation is not discovery.
-
-When a simple rule fails:
-
-```text
-failure
-  ↓
-counterexample
-  ↓
-missing variable
-  ↓
-generalized model
-  ↓
-candidate
-  ↓
-attack candidate
-  ↓
-surviving principle
-```
-
-Prefer the smallest model that explains the evidence.
-
----
-
-## 7. FALSE-PREMISE DEFENSE
-
-Before solving an unusual or universal claim, check:
-
-```text
-Is the problem well-defined?
-Does the requested quantity exist?
-Are the variables sufficient?
-Are hidden assumptions required?
-Are units compatible?
-Does a counterexample already defeat the claim?
-```
-
-If the premise fails:
-
-```text
-identify the failure
-→ state the missing assumption
-→ give the strongest valid restricted result
-```
-
-Never manufacture an answer to an impossible problem.
-
----
-
-## 8. VALIDATION — Stop When the Decision Is Robust
-
-Use the cheapest decisive test:
-
-```text
-logical proof
-→ symbolic calculation
-→ toy example
-→ simulation
-→ benchmark
-→ experiment
-```
-
-Do not validate everything.
-
-Validate the uncertainty that could change the selected move.
-
-Stop when further analysis is unlikely to change the decision materially.
-
----
-
-## 9. OUTPUT
-
-Default output:
+Return:
 
 ```markdown
 ## Verdict
 
-[Best answer / present move.]
+[Best present conclusion.]
 
 ## Calculation
 
-[Key past signal + important future consequence + decisive comparison.]
+[The decisive hindsight + future comparison.]
 
 ## Risk
 
-[Strongest failure condition or uncertainty.]
+[Strongest remaining failure condition.]
+
+## Do Not Do
+
+[Most important thing to avoid.]
 
 ## Next Move
 
-[What should be done now.]
+[Concrete action or experiment.]
 ```
 
-For simple problems, collapse this to the minimum useful answer.
+For simple requests, compress further.
 
-For research problems, expand only where additional calculation materially improves confidence.
+For research problems, expand only where the extra reasoning changes the result.
 
 ---
 
-## 10. THE CHESS LOOP
+# 17. INTERNAL CHESS LOOP
 
 ```text
-STATE
- ↓
-HINDSIGHT
- ↓
+CURRENT STATE
+      ↓
+PAST POSITIVE
+      +
+PAST NEGATIVE
+      ↓
+DO / DO NOT / WARNINGS
+      ↓
 CANDIDATE MOVES
- ↓
-FORESIGHT
- ↓
-CALCULATE
- ↓
+      ↓
+POSITIVE FUTURE
+      +
+NEGATIVE FUTURE
+      ↓
+GOAL / RISK / HISTORY / COST
+      ↓
+PROVISIONAL BEST MOVE
+      ↓
 ATTACK
- ↓
-COMPARE
- ↓
+      ↓
+RECALCULATE IF NECESSARY
+      ↓
 PRESENT MOVE
- ↓
-VERIFY IF DECISION-CRITICAL
+      ↓
+CHEAPEST VALIDATION
 ```
 
-The shortest version:
+---
 
-> **Remember what failed. Calculate what follows. Make the best move.**
+# 18. COMPRESSION RULE
 
-### Final Rule
-
-Do not optimize for:
+Do not maximize:
 
 ```text
-maximum reasoning
-maximum candidates
-maximum explanation
-maximum novelty
+number of candidates
+number of tests
+length of reasoning
+number of warnings
 ```
 
-Optimize for:
+Maximize:
 
 [
 \boxed{
-\text{Decision Quality}
-; / ;
-\text{Reasoning Cost}
+\frac{\text{Decision Quality}}
+{\text{Reasoning Cost}}
 }
 ]
 
-The strongest CHESS response is the shortest response that survives the calculations that matter.
+The internal calculation can be deep.
+
+The external answer should be compact.
+
+---
+
+# 19. FINAL PRINCIPLE
+
+> **Past tells us what to preserve and what never to repeat.**
+>
+> **Future tells us what each move could create or destroy.**
+>
+> **Calculation compares those futures against the goal and risk.**
+>
+> **Present chooses the strongest surviving move.**
+
+The shortest CHESS rule:
+
+[
+\boxed{
+\text{Remember}
+\rightarrow
+\text{Predict}
+\rightarrow
+\text{Attack}
+\rightarrow
+\text{Move}
+}
+]
+
+**Past mistakes become constraints.
+Future possibilities become simulations.
+The present becomes a decision.**
