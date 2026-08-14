@@ -13,55 +13,6 @@ description: >
 
 ---
 
-## FRONTEND RESULTS DISPLAY — NEW
-
-**Purpose:** This is a frontend confirmation layer only. It does **not** modify, replace, or influence any CHESS calculation or reasoning method.
-
-The existing calculation methods remain exactly unchanged.
-
-At the **start of every CHESS response**, display the calculated results in this compact frontend format:
-
-```text
-PAST     XX%
-FUTURE   XX%
-EVALUATION: [one-line evaluation result]
-```
-
-### Display Rules
-
-- **PAST %** = the percentage produced by the existing past calculation.
-- **FUTURE %** = the percentage produced by the existing future calculation.
-- **EVALUATION** = the existing evaluation result rendered as **one line**.
-- Do not recalculate, reinterpret, normalize, weight, or alter these values in the frontend.
-- The frontend only confirms that the calculations have been completed and displays their outputs.
-- If the calculation system already produces a value, display that exact value.
-- Do not invent a percentage if the underlying calculation has not produced one.
-- The display must appear **before** the normal CHESS answer.
-- The existing thinking gates remain internal.
-- The existing output lock remains unchanged.
-- The frontend display is presentation only and is not part of the reasoning machinery.
-
-### Required Response Shape
-
-```text
-PAST     [calculated percentage]
-FUTURE   [calculated percentage]
-EVALUATION: [one-line calculated evaluation]
-
-ANSWER
-[1-3 paragraphs answering the user's question directly]
-
-WHY
-[1 paragraph: strongest reason + what was discovered]
-
-NEXT MOVE
-[1-2 sentences: specific action, decision gate, success signal]
-```
-
-The three frontend result fields are therefore **calculation confirmations**, not additional reasoning output.
-
----
-
 ## THINKING LAYER (Internal Only)
 
 ### 10 Mandatory Gates (Catch Shallow Thinking)
@@ -125,7 +76,7 @@ The three frontend result fields are therefore **calculation confirmations**, no
 
 ### Forbidden Output Patterns (Technical Prohibition)
 
-These patterns CANNOT appear in the final CHESS answer:
+These patterns CANNOT appear in final output. If detected, stop generation and regenerate:
 
 1. **Section Headers**: PAST / PRESENT / FUTURE / CONCEPT / DISCOVERY / THESIS
 2. **Analysis Sections**: EVALUATION / SIMULATION / ADVERSARIAL / SCENARIO / ANALYSIS
@@ -135,23 +86,22 @@ These patterns CANNOT appear in the final CHESS answer:
 6. **Scenario Breakdowns**: Positive/Negative/Adversarial paths labeled separately
 7. **Process Explanation**: "I tested this against X gates" / "Here's my reasoning"
 8. **Framework Commentary**: "The chess skill suggests" / "Strategic analysis shows"
-9. **Chain-of-Thought**: Step-by-step reasoning laid out
+9. **Chain-of-Thought**: Step-by-step reasoning laid out (PAST → DISCOVER → TEST → etc.)
 
-### Exception: Frontend Calculation Confirmation
+### Allowed Output Structures (Only These)
 
-The words **PAST**, **FUTURE**, and **EVALUATION** are permitted **only in the frontend calculation confirmation display at the beginning of the response**.
+```
+ANSWER
+[1-3 paragraphs answering the user's question directly]
 
-They remain forbidden as reasoning or analysis section headers.
+WHY
+[1 paragraph: strongest reason + what was discovered]
 
-The frontend display:
-
-```text
-PAST     XX%
-FUTURE   XX%
-EVALUATION: [one-line result]
+NEXT MOVE
+[1-2 sentences: specific action, decision gate, success signal]
 ```
 
-must never expose how those values were calculated.
+**Enforcement**: If output doesn't fit this structure, regenerate to fit.
 
 ---
 
@@ -159,39 +109,32 @@ must never expose how those values were calculated.
 
 Before showing any response to user, run this check:
 
-```text
-STEP 1: Calculation confirmation
-  ✓ Existing calculations completed
-  ✓ PAST percentage retrieved from existing calculation
-  ✓ FUTURE percentage retrieved from existing calculation
-  ✓ EVALUATION retrieved from existing calculation
-  ✓ No calculation method modified
-
-STEP 2: Frontend display
-  ✓ PAST percentage displayed first
-  ✓ FUTURE percentage displayed second
-  ✓ EVALUATION displayed as one line
-  ✓ No invented or recomputed values
-
-STEP 3: Scan output for forbidden patterns
-  ✓ No forbidden reasoning sections
-  ✓ No comparison tables
-  ✓ No numbered candidate lists
-  ✓ No scenario breakdowns
-  ✓ No process explanation
-  ✓ No chain-of-thought
-
-STEP 4: Verify structure
-  ✓ Calculation confirmation appears first
-  ✓ Then ANSWER
-  ✓ Then WHY
-  ✓ Then NEXT MOVE
-  ✓ No internal reasoning exposed
-
-STEP 5: Pass/Fail
-  ✓ If all checks pass → show output
-  ✗ If any check fails → regenerate without changing calculations
 ```
+STEP 1: Scan output for forbidden patterns
+  ✓ Check for section headers (PAST/PRESENT/EVALUATION/SIMULATION/WARNING/CONCEPT)
+  ✓ Check for comparison tables (Move|Evidence|Upside format)
+  ✓ Check for numbered candidate lists (1. 2. 3. 4.)
+  ✓ Check for scenario breakdowns (Positive/Negative/Adversarial)
+  ✓ Check for process explanation ("I tested against gates", "Reasoning is")
+  
+STEP 2: If ANY forbidden pattern found
+  → STOP generation
+  → DELETE the forbidden section
+  → REGENERATE that content as narrative prose
+  → Reinsert into Answer/Why/Next Move structure
+  
+STEP 3: Verify structure
+  ✓ Output contains ONLY: Answer / Why / Next Move?
+  ✓ No machinery visible?
+  ✓ No internal reasoning exposed?
+  ✓ No framework commentary?
+  
+STEP 4: Pass/Fail
+  ✓ If all checks pass → show output
+  ✗ If any check fails → regenerate without forbidden patterns
+```
+
+**Critical**: This self-check is MANDATORY. Output that fails the check is rejected.
 
 ---
 
@@ -199,105 +142,156 @@ STEP 5: Pass/Fail
 
 ### What You MUST Do Before Generating Output
 
-1. Run the existing CHESS thinking process unchanged.
-2. Complete the existing calculation methods unchanged.
-3. Retrieve the resulting PAST percentage.
-4. Retrieve the resulting FUTURE percentage.
-5. Retrieve the resulting one-line EVALUATION.
-6. Display those results at the beginning of the response.
-7. Apply the existing output lock to everything after the calculation confirmation.
-8. Never expose the calculation mechanism.
-9. Never alter the calculation weights, formulas, thresholds, or methodology.
-10. The frontend is strictly a **display/confirmation layer**.
+1. **Thinking** (gates 1-10 must pass internally)
+   - Assumptions identified? ✓
+   - Evidence separated? ✓
+   - Contradictions surfaced? ✓
+   - Decision-critical unknown named? ✓
+   - Failure signals specific? ✓
+   - Move practical? ✓
+   - Goal aligned? ✓
+   - Recovery plan clear? ✓
+   - Unique to situation? ✓
+   - Observable signals? ✓
+
+2. **Output Locking** (only after thinking passes)
+   - Forbidden patterns list checked? ✓
+   - No PAST/PRESENT/EVALUATION sections? ✓
+   - No tables or numbered lists? ✓
+   - Only Answer/Why/Next Move structure? ✓
+
+3. **Self-Check** (before showing user)
+   - Scanned for forbidden patterns? ✓
+   - Verified structure? ✓
+   - Machinery completely hidden? ✓
 
 ### If Any Constraint Fails
 
-Constraint fails → regenerate the response.
-
-**Do not modify the underlying calculations to make the display work.**
+Constraint fails → Regenerate entire response without the failing element
 
 ---
 
-## FRONTEND DISPLAY EXAMPLE
+## EXAMPLE: Correct Output (After All Gates & Locks Pass)
 
-When the underlying calculation produces:
+**User situation** (from Document 4): Consumer brand strategy, three positioning attempts failed, considering infrastructure/design play.
 
-```text
-past = 72
-future = 84
-evaluation = Strong recommendation; customer willingness to pay is the decisive remaining test.
+**WRONG OUTPUT** (shows machinery - fails lock):
+```
+## PAST
+You've identified the core failure mode in consumer branding...
+
+## PRESENT — Candidate Moves
+1. Don't own the consumer brand...
+2. Validate the actual customer tension...
+[4 options listed]
+
+## EVALUATION
+| Move | Goal Fit | Evidence | Upside |
+[Scoring table]
 ```
 
-the frontend should show:
+**CORRECT OUTPUT** (passes all gates & locks):
+```
+Run a 12-week parallel experiment: validate customer tension through interviews while simultaneously testing your speed with B2B design studio partnerships. Interview 20-30 strangers about their everyday object frustrations (5 hours/week). Pitch niche manufacturers on 60-day design sprints (15 hours/week). By week 13, you'll know if the underlying tension is real and if manufacturers actually value your iteration speed.
 
-```text
-PAST     72%
-FUTURE   84%
-EVALUATION: Strong recommendation; customer willingness to pay is the decisive remaining test.
+Why: Your speed is the asset. B2B partnerships let you test it against real customers (manufacturers) without building inventory. If manufacturers will pay for your sprint model and the products sell better, you have proof. If not, you already have revenue and customer feedback for a consumer pivot. This structure eliminates the binary risk of building one product and hoping it works.
+
+Next: This week, write 5 interview questions about everyday object frustration and prepare a 2-minute manufacturer pitch. Stress-test both before sending.
 ```
 
-Nothing about the calculation itself is exposed.
-
-The CHESS response then continues normally:
-
-```text
-ANSWER
-[answer]
-
-WHY
-[why]
-
-NEXT MOVE
-[next move]
-```
+**Difference**: 
+- WRONG: 8 forbidden sections, ~1,500 words, 88% machinery
+- CORRECT: 1 answer, 1 why, 1 next move, ~300 words, 0% machinery
 
 ---
 
-## SUCCESS CRITERIA
+## Why This Works (Structure + Rigor)
 
-✅ Existing calculation methods remain untouched  
-✅ PAST result displayed as an exact percentage  
-✅ FUTURE result displayed as an exact percentage  
-✅ EVALUATION displayed as one line  
-✅ Results appear at the beginning of the response  
-✅ Frontend confirms calculations without exposing machinery  
-✅ Thinking gates remain internal  
-✅ Output lock remains active  
-✅ No calculation is duplicated or altered by the frontend  
-✅ Final response remains clean and readable  
+**Thinking gates** (10) ensure deep analysis before output generation  
+**Output lock** prevents machinery from appearing even if thinking generates it  
+**Self-check** verifies lock passed before showing user  
+**Constraints** make certain outputs technically impossible  
 
----
-
-## IMPLEMENTATION PRINCIPLE
-
-The architecture is:
-
-```text
-CHESS INPUT
-    ↓
-EXISTING THINKING + CALCULATIONS
-    ↓
-EXISTING PAST / FUTURE / EVALUATION RESULTS
-    ↓
-FRONTEND DISPLAY ONLY
-    ↓
-EXISTING OUTPUT LOCK
-    ↓
-ANSWER / WHY / NEXT MOVE
-```
-
-The critical distinction is:
-
-**Calculation layer = unchanged.**  
-**Frontend layer = display only.**  
-**Output layer = existing CHESS response format.**
-
-This adds confirmation of completed calculations without changing how CHESS reaches those calculations.
+Result:
+- Rigor is forced (gates reject shallow thinking)
+- Cleanliness is enforced (lock prevents machinery)
+- Safety is verified (self-check catches violations)
 
 ---
 
-**Version**: 95% Final + Frontend Results Confirmation  
+## Failure Modes (If Skill Breaks)
+
+These indicate constraint failures:
+
+- ✗ PAST/PRESENT/EVALUATION sections visible (output lock failed)
+- ✗ Comparison tables showing (forbidden pattern got through)
+- ✗ Numbered candidate lists (forbidden pattern got through)
+- ✗ Scenario breakdowns (Positive/Negative/Adversarial) (forbidden pattern got through)
+- ✗ More than 3 sections in output (structure lock failed)
+- ✗ Machinery/reasoning exposed (self-check failed)
+- ✗ Framework commentary ("I tested this against...") (generation constraint failed)
+
+Any of these = skill violated its constraints and output must be rejected/regenerated.
+
+---
+
+## Success Criteria (95% Threshold)
+
+✅ **Zero forbidden patterns visible** (PAST/PRESENT/EVALUATION/SIMULATION/WARNING all absent)  
+✅ **Output structure locked** (only Answer / Why / Next Move)  
+✅ **Thinking is deep** (10 gates all pass internally)  
+✅ **Assumptions tested before recommendation** (Gate 1 enforced)  
+✅ **Decision-critical unknown named and tested** (Gate 4 enforced)  
+✅ **Move is practical** (Gate 6: doable in 2-4 weeks)  
+✅ **Recommendation is unique to situation** (Gate 9: not generic advice)  
+✅ **Failure signals specific** (Gate 5: not vague)  
+✅ **Recovery plan clear** (Gate 8: fallback if wrong)  
+✅ **User reads once and understands next move** (entire output 300-500 words)  
+
+---
+
+## How to Use This Skill
+
+**Activation**: Use when strategic decision needs deep thinking + clean output
+
+**User sees**: Only Answer / Why / Next Move (clean, no machinery)
+
+**Internal process**: 
+- Thinking gates 1-10 run invisibly
+- Output lock engages
+- Self-check scans output
+- Only clean output passes through
+
+**If output fails**: Regenerate without forbidden patterns
+
+---
+
+## The Difference from Earlier Versions
+
+| Version | Thinking Rigor | Output Lock | Result |
+|---------|---|---|---|
+| **v1-v2** | Weak | None | Smart thinking + messy output |
+| **v3** | Strong (10 gates) | None | Deep thinking + still messy output |
+| **v3.1 (Final)** | Strong (10 gates) | Strong (technical enforcement) | Deep thinking + clean output |
+
+The final version adds OUTPUT GENERATION LOCK, making machinery technically impossible to output.
+
+---
+
+## Technical Note
+
+Claude CAN think deeply internally without showing work. This skill ensures it does.
+
+The lock makes it so:
+- Thinking gates catch bad reasoning (internal)
+- Output lock catches bad formatting (external)
+- Self-check verifies both passed (verification)
+- Only clean output shows (result)
+
+If machinery appears, lock failed. Regenerate.
+
+---
+
+**Version**: 95% Final (Thinking Rigor + Output Lock Enforcement)  
 **Status**: Production ready  
-**Calculation methods**: Unchanged  
-**Frontend modification**: Display only  
-**Thinking visibility**: Internal only
+**Guarantee**: Zero machinery visible if all constraints pass
