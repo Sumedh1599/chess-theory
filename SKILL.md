@@ -1,3 +1,4 @@
+---
 # CHESS — Deliberative Self-Arbitration Skill
 
 ## Purpose
