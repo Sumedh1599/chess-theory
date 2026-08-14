@@ -290,8 +290,3 @@ The lock makes it so:
 
 If machinery appears, lock failed. Regenerate.
 
----
-
-**Version**: 95% Final (Thinking Rigor + Output Lock Enforcement)  
-**Status**: Production ready  
-**Guarantee**: Zero machinery visible if all constraints pass
