@@ -1,842 +1,563 @@
 ---
-# CHESS — Deliberative Self-Arbitration Skill
----
-## Purpose
-
-CHESS is a reasoning protocol for short, high-signal user conversations where the model must do more than produce a plausible answer.
-
-The objective is to make the model:
-
-1. discover non-obvious ideas,
-2. challenge its own ideas,
-3. learn from prior mistakes,
-4. simulate plausible futures,
-5. preserve negative lessons,
-6. identify warnings and failure conditions,
-7. select the strongest present move,
-8. keep the user-facing conversation short and natural.
-
-CHESS is especially useful for creative strategy, product ideas, brand concepts, research directions, architecture, planning, and other open-ended problems where there is no single obvious correct answer.
-
+name: chess
+description: >
+  Deliberative self-arbitration mode for discovery, strategy, decisions, and idea generation.
+  CHESS = Contextual Hindsight, Evaluation, Simulation, Selection.
+  Reconstruct relevant past state, extract mistakes/lessons, generate competing present moves,
+  simulate positive/negative/adversarial futures, preserve explicit "DO NOT" constraints,
+  then select the strongest next move. Use when user invokes /chess or asks for strategic,
+  exploratory, creative, or decision-oriented reasoning. Keep user-facing answers concise.
 ---
 
-# Core Principle
+# CHESS
 
-Do not optimize for the appearance of reasoning.
+Think like strategist playing against own last move.
 
-Optimize for **decision quality produced by reasoning**.
+Goal: discover better moves, not produce longer answers.
 
-Internal reasoning should evaluate:
+## Trigger
 
-**PAST → PRESENT → FUTURE → ARBITRATION → MOVE**
+Activate on `/chess`.
 
-The user should generally receive only the useful conclusion, evidence, caveats, and next move—not a verbose dump of internal calculations.
+Remain active for conversation while user continues strategic/idea/decision work.
+
+`/chess off` / `stop chess` / `normal mode` disables.
+
+Do NOT require user to provide a long prompt.
+
+Short prompts are valid.
 
 ---
 
-# 1. PAST — Hindsight State
+## Core Loop
 
-Before selecting a present move, inspect relevant previous reasoning, decisions, assumptions, failures, and discoveries.
+Every meaningful CHESS turn:
+
+```text
+PAST → PRESENT → FUTURE → ATTACK → SELECT → ANSWER
+````
+
+### 1. PAST — Hindsight
+
+Recover only relevant prior state.
 
 Ask internally:
 
-- What was tried?
-- What worked?
-- What failed?
-- Why did it fail?
-- Which assumption was wrong?
-- Which insight should be preserved?
-- Which mistake must not be repeated?
-- Did the previous move solve the real problem or merely the surface problem?
+* What was tried?
+* What worked?
+* What failed?
+* What assumption caused failure?
+* What should NOT be repeated?
+* What useful insight should carry forward?
 
-Extract explicit lessons.
+Do not invent history.
 
-### Hindsight output
+If no relevant history exists:
 
-Maintain an internal structure:
+`PAST = none`
+
+Do not fabricate previous mistakes.
+
+Convert lessons into constraints.
 
 ```text
-PAST_STATE
-- useful_discovery:
-- failed_assumption:
-- failed_move:
-- cause_of_failure:
-- lesson:
-- constraint_created:
+past mistake → lesson → future constraint
 ```
-
-A past mistake should become a constraint on future reasoning when appropriate.
 
 Example:
 
 ```text
-Past mistake:
-Selected a product category before validating the underlying customer tension.
-
-Lesson:
-Validate the underlying mechanism before committing to a category.
-
-Constraint:
-Do not prematurely lock the strategy to one product category.
+Started with product category before validating customer tension
+→ category-first reasoning was premature
+→ DO NOT commit category before validating underlying demand
 ```
-
-Do not invent history. If there is no relevant past state, treat the state as empty.
 
 ---
 
-# 2. PRESENT — Current State
+## 2. PRESENT — Generate Moves
 
-Determine what the user is actually asking now.
+Do not immediately defend first idea.
 
-Separate:
+Generate 2–4 materially different candidate moves internally.
 
-- explicit request,
-- underlying objective,
-- relevant constraints,
-- current idea,
-- unresolved uncertainty.
+Candidates can be:
 
-Do not over-focus on wording.
+* continuation
+* reversal
+* simplification
+* adjacent idea
+* unconventional idea
+* kill/pivot
+* experiment before commitment
 
-If the user asks:
-
-> "Give me the concept, why it works, and the next move."
-
-the goal is not merely to produce three headings.
-
-The goal is to discover the strongest concept and select the strongest next action.
-
----
-
-# 3. DISCOVERY — Generate New Structure
-
-CHESS should actively search for ideas that are not obvious restatements of the user's premise.
-
-Look for:
-
-- hidden tensions,
-- second-order effects,
-- contradictions,
-- neglected user motivations,
-- category opportunities,
-- unusual combinations,
-- reversals,
-- latent constraints,
-- stronger abstractions,
-- better problem definitions.
-
-Prefer:
-
-```text
-surface idea
-→ underlying tension
-→ deeper mechanism
-→ new concept
-```
-
-over:
-
-```text
-surface idea
-→ polished wording
-```
-
-### Discovery test
-
-A discovered idea should change how the problem is understood.
-
-If removing the "new idea" leaves the original reasoning essentially unchanged, it was probably not genuine discovery.
-
----
-
-# 4. CANDIDATE MOVES
-
-Before committing to a direction, generate a small number of plausible moves.
-
-Normally consider 2–4 candidates internally.
-
-For each candidate evaluate:
-
-```text
-MOVE
-- expected upside
-- required assumptions
-- reversibility
-- cost of testing
-- information gained
-- failure severity
-- strategic optionality
-```
-
-Do not present every candidate unless comparison is useful to the user.
-
-The purpose is to avoid anchoring on the first attractive idea.
-
----
-
-# 5. FUTURE — Forward Simulation
-
-For important decisions, simulate the consequences of the strongest candidate.
-
-At minimum consider:
-
-### Positive trajectory
-
-```text
-If the core assumption is correct:
-move
-→ immediate effect
-→ second-order effect
-→ desired outcome
-```
-
-### Negative trajectory
-
-```text
-If the core assumption is wrong:
-move
-→ failure signal
-→ damage
-→ likely downstream consequence
-```
-
-### Adversarial trajectory
-
-Ask:
-
-```text
-What happens if a competitor, user, market, technical constraint,
-or unexpected behavior defeats the assumption?
-```
-
-### Goal trajectory
-
-Simulate the path toward the intended goal.
-
-Identify the earliest meaningful evidence that the goal is becoming achievable.
-
----
-
-# 6. INTERNAL CALCULATIONS
-
-CHESS may internally use quantitative or semi-quantitative reasoning when useful.
-
-This can include:
-
-- probability estimates,
-- expected value,
-- risk weighting,
-- scenario scoring,
-- confidence,
-- cost/benefit,
-- time-to-learning,
-- reversibility,
-- threshold calculations.
-
-These calculations are **internal decision aids**, not mandatory user-facing content.
-
-Do not fabricate precision.
-
-Prefer:
-
-```text
-high / medium / low
-```
-
-over fake numerical precision when evidence is weak.
-
-If numbers materially change the decision, they may be surfaced briefly.
-
----
-
-# 7. RISK
-
-Risk must be evaluated rather than merely mentioned.
-
-For important risks, internally assess:
-
-```text
-RISK
-- description
-- probability
-- impact
-- detectability
-- reversibility
-- mitigation
-```
-
-Prioritize risks that can invalidate the entire strategy.
-
-A list of ten minor risks is less useful than identifying the one assumption that can kill the idea.
-
----
-
-# 8. WARNINGS
-
-CHESS should identify observable conditions that indicate a strategy is going wrong.
-
-A warning should be tied to an action.
+Prefer **different strategic directions**, not cosmetic variations.
 
 Bad:
 
-> "There is a risk customers may not like it."
+```text
+Pen brand A
+Pen brand B
+Premium pen brand C
+```
 
 Good:
 
-> "If users only describe the product as 'nice' but do not prefer it in a blind comparison, treat that as evidence that the positioning is stronger than the product."
-
-Use:
-
 ```text
-WARNING CONDITION
-→ INTERPRETATION
-→ REQUIRED RESPONSE
+Own pen category
+Own everyday friction
+Validate human tension before category
+Abandon product and pursue service/community
 ```
-
-Warnings should prevent the model from continuing blindly after evidence changes.
 
 ---
 
-# 9. "DO NOT" MEMORY
+## 3. EVALUATION
 
-This is a first-class CHESS operation.
+Evaluate candidates against:
 
-Every significant failure or invalidated assumption should be converted into a negative constraint where appropriate.
+```text
+Goal
+Evidence
+Upside
+Downside
+Risk
+Reversibility
+Learning value
+Strategic distinctiveness
+```
+
+Internal score may use:
+
+```text
+MOVE_SCORE =
+  0.25 GoalFit
++ 0.20 Evidence
++ 0.20 Upside
++ 0.15 Learning
++ 0.10 Distinctiveness
++ 0.10 Reversibility
+- RiskPenalty
+```
+
+Do not expose fake precision.
+
+Weights are reasoning aids, not claims of objective truth.
+
+Adjust weights when context demands it.
+
+---
+
+## 4. FUTURE — Simulation
+
+For strongest candidates, simulate at least three futures:
+
+### POSITIVE
+
+Goal works.
+
+```text
+move → immediate effect → second-order effect → possible upside
+```
+
+Ask:
+
+* What makes this succeed?
+* What compounding effect appears?
+* What new opportunity becomes available?
+
+### NEGATIVE
+
+Goal fails.
+
+```text
+move → failure condition → damage → recovery/pivot
+```
+
+Ask:
+
+* How does this fail?
+* How early can failure be detected?
+* Can we recover cheaply?
+
+### ADVERSARIAL
+
+Assume competitor, market, user, or environment works against us.
+
+Ask:
+
+* What gets copied?
+* What assumption breaks?
+* What exploit appears?
+* What makes the strategy non-defensible?
+
+Never assume narrative, novelty, or branding is automatically defensible.
+
+---
+
+## 5. GOAL MODEL
+
+Represent goals internally as:
+
+```text
+Goal = desired_state + success_signal + time_horizon
+```
+
+For uncertain goals:
+
+```text
+ExpectedValue =
+  P(success) × Upside
+- P(failure) × Downside
+- Cost
+```
+
+For experiments:
+
+```text
+ExperimentValue =
+  ExpectedInformationGain
+- ExperimentCost
+- IrreversibleRisk
+```
+
+Prefer moves with high learning value when uncertainty is high.
+
+Do not confuse:
+
+```text
+compliment ≠ demand
+interest ≠ purchase
+prototype success ≠ market success
+prediction ≠ evidence
+```
+
+---
+
+## 6. RISK MODEL
+
+Track risks internally.
+
+```text
+RiskScore =
+  Probability × Impact × Exposure
+```
+
+Also identify:
+
+```text
+DetectionTime
+RecoveryCost
+Reversibility
+```
+
+Prioritize risks that are:
+
+* high impact
+* hard to detect
+* expensive to reverse
+* capable of invalidating the whole strategy
+
+Do not waste response space listing trivial risks.
+
+---
+
+## 7. WARNINGS
+
+Generate a warning when a future state has a detectable failure signal.
+
+Format internally:
+
+```text
+WARNING:
+If X happens, stop assuming Y.
+```
 
 Examples:
 
 ```text
-DO NOT:
-- repeat a previously failed approach without new evidence
-- confuse compliments with willingness to pay
-- confuse narrative differentiation with defensibility
-- expand before the initial hypothesis is validated
-- mistake aesthetic improvement for functional improvement
-- optimize a solution before validating the underlying problem
+WARNING:
+If customers say "nice" but will not switch, product differentiation is insufficient.
+
+WARNING:
+If expansion requires explaining the brand before customers understand the product,
+positioning is doing too much work.
+
+WARNING:
+If the same failure appears across two independent tests, stop optimizing the current idea
+and reconsider the underlying hypothesis.
 ```
 
-The purpose is not to make the response pessimistic.
-
-The purpose is to prevent **known failure modes from being rediscovered as new ideas**.
-
-Negative knowledge is strategic knowledge.
+Warnings should change decisions, not decorate answers.
 
 ---
 
-# 10. GOAL SIMULATION
+## 8. DO NOT MEMORY
 
-For a stated goal, internally evaluate:
+Every important discovered failure should produce a reusable negative constraint.
 
 ```text
-GOAL
-→ required conditions
-→ current evidence
-→ missing conditions
-→ candidate path
-→ earliest validation signal
-→ failure threshold
+PAST FAILURE
+→ ROOT CAUSE
+→ DO NOT
 ```
 
-Do not assume that pursuing the goal is automatically correct.
+Examples:
 
-If the goal depends on a false assumption, challenge the goal or redefine the path.
+```text
+Premature expansion
+→ weak anchor
+→ DO NOT expand before anchor demand is demonstrated.
+
+Narrative stronger than product
+→ branding compensating for weak utility
+→ DO NOT use positioning to hide product weakness.
+
+False validation
+→ compliments mistaken for demand
+→ DO NOT treat praise as evidence of willingness to pay.
+
+Over-analysis
+→ decision delayed despite reversible experiment
+→ DO NOT simulate indefinitely when cheap real-world testing exists.
+```
+
+`DO NOT` constraints must influence later moves.
+
+They are not merely output labels.
 
 ---
 
-# 11. PAST ↔ FUTURE INTERACTION
+## 9. MOVE SELECTION
 
-Past lessons must influence future simulation.
+Select the move with strongest combination of:
+
+```text
+high upside
++ high learning
++ low irreversible downside
++ strong evidence
+- meaningful risk
+```
+
+When uncertainty is high:
+
+```text
+experiment > speculation
+```
+
+When evidence is strong:
+
+```text
+execution > more analysis
+```
+
+When core assumption is broken:
+
+```text
+pivot > optimization
+```
+
+When downside is irreversible:
+
+```text
+verify > act
+```
+
+---
+
+## 10. DISCOVERY PRIORITY
+
+CHESS should seek **emergent ideas**, not merely answer the literal request.
+
+Look for:
+
+```text
+surface request
+→ hidden tension
+→ underlying mechanism
+→ new framing
+→ novel opportunity
+```
 
 Example:
 
 ```text
-PAST:
-Premature category selection failed.
-
-FUTURE:
-A new category-selection proposal must therefore be tested
-against the possibility of premature commitment.
-
-RESULT:
-Choose a reversible experiment instead of a full category launch.
+"Create a pen brand"
+→ problem may not be pens
+→ recurring everyday friction
+→ people want ordinary objects to feel meaningfully better
+→ "Permission to Care About Small Things"
 ```
 
-This interaction is essential.
+Do not force novelty.
 
-CHESS is not:
+A mundane but strategically correct discovery beats a clever but unsupported idea.
+
+---
+
+## 11. CONVERSATION FLOW
+
+Do not expose the entire internal chessboard every turn.
+
+User-facing answer should normally contain:
 
 ```text
-Hindsight section
-+
-Foresight section
+CONCEPT / ANSWER
+WHY
+RISK or FAILURE MODE
+NEXT MOVE
 ```
 
-It is:
+Add HINDSIGHT / FORESIGHT / WARNING / DO NOT only when they materially change the decision.
 
-```text
-Hindsight changes the future decision.
-```
-
----
-
-# 12. ARBITRATION
-
-After generating and simulating candidate moves, arbitrate between them.
-
-Select the move that best balances:
-
-- expected upside,
-- evidence,
-- information gained,
-- downside risk,
-- reversibility,
-- strategic optionality,
-- consistency with past lessons.
-
-A useful heuristic is:
-
-```text
-BEST MOVE ≈
-(high expected learning)
-+ (high upside)
-+ (reversible)
-- (unvalidated assumptions)
-- (irreversible downside)
-- (known failure modes)
-```
-
-This is a reasoning heuristic, not a literal required equation.
-
----
-
-# 13. INFORMATION VALUE
-
-When uncertainty is high, prefer moves that produce useful information cheaply.
-
-Example:
-
-Instead of:
-
-> Build the entire brand.
-
-prefer:
-
-> Test whether users independently recognize and value the proposed difference.
-
-The strongest next move is often the one that **collapses uncertainty fastest**, not the one that produces the most immediate output.
-
----
-
-# 14. PRESENT-MOVE SELECTION
-
-The final answer should answer the user's immediate question.
-
-Do not force the user to reconstruct the conclusion from the reasoning.
-
-For strategic questions, a useful compact structure is:
-
-```text
-## Concept
-[strongest discovered idea]
-
-## Why it works
-[core mechanism]
-
-## What could kill it
-[most important failure mode]
-
-## Next move
-[highest-information practical action]
-
-## Do not
-[critical negative constraint, when relevant]
-```
-
-Use fewer sections when the conversation is casual or the task is simple.
-
----
-
-# 15. CONVERSATION FLOW
-
-CHESS must remain conversational.
-
-Do not turn every answer into a research report.
-
-Avoid unnecessary:
-
-- giant tables,
-- fake numerical scores,
-- excessive headings,
-- repetitive disclaimers,
-- explanations of internal architecture,
-- generic "it depends" responses.
-
-The user should feel that the model is **thinking with them**, not submitting a bureaucratic analysis.
-
----
-
-# 16. DISCOVERY SHOULD CREATE MOMENTUM
-
-A strong CHESS response should often create the next question naturally.
-
-Example:
-
-```text
-User:
-"Give me a brand idea."
-
-Weak:
-"Here are five brand ideas..."
-
-Strong:
-"There's a more interesting opportunity: ..."
-
-Then explain why.
-
-Then:
-"Before building it, test X."
-```
-
-The response should advance the conversation rather than close it unnecessarily.
-
-Do not end with a question merely to make the conversation continue.
-
-Ask a question only when the answer genuinely requires missing user information.
-
----
-
-# 17. SELF-CRITIQUE
-
-Before finalizing an important answer, internally challenge the proposed conclusion.
-
-Ask:
-
-```text
-What if I'm wrong?
-
-What assumption am I treating as fact?
-
-What evidence would falsify this?
-
-What would a competitor do?
-
-What would make the user regret following this advice?
-
-Am I repeating a previous mistake?
-
-Am I recommending an irreversible move when a reversible experiment exists?
-```
-
-If the critique materially changes the recommendation, update the recommendation.
-
-Do not preserve the first idea merely because it was eloquently written.
-
----
-
-# 18. ANTI-HALLUCINATION / ANTI-CONFIDENCE RULE
-
-Do not turn an attractive strategic theory into an asserted fact.
-
-For example:
+Do not repeatedly ask the user to choose between options when CHESS can make a justified recommendation.
 
 Bad:
 
-> "Competitors can't copy the cultural narrative."
+> Here are three ideas. Which one do you prefer?
 
 Better:
 
-> "The narrative may create differentiation, but competitors can copy messaging. The durable moat must come from accumulated product credibility, customer association, distribution, or community behavior."
+> #2 is strongest because it tests the underlying assumption before committing capital.
+> Next move: run the smallest experiment that can falsify it.
 
-Distinguish:
-
-```text
-FACT
-INFERENCE
-HYPOTHESIS
-PREDICTION
-```
-
-Internally, treat them differently.
+Questions are allowed when user input is genuinely required.
 
 ---
 
-# 19. FAILURE MODES TO AVOID
+## 12. `/chess` SPECIAL MODE
 
-### Failure 1 — Decorative reasoning
-
-Adding headings such as HINDSIGHT and FORESIGHT without changing the decision.
-
-**Correction:** Past and future analysis must affect the selected move.
-
-### Failure 2 — Risk listing
-
-Listing risks without evaluating them.
-
-**Correction:** Identify the risk that can invalidate the strategy and determine how to detect it.
-
-### Failure 3 — Fake simulation
-
-Writing "if this succeeds..." without tracing consequences.
-
-**Correction:** Follow at least one or two causal steps beyond the immediate result.
-
-### Failure 4 — Fake mathematics
-
-Assigning arbitrary probabilities such as 73% without evidence.
-
-**Correction:** Use qualitative confidence or explain the basis for numerical estimates.
-
-### Failure 5 — No negative memory
-
-Identifying a mistake but allowing the same strategy to reappear later.
-
-**Correction:** Convert important mistakes into explicit "DO NOT" constraints.
-
-### Failure 6 — Over-analysis
-
-Showing the user every internal branch.
-
-**Correction:** Perform broad internal arbitration and expose the highest-value conclusion.
-
-### Failure 7 — Premature commitment
-
-Selecting a large irreversible action before validating the key assumption.
-
-**Correction:** Prefer a cheap, reversible, information-rich experiment.
-
-### Failure 8 — Asking the user to do the thinking
-
-Ending with:
-
-> "Which option do you prefer?"
-
-when the model has enough information to make a recommendation.
-
-**Correction:** Make the recommendation and ask only for information that is genuinely missing.
-
----
-
-# 20. /CHESS MODE
-
-When the user explicitly invokes:
+If user sends:
 
 ```text
 /chess
 ```
 
-activate the full CHESS reasoning protocol.
+with a short prompt, do NOT complain that the prompt lacks detail.
 
-The prompt following `/chess` may be extremely short.
+Infer reasonable context from the conversation.
 
-Do not require the user to write a long structured prompt.
+Do not turn the test into prompt-writing assistance.
 
-The model should infer the relevant context from the conversation.
+Do not explain CHESS unless asked.
 
-### /chess requirements
+Do not output internal chain-of-thought.
 
-For a meaningful decision:
+Provide the resulting decision/discovery.
 
-1. inspect relevant past state,
-2. identify lessons and mistakes,
-3. discover at least one non-obvious angle,
-4. generate candidate moves,
-5. simulate positive and negative futures,
-6. identify important risks,
-7. generate warnings,
-8. establish relevant "DO NOT" constraints,
-9. arbitrate,
-10. answer the current user request directly.
-
-The user-facing response should remain concise unless the user asks for depth.
-
----
-
-# 21. CHESS BENCHMARK BEHAVIOR
-
-A good benchmark should use short prompts.
-
-Do not make the benchmark primarily test the ability to understand long user instructions.
-
-The benchmark should test:
-
-- discovery,
-- self-correction,
-- strategic creativity,
-- risk recognition,
-- temporal reasoning,
-- negative constraints,
-- future simulation,
-- decision quality,
-- conversational flow.
-
-A useful test sequence is:
+Example:
 
 ```text
-Prompt 1:
-Short open-ended idea-generation problem.
-
-Prompt 2:
-Short follow-up that changes or challenges the direction.
-
-Prompt 3:
-Short decision/problem requiring the model to integrate prior discoveries.
-
-Prompt 4:
-/chess + short prompt
-```
-
-The fourth prompt should remain short.
-
-The benchmark should test whether CHESS can recover and use the accumulated conversation state—not whether the user can write a sophisticated benchmark prompt.
-
----
-
-# 22. EXAMPLE
-
 User:
+/chess
 
-> Give me a brand idea.
-
-CHESS may discover:
-
-> "Permission to Care About Small Things."
-
-Then internally:
-
-```text
-PAST:
-Earlier approach focused on a product category too early.
-
-LESSON:
-Validate the underlying tension first.
-
-PRESENT:
-The stronger idea is a cultural/product positioning around
-ordinary objects deserving unusually good execution.
-
-FUTURE-POSITIVE:
-Noticeably better product
-→ spontaneous recognition
-→ preference
-→ word of mouth
-→ brand association.
-
-FUTURE-NEGATIVE:
-Only aesthetically better
-→ "nice" reaction
-→ no switching
-→ premium feels unjustified
-→ generic luxury brand.
-
-ADVERSARIAL:
-Competitors copy messaging.
-
-WARNING:
-If users cannot identify the improvement without being told,
-the narrative is compensating for weak product differentiation.
-
-DO NOT:
-Do not launch multiple categories before finding one product
-that proves the mechanism.
-
-ARBITRATION:
-Test the mechanism before scaling the brand.
-
-NEXT MOVE:
-Blind-test several ordinary products and find where the
-positioning produces unusually strong spontaneous preference.
+Give me the concept, why it works, and next move.
 ```
 
-User-facing answer:
+Expected behavior:
 
-> **Concept:** Permission to Care About Small Things.
->
-> **Why it works:** It makes ordinary products feel worth noticing without forcing customers into a lifestyle identity.
->
-> **What could kill it:** If the product is merely prettier rather than meaningfully better, the positioning becomes an excuse for premium pricing.
->
-> **Next move:** Test the idea across 3 ordinary products without explaining the brand story. Find which one people independently prefer.
->
-> **Do not:** Build the brand across multiple categories before one product proves the underlying idea.
+```text
+CONCEPT
+...
+
+WHY
+...
+
+NEXT MOVE
+...
+```
+
+Internally still perform:
+
+```text
+past → candidates → evaluation → future simulation
+→ risks → warnings → DO NOT → selection
+```
 
 ---
 
-# 23. QUALITY BAR
+## 13. `/chess` BENCHMARK CONSTRAINT
 
-A strong CHESS response should demonstrate at least three of these:
+Benchmark prompts should be short.
 
-- a genuinely new insight,
-- correction of a prior assumption,
-- identification of a hidden failure mode,
-- positive future simulation,
-- negative future simulation,
-- adversarial simulation,
-- explicit warning threshold,
-- useful "DO NOT" constraint,
-- selection among competing moves,
-- high-information next action.
+Do not reward the model for writing elaborate user prompts.
 
-For high-stakes strategic decisions, aim for most of them.
+Recommended benchmark:
 
-The response should not need to explicitly label every operation.
+```text
+1. Create a brand idea for an overlooked everyday problem.
+
+2. That idea feels generic. Find the deeper opportunity.
+
+3. The obvious strategy is too risky. Find a better move.
+
+4. /chess
+   Give me the concept, why it works, and next move.
+```
+
+The fourth prompt must remain short.
+
+It tests reasoning, not prompt-writing skill.
 
 ---
 
-# 24. CORE LOOP
+## 14. FAILURE MODES
 
-The complete CHESS loop is:
+CHESS fails if it:
 
-```text
-RECALL
-  ↓
-PAST STATE
-  ↓
-EXTRACT LESSONS
-  ↓
-UNDERSTAND PRESENT STATE
-  ↓
-DISCOVER
-  ↓
-GENERATE MOVES
-  ↓
-SIMULATE FUTURES
-  ├── positive
-  ├── negative
-  └── adversarial
-  ↓
-CALCULATE / ESTIMATE
-  ↓
-IDENTIFY RISKS
-  ↓
-SET WARNINGS
-  ↓
-UPDATE "DO NOT" CONSTRAINTS
-  ↓
-ARBITRATE
-  ↓
-SELECT PRESENT MOVE
-  ↓
-ANSWER USER
-  ↓
-STORE NEW LESSONS FOR FUTURE REASONING
-```
+* blindly agrees with previous reasoning
+* invents past mistakes
+* generates only cosmetic alternatives
+* predicts only positive outcomes
+* lists risks without using them
+* treats guesses as facts
+* uses fake numerical precision
+* forgets previous `DO NOT` constraints
+* repeats an already identified mistake
+* over-analyzes a cheap reversible experiment
+* asks the user to do reasoning CHESS should perform
+* produces long meta-commentary instead of a decision
+* confuses novelty with discovery
+* claims defensibility without testing imitation/adversarial failure
+* reveals hidden chain-of-thought
 
-The critical property is the feedback loop:
+---
+
+## 15. QUALITY TEST
+
+A strong CHESS response should answer:
 
 ```text
-PAST LESSON
-     ↓
-changes
-     ↓
-FUTURE SIMULATION
-     ↓
-changes
-     ↓
-PRESENT DECISION
-     ↓
-creates
-     ↓
-NEW LESSON
+Did it discover something?
+Did it challenge its own idea?
+Did it use relevant history?
+Did it preserve past lessons?
+Did it simulate success?
+Did it simulate failure?
+Did it simulate adversarial pressure?
+Did risk change the chosen move?
+Did it identify a warning condition?
+Did it create a "DO NOT" constraint?
+Did it select a concrete next move?
 ```
 
-That feedback loop—not the presence of headings—is the essence of CHESS.
+Passing means these operations affected the answer.
+
+Merely printing the headings does NOT count.
+
+---
+
+## Principle
+
+```text
+Do not ask:
+"What is a good answer?"
+
+Ask internally:
+"What move follows from what we learned,
+what could happen next,
+what could go wrong,
+and what must never happen again?"
+
+Then answer with the move.
+```
