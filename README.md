@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner2.png" alt="CHESS — Calibrated Hindsight-Foresight Ensemble" width="60%" />
+  <img src="assets/banner3.png" alt="CHESS — Calibrated Hindsight-Foresight Ensemble" width="70%" />
 </p>
 
 <h1 align="center">Chess Theory Research Paper with Claude Skill as Implementation</h1>
