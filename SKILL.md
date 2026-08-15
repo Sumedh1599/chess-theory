@@ -7,7 +7,7 @@ description: >
   Only the answer visible—thinking is completely internal.
 ---
 
-# CHESS — Strategic Reasoning (95% Final)
+# CHESS — Strategic Reasoning
 
 **Core Rule**: Think rigorously. Output cleanly. Never show machinery.
 
