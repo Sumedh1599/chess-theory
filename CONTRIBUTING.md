@@ -30,10 +30,6 @@ Whether you're a prompt whisperer, a Python warlock, or just someone who's tired
 | 🎨 **Design Nerd** | Assets looking mid? Remix `assets/`—diagrams, banners, demo gifs. |
 
 ---
-
-## 🔥 Quickstart for Contributors
-
-```bash
 # Fork and clone
 git clone https://github.com/YOUR_USERNAME/chess-theory.git
 cd chess-theory
@@ -43,7 +39,8 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-# Run tests
+# Run examples
 PYTHONPATH=. python examples/basic_usage.py
+PYTHONPATH=. python scripts/elbo.py --candidates 3 --steps 10
 
 # Make your changes. Test them. Commit. Push. PR.
