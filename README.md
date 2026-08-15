@@ -5,7 +5,7 @@
 <h1 align="center">Chess Theory Research Paper with Claude Skill as Implementation</h1>
 <p align="center">
   <b>Calibrated Hindsight–Foresight Ensemble for Strategic Self-Arbitration</b><br>
-  A Claude skill that makes AI think before it speaks.
+  A Claude skill that makes AI learn from past, predict future and make a present move.
 </p>
 
 
