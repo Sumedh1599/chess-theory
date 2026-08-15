@@ -4,7 +4,7 @@ description: >
   Strategic decision mode with mandatory thinking rigor AND output lock enforcement.
   Identifies hidden tensions, tests core assumptions, predicts failure signals, discovers what was missed.
   10 thinking gates ensure rigorous analysis. Output generation lock ensures ZERO machinery appears.
-  Only the answer visible—thinking is completely internal.
+  Only the answer visible, thinking is completely internal.
 ---
 
 # CHESS — Strategic Reasoning
