@@ -14,7 +14,9 @@
   <a href="LICENSE"><img src="https://img.shields.io/github/license/Sumedh1599/chess-theory?style=flat" alt="MIT License"></a>
   <a href="research_paper.pdf"><img src="https://img.shields.io/badge/paper-PDF-blue?style=flat" alt="Research Paper"></a>
   <a href="#install"><img src="https://img.shields.io/badge/install-Claude%20skill-brightgreen?style=flat" alt="Install"></a>
-   <a href="https://doi.org/10.5281/zenodo.21975116"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.21975116.svg" alt="DOI"></a>
+  <a href="https://doi.org/10.5281/zenodo.21975116">
+  <img src="https://img.shields.io/badge/DOI-10.5281%2Fzenodo.21975116-blue" alt="DOI">
+</a>
 </p>
 
 ---
